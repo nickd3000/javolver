@@ -1,4 +1,12 @@
+package Test;
+
 import java.awt.Color;
+
+import evo.*;
+
+import evo.BasicDisplay;
+import evo.Evolver;
+import evo.IGene;
 
 
 public class TestEvolver {
@@ -6,8 +14,8 @@ public class TestEvolver {
 	public static void main(String[] args) {
 
 		//testTree();
-		//testWord();
-		testTextPic();
+		testWord();
+		//testTextPic();
 	}
 
 	public static void testTextPic()
@@ -61,12 +69,12 @@ public class TestEvolver {
 					testEvolver.doOneCycle();
 				}
 				//testEvolver.cullHalf();
-				if (testEvolver.GenePool.size()<1) continue;
+				if (testEvolver.getGenePool().size()<1) continue;
 				testEvolver.report();
 				GeneTree best = (GeneTree) testEvolver.findBestScoringGene();
 				GeneTree secondBest = null;
 				float runningScore=0.0f;
-				for (IGene gene : testEvolver.GenePool)
+				for (IGene gene : testEvolver.getGenePool())
 				{
 					if (gene.canMate(best,false)==false && gene.getScore()>runningScore)
 					{
@@ -108,7 +116,7 @@ public class TestEvolver {
 		adam.word = "JSCH IE SPWW";
 		testEvolver.addGene(adam);
 		
-		for (int j=0;j<10000;j++)
+		for (int j=0;j<10;j++)
 		{
 			for (int i=0;i<10;i++)
 			{

@@ -1,6 +1,11 @@
+package Test;
+
 import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+
+import evo.BasicDisplay;
+import evo.IGene;
 
 
 public class GeneTree implements IGene {

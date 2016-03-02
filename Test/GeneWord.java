@@ -1,3 +1,6 @@
+package Test;
+
+import evo.IGene;
 
 public class GeneWord implements IGene {
 

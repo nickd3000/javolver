@@ -1,3 +1,4 @@
+package evo;
 
 // Import the basic graphics classes.
 import java.awt.*;
@@ -11,7 +12,7 @@ public class BasicDisplay extends JFrame {
 	Color currentColor;
 	int width, height;
 
-	BasicDisplay(int width, int height) {
+	public BasicDisplay(int width, int height) {
 		super();
 		this.width = width;
 		this.height = height;

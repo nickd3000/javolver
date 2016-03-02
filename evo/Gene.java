@@ -1,4 +1,4 @@
-
+package evo;
 public interface Gene {
 
 	public String sequence = "";
