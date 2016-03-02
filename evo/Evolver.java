@@ -14,7 +14,7 @@ import javax.script.ScriptException;
 
 public class Evolver {
 
-	private static ArrayList<IGene> GenePool = null;
+	private /*static*/ ArrayList<IGene> GenePool = null;
 	
 	public Evolver()
 	{
@@ -47,6 +47,7 @@ public class Evolver {
 		
 		
 		// Clone the best one.
+		/*
 		IGene best = findBestScoringGene();
 		if (best!=null)
 		{
@@ -57,11 +58,14 @@ public class Evolver {
 			clone = best.createChild(best, best); // Looks weird but we are going to randomise it.
 			getGenePool().add(clone);
 		}
+		*/
 		
 		scoreGenes();
 		
-		killOld(2);
-		while (getGenePool().size()>100) { cullHalf(); }
+		killOld(30);
+		//while (getGenePool().size()>100) { 
+		cullHalf();
+		cullHalf();
 		reduceSetTo(500);
 		
 	}
@@ -209,18 +213,18 @@ public class Evolver {
 	 * Select a random gene from the pool weighted towards the fittest individuals.
 	 * @return
 	 */
-	public static IGene rouletteSelection()
+	public IGene rouletteSelection()
 	{
 	    float totalScore = 0;
 	    float runningScore = 0;
-	    for (IGene g : getGenePool())
+	    for (IGene g : GenePool)
 	    {
 	        totalScore += g.getScore();
 	    }
 
 	    float rnd = (float) (Math.random() * totalScore);
 
-	    for (IGene g : getGenePool())
+	    for (IGene g : GenePool)
 	    {   
 	        if (    rnd>=runningScore &&
 	                rnd<=runningScore+g.getScore())
@@ -310,11 +314,11 @@ public class Evolver {
 		return new Double(result);
 	}
 
-	public static ArrayList<IGene> getGenePool() {
+	public ArrayList<IGene> getGenePool() {
 		return GenePool;
 	}
 
-	public static void setGenePool(ArrayList<IGene> genePool) {
+	public void setGenePool(ArrayList<IGene> genePool) {
 		GenePool = genePool;
 	}
 	

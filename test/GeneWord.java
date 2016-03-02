@@ -1,4 +1,4 @@
-package Test;
+package test;
 
 import evo.IGene;
 
@@ -13,7 +13,7 @@ public class GeneWord implements IGene {
 	@Override
 	public void init() {
 		// TODO Auto-generated method stub
-		word = "JWIDPIQXEPUL";
+		word = "JWIDPIQX";
 	}
 
 
@@ -31,7 +31,7 @@ public class GeneWord implements IGene {
 		age++;
 		if (scored==true) return;
 			
-		String targetWord = "NICK IS COOL";
+		String targetWord = "GENETICS";
 		float theScore = 0.0f;
 		for (int i=0;i<targetWord.length();i++)
 		{
@@ -93,7 +93,7 @@ public class GeneWord implements IGene {
 	@Override
 	public int getAge() {
 		// TODO Auto-generated method stub
-		return 0;
+		return age;
 	}
 
 
