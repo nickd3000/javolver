@@ -34,6 +34,12 @@ public class GeneTree implements IGene {
 	float score = 0;
 	int generation = 0;
 	
+	@Override
+	public IGene newInstance()
+	{
+		return new GeneTree();
+	}
+	
 	public void clampValues()
 	{
 		
@@ -75,7 +81,7 @@ public class GeneTree implements IGene {
 		clampValues();
 		*/
 		float scale = 0.001f;
-		scale = (float) Math.random() * 10.125f;
+		scale = (float) Math.random() * 10.0f; //10.125f;
 		for (int i=0;i<VAL_branch2Angle;i++)
 		{
 			dna[i] = (float) (dna[i] + ((Math.random()-0.5f)*scale));
@@ -88,7 +94,7 @@ public class GeneTree implements IGene {
 		
 		float scaleHeight = 0.001f;
 		float scaleAverageDist=0.1f;
-		float scaleLeafBonus=0.01f;
+		float scaleLeafBonus=0.1f;
 		
 		age++;
 		
@@ -145,8 +151,8 @@ public class GeneTree implements IGene {
 			//if (minDist>0.10f)
 			//	score+= minDist * 0.015f;
 			
-			//else if (minDist<=0.10f)
-			//	score-=0.0001f;
+			if (minDist<=0.50f)
+				score-=0.001f;
 			
 		}
 		
@@ -155,8 +161,8 @@ public class GeneTree implements IGene {
 		
 		
 		// Favour large branch angles.
-		score += dna[VAL_branch1Angle]*0.001;
-		score += dna[VAL_branch2Angle]*0.001;
+		score += dna[VAL_branch1Angle]*0.002;
+		score += dna[VAL_branch2Angle]*0.002;
 		
 		// Bonus for every leaf.
 		score += (float)leafPoints.size()*scaleLeafBonus;

@@ -14,26 +14,67 @@ import javax.script.ScriptException;
 
 public class Evolver {
 
-	private /*static*/ ArrayList<IGene> GenePool = null;
+	private ArrayList<IGene> genePool = null;
+	private IGene proto; // Copy of type of gene we will use.
+
 	
-	public Evolver()
+	public Evolver(IGene proto)
 	{
+		this.proto = proto;
 		init();
 	}
 	
 	public void init()
 	{
-		setGenePool(new ArrayList<IGene>());
+		genePool = new ArrayList<IGene>();
 	}
+	
+	
+	/**
+	 * Add a number of randomly initialized genes to the population.
+	 */
+	public void addRandomPopulation(int count)
+	{
+		IGene n = null;
+		
+		for (int i=0; i<count; i++)
+		{
+			n = proto.newInstance();
+			n.init();
+			n.randomise();
+			genePool.add(n);
+		}
+	}
+	
 	
 	public void doOneCycle()
 	{
 		scoreGenes();
 		//cullHalf();
-		for (int i=0;i<(getGenePool().size()/10)+3;i++) breed();
+	
+		ArrayList<IGene> newGenePool = null;
+		newGenePool = new ArrayList<IGene>();
+		
+		// Elitism.
+		newGenePool.add(findBestScoringGene());
+		
+		for (int i=0;i<genePool.size()-1;i++)
+		{
+			IGene g1 = tournamentSelection(genePool, 100);
+			IGene g2 = tournamentSelection(genePool, 100);
+			newGenePool.add(breed(g1,g2));
+		}
+		
+		// Copy new pool over main pool.
+		genePool = newGenePool;
+		
+		
+		// for (int i=0;i<(getGenePool().size()/10)+3;i++) breed();
+		// for (int i=0;i<(genePool.size()/10)+3;i++) breed();
+		
 		
 		// Introduce new, random genes.
-		
+		/*
 		for (int i=0;i<10;i++)
 		{
 			if (getGenePool().size()>0)
@@ -44,7 +85,7 @@ public class Evolver {
 				getGenePool().add(best);
 			}
 		}
-		
+		*/
 		
 		// Clone the best one.
 		/*
@@ -60,13 +101,13 @@ public class Evolver {
 		}
 		*/
 		
-		scoreGenes();
+		//scoreGenes();
 		
-		killOld(30);
+		//killOld(50);
 		//while (getGenePool().size()>100) { 
-		cullHalf();
-		cullHalf();
-		reduceSetTo(500);
+		//cullHalf();
+		//cullHalf();
+		//reduceSetTo(500);
 		
 	}
 	
@@ -85,6 +126,18 @@ public class Evolver {
 			gene.calculateScore();
 			
 		}
+	}
+	
+	
+	/***
+	 * Select a pair of genes, mate them and add the children to the pool.
+	 * 
+	 */
+	public IGene breed(IGene g1, IGene g2)
+	{
+		IGene child = g1.createChild(g1, g2);
+		child.mutate();
+		return child;
 	}
 	
 	/***
@@ -106,11 +159,41 @@ public class Evolver {
 			if (g1.canMate(g2, true)) break;
 		}
 		
+		if (g1==null || g2==null) return;
+		
 		if (g1.canMate(g2, true)==false) return;
 		
 		IGene child = g1.createChild(g1, g2);
 		child.mutate();
 		addGene(child);
+	}
+	
+	/**
+	 * Return the fittest individual from a pool, from a random selection.
+	 */
+	public IGene tournamentSelection(ArrayList<IGene> pool, int tournamentSize)
+	{
+		int poolSize = pool.size();
+		float maxScore = -1000;
+		IGene currentWinner = null;
+		
+		for (int i=0;i<tournamentSize;i++)
+		{
+			IGene contender = getRandomIndividual(pool);
+			if (contender.getScore()>maxScore)
+			{
+				maxScore = contender.getScore();
+				currentWinner = contender;
+			}
+		}
+		
+		return currentWinner;
+	}
+	
+	public IGene getRandomIndividual(ArrayList<IGene> pool)
+	{
+		int id = (int)((float)(pool.size()-1) * Math.random());
+		return pool.get(id);
 	}
 	
 	public void addGene(IGene newGene)
@@ -139,15 +222,19 @@ public class Evolver {
 		if (getGenePool().size()<amount) return;
 		ArrayList<IGene> NewGenePool = null;
 		NewGenePool = new ArrayList<IGene>();
+		
 		for (int i=0;i<amount;i++)
 		{
-			int id = (int)((float)(getGenePool().size()-1) * Math.random());
+			//int id = (int)((float)(getGenePool().size()-1) * Math.random());
+			//IGene cpy = getGenePool().get(id);
 			
-			IGene cpy = getGenePool().get(id);
+			IGene cpy = this.rouletteSelection();
+			
 			NewGenePool.add(cpy);
 		}
+		
 		// Switch over.
-				setGenePool(NewGenePool);
+		setGenePool(NewGenePool);
 	}
 	
 
@@ -217,14 +304,14 @@ public class Evolver {
 	{
 	    float totalScore = 0;
 	    float runningScore = 0;
-	    for (IGene g : GenePool)
+	    for (IGene g : genePool)
 	    {
 	        totalScore += g.getScore();
 	    }
 
 	    float rnd = (float) (Math.random() * totalScore);
 
-	    for (IGene g : GenePool)
+	    for (IGene g : genePool)
 	    {   
 	        if (    rnd>=runningScore &&
 	                rnd<=runningScore+g.getScore())
@@ -315,11 +402,11 @@ public class Evolver {
 	}
 
 	public ArrayList<IGene> getGenePool() {
-		return GenePool;
+		return this.genePool;
 	}
 
 	public void setGenePool(ArrayList<IGene> genePool) {
-		GenePool = genePool;
+		this.genePool = genePool;
 	}
 	
 }

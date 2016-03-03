@@ -12,21 +12,22 @@ public class TestEvolver {
 
 	public static void main(String[] args) {
 
-		// testTree();
-		testWord();
+		testTree();
+		//testWord();
 		// testTextPic();
 	}
 
 	public static void testWord() {
 
 		// Create the evolver:
-		Evolver testEvolver = new Evolver();
+		Evolver testEvolver = new Evolver(new GeneWord());
 
-		GeneWord adam = new GeneWord();
-		adam.word = "PEFNTISD"; // Target word is GENETICS
-		testEvolver.addGene(adam);
-
-		for (int j = 0; j < 100; j++) {
+		//GeneWord adam = new GeneWord();
+		//adam.word = "PEFNTISD"; // Target word is GENETICS
+		//testEvolver.addGene(adam);
+		testEvolver.addRandomPopulation(100);
+		
+		for (int j = 0; j < 50; j++) {
 			for (int i = 0; i < 10; i++) {
 				testEvolver.doOneCycle();
 			}
@@ -39,6 +40,8 @@ public class TestEvolver {
 	}
 	
 	public static void testTextPic() {
+		
+		
 		BasicDisplay disp = new BasicDisplay(800, 400);
 		GeneTextPic testGene = new GeneTextPic();
 
@@ -65,14 +68,17 @@ public class TestEvolver {
 		System.out.print("START");
 		for (int n = 0; n < 500; n++) {
 			// Create the evolver:
-			Evolver testEvolver = new Evolver();
+			Evolver testEvolver = new Evolver(new GeneTree());
 
+			testEvolver.addRandomPopulation(100);
+			
+			/*
 			GeneTree adam = null;
 			for (int i = 0; i < 1000; i++) {
 				adam = new GeneTree();
 				adam.init();
 				testEvolver.addGene(adam);
-			}
+			}*/
 
 			for (int j = 0; j < 500000000; j++) {
 				for (int i = 0; i < 1; i++) {

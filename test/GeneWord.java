@@ -1,5 +1,7 @@
 package test;
 
+import java.net.NetworkInterface;
+
 import evo.IGene;
 
 public class GeneWord implements IGene {
@@ -16,6 +18,11 @@ public class GeneWord implements IGene {
 		word = "JWIDPIQX";
 	}
 
+	@Override
+	public IGene newInstance()
+	{
+		return new GeneWord();
+	}
 
 	@Override
 	public void mutate() {

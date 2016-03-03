@@ -33,6 +33,12 @@ public class GeneTextPic implements IGene {
 	}
 
 	@Override
+	public IGene newInstance()
+	{
+		return new GeneTextPic();
+	}
+	
+	@Override
 	public void mutate() {
 		// TODO Auto-generated method stub
 
