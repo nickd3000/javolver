@@ -12,8 +12,9 @@ public class TestEvolver {
 
 	public static void main(String[] args) {
 
-		testTree();
+		//testTree();
 		//testWord();
+		testProgram();
 		// testTextPic();
 	}
 
@@ -34,6 +35,28 @@ public class TestEvolver {
 			// testEvolver.cullHalf();
 			testEvolver.report();
 
+		}
+
+		System.out.print("END ");
+	}
+	
+	public static void testProgram() {
+
+		// Create the evolver:
+		Evolver testEvolver = new Evolver(new GeneProgram());
+
+		testEvolver.addRandomPopulation(150);
+		int iteration=0;
+		
+		for (int j = 0; j < 5000; j++) {
+			for (int i = 0; i < 100; i++) {
+				testEvolver.doOneCycle();
+				iteration++;
+			}
+			
+			System.out.print("iteration: " + iteration + "  ");
+			testEvolver.report();
+			
 		}
 
 		System.out.print("END ");
@@ -88,7 +111,7 @@ public class TestEvolver {
 				if (testEvolver.getGenePool().size() < 1)
 					continue;
 				testEvolver.report();
-				GeneTree best = (GeneTree) testEvolver.findBestScoringGene();
+				GeneTree best = (GeneTree) testEvolver.findBestScoringGene(testEvolver.getGenePool());
 				GeneTree secondBest = null;
 				float runningScore = 0.0f;
 				for (IGene gene : testEvolver.getGenePool()) {

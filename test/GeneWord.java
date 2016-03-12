@@ -62,10 +62,16 @@ public class GeneWord implements IGene {
 		String DNA3 = ((GeneWord)p2).word;
 		char[] chars = DNA3.toCharArray();
 		
+		boolean side = false;
 		for (int i=0;i<DNA1.length();i++)
 		{
-			if (Math.random()<0.5) chars[i] = DNA1.charAt(i);
-			else chars[i] = DNA2.charAt(i);
+			if (Math.random()<0.25) { // Randomly switch side.
+				if (side==true) side=false;
+				else side = true;
+			}
+				
+			if (side)	chars[i] = DNA1.charAt(i);
+			else		chars[i] = DNA2.charAt(i);
 		}
 		
 		DNA3 = new String(chars);

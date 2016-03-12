@@ -95,6 +95,7 @@ public class GeneTree implements IGene {
 		float scaleHeight = 0.001f;
 		float scaleAverageDist=0.1f;
 		float scaleLeafBonus=0.1f;
+		float leafCost=0.01f;
 		
 		age++;
 		
@@ -154,6 +155,7 @@ public class GeneTree implements IGene {
 			if (minDist<=0.50f)
 				score-=0.001f;
 			
+			score-=leafCost;
 		}
 		
 		score += (totalDist/(float)(numLeaves*numLeaves))*scaleAverageDist;
@@ -183,10 +185,15 @@ public class GeneTree implements IGene {
 		GeneTree child = new GeneTree();
 		child.init();
 		
-		
+		boolean side=false;
 		for (int i=0;i<dnaLength;i++)
 		{
-			if (Math.random()<0.5) child.dna[i] = ((GeneTree)p1).dna[i];
+			if (Math.random()<0.25) { // Randomly switch side.
+				if (side==true) side=false;
+				else side = true;
+			}
+			
+			if (side==true) child.dna[i] = ((GeneTree)p1).dna[i];
 			else child.dna[i] = ((GeneTree)p2).dna[i];
 		}
 		
