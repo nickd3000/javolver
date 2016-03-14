@@ -22,7 +22,7 @@ public class GeneProgram implements IGene {
 	public void init() {
 		// TODO Auto-generated method stub
 		//word = "HELLO";
-		int dnaSize = 250;
+		int dnaSize = 160;
 		for (int i=0;i<dnaSize;i++)
 		{
 			if (Math.random()<0.7)
@@ -40,8 +40,8 @@ public class GeneProgram implements IGene {
 
 	@Override
 	public void mutate() {
-		double mutationChance=0.1; // 0..1 value - higher means more chance of mutation.
-		double bigMutationChance=0.01; // 0..1 value - higher means more chance of mutation.
+		double mutationChance=0.001; // 0..1 value - higher means more chance of mutation.
+		double bigMutationChance=0.001; // 0..1 value - higher means more chance of mutation.
 		for (int i=0;i<dna.size();i++)
 		{
 			// Mutate slightly
@@ -56,8 +56,54 @@ public class GeneProgram implements IGene {
 			// Completely mutate.
 			if (Math.random()<bigMutationChance) dna.set(i, (int)(Math.random()*255.0));
 		}
+		
+		if (Math.random()<0.1) dna = mutateInsert(dna);
+		if (Math.random()<0.1) dna = mutateDelete(dna);
+		for (int i=0;i<1;i++) dna = mutateSwap(dna);
+	}
+	
+	public ArrayList<Integer> mutateInsert(ArrayList<Integer> d)
+	{
+		int skip = (int)(d.size()*Math.random());
+		ArrayList<Integer> nd = new ArrayList<>(d);
+		for (int i=0;i<d.size()-1;i++)
+		{
+			int pos = i;
+			if (i>skip) pos=i+1;
+			nd.set(pos, d.get(i));
+			
+		}
+			
+		return nd;
 	}
 
+	public ArrayList<Integer> mutateDelete(ArrayList<Integer> d)
+	{
+		int skip = (int)(d.size()*Math.random());
+		ArrayList<Integer> nd = new ArrayList<>(d);
+		for (int i=0;i<d.size()-1;i++)
+		{
+			int pos = i;
+			if (i>skip) pos=i+1;
+			nd.set(i, d.get(pos));
+			
+		}
+			
+		return nd;
+	}
+	
+	public ArrayList<Integer> mutateSwap(ArrayList<Integer> d)
+	{
+		ArrayList<Integer> nd = new ArrayList<>(d);
+		int pos1 = (int)(Math.random()*(double)(d.size()-1));
+		int pos2 = (int)(Math.random()*(double)(d.size()-1));
+				
+		nd.set(pos1, d.get(pos1));
+		nd.set(pos2, d.get(pos2));
+			
+		return nd;
+	}
+	
 	// Setup and also run simple machine, return console result.
 	public String setupSimpleMachineFromDNA(SimpleMachine sm, ArrayList<Integer> d)
 	{
@@ -73,7 +119,7 @@ public class GeneProgram implements IGene {
 		}
 		
 		
-		int maxCycles = 1500;
+		int maxCycles = 500;
 		int cycleCount = 0;
 		for (int i=0;i<maxCycles; i++)
 		{
@@ -109,21 +155,25 @@ public class GeneProgram implements IGene {
 		
 		
 		// Add points for having some output:
-		if (machineOutput.length()>0) score+=5;
+		if (machineOutput.length()>0) score+=1f;
 		
 		// Penalty for too much output.
 		if (machineOutput.length()>10) score=score*0.8f;
 		if (machineOutput.length()>20) score=score*0.5f;
 		if (machineOutput.length()>50) score=score*0.2f;
 		
-		score-= cyclePenalty*2.0;
+		//score-= cyclePenalty*2.0;
 		
 		// Add points for noop commands...
 		for (int i=0;i<dna.size();i++)
 		{
-			if (dna.get(i)==0) score+=0.0001;
+			if (dna.get(i)==0) score+=0.0001f;
 		}
 		
+		//score += Math.random()*0.1f;
+		
+		if (cyclePenalty<0.01) score*=0.1f;
+		if (cyclePenalty>0.8) score*=0.8f;
 	}
 
 	@Override
@@ -140,10 +190,12 @@ public class GeneProgram implements IGene {
 		ArrayList<Integer> DNA3 = new ArrayList<Integer>(DNA2);
 		//char[] chars = DNA3.toCharArray();
 		
-		boolean side = false;
+		boolean side = Math.random()<0.5?false:true;
+		int switchPosition = (int)(Math.random()*(double)DNA1.size());
 		for (int i=0;i<DNA1.size();i++)
 		{
-			if (Math.random()<0.01) { // Randomly switch side.
+			//if (Math.random()<0.01) { // Randomly switch side.
+			if (i==switchPosition || Math.random()<0.1) {
 				if (side==true) side=false;
 				else side = true;
 			}
@@ -164,10 +216,16 @@ public class GeneProgram implements IGene {
 
 	float getScoreForCharacter(char a, char b)
 	{
-		int maxDiff = 20;
+		int maxDiff = 5;
 		int diff = Math.abs(a-b);
 		if (diff>maxDiff) return 0.0f;
-		return ((maxDiff-diff)/(float)maxDiff);
+		float s = ((maxDiff-diff)/(float)maxDiff);
+		
+		if (diff<2) s*=2.0f;
+		if (diff<1) s*=5.0f;
+		
+		
+		return s;
 	}
 
 

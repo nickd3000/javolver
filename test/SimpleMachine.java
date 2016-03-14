@@ -38,7 +38,7 @@ public class SimpleMachine {
 			
 		switch (operator)
 		{
-		case NO_OP: break;
+		case NO_OP: pc++; break;
 		case COPY_A_B: regB = regA; pc++; break;
 		case COPY_B_A: regA = regB; pc++; break;
 		case COPY_M_A: regA = memory[pc+1]; pc+=2; break;

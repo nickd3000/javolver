@@ -13,9 +13,10 @@ public class TestEvolver {
 	public static void main(String[] args) {
 
 		//testTree();
-		//testWord();
-		testProgram();
-		// testTextPic();
+		testWord();
+		//testProgram();
+		
+		//Utils.test();
 	}
 
 	public static void testWord() {
@@ -47,16 +48,31 @@ public class TestEvolver {
 
 		testEvolver.addRandomPopulation(150);
 		int iteration=0;
+		int cataclysmCounter=0;
 		
-		for (int j = 0; j < 5000; j++) {
+		long realStart = System.nanoTime();
+		long startTime =0, endTime = 0, duration = 0;
+		
+		for (int j = 0; j < 50000; j++) {
+			startTime = System.nanoTime();
 			for (int i = 0; i < 100; i++) {
 				testEvolver.doOneCycle();
 				iteration++;
+				cataclysmCounter++;
 			}
-			
-			System.out.print("iteration: " + iteration + "  ");
+			endTime = System.nanoTime();
+			duration = (endTime-startTime);
+			long totalTime = (endTime - realStart) / (1000000000);
+			System.out.print("iteration: " + iteration + "  Time in ms: " + (duration/1000000) + " total:" + totalTime);
 			testEvolver.report();
 			
+			// Cataclysmic event!
+			if (cataclysmCounter>1000)
+			{
+				cataclysmCounter=0;
+				testEvolver.reduceSetTo(50);
+				testEvolver.addRandomPopulation(100);
+			}
 		}
 
 		System.out.print("END ");

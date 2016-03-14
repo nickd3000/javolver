@@ -1,6 +1,10 @@
 package evo;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptEngine;
@@ -49,6 +53,7 @@ public class Evolver {
 	
 	public void doOneCycle()
 	{
+		//scoreGenesParallel(genePool);
 		scoreGenes(genePool);
 		//cullHalf();
 	
@@ -62,17 +67,18 @@ public class Evolver {
 		
 		for (int i=0;i<genePool.size()-1;i++)
 		{
-			IGene g1 = tournamentSelection(genePool, 30);
-			IGene g2 = tournamentSelection(genePool, 30);
+			IGene g1 = tournamentSelection(genePool, 0.1);
+			IGene g2 = tournamentSelection(genePool, 0.1);
 			
 			//IGene g1 = rouletteSelection(genePool);
 			//IGene g2 = rouletteSelection(genePool);
 			
 			brood.clear();
-			for (int j=0;j<15;j++)
+			for (int j=0;j<2;j++)
 			{
 				brood.add(breed(g1,g2));
 			}
+			//scoreGenesParallel(brood);
 			scoreGenes(brood);
 			newGenePool.add(findBestScoringGene(brood));
 		}
@@ -140,6 +146,37 @@ public class Evolver {
 		}
 	}
 	
+	public void scoreGenesParallel(ArrayList<IGene> pool)
+	{
+		
+		ExecutorService executorService = Executors.newFixedThreadPool(2);
+
+		//System.out.println("Starting threads...");
+		
+		for (IGene gene : pool)
+		{
+			//if (executorService.
+			executorService.submit(new Runnable() {
+			    public void run() {
+			        //System.out.println("Asynchronous task");
+			        gene.calculateScore();
+			    }
+			});
+		}
+		
+		executorService.shutdown();
+		
+		try {
+			if (!executorService.awaitTermination(3, TimeUnit.SECONDS))
+				System.out.println("Timout elapsed");
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+				
+		
+	}
+	
 	
 	/***
 	 * Select a pair of genes, mate them and add the children to the pool.
@@ -182,14 +219,19 @@ public class Evolver {
 	
 	/**
 	 * Return the fittest individual from a pool, from a random selection.
+	 * @param	pool				The pool of genes to select from.
+	 * @param	tournamentSize	0..1 value, percentage of pool to include in tournament
+	 * @return					The winner of the tournament
 	 */
-	public IGene tournamentSelection(ArrayList<IGene> pool, int tournamentSize)
+	public IGene tournamentSelection(ArrayList<IGene> pool, double tournamentSize)
 	{
 		int poolSize = pool.size();
 		float maxScore = -1000;
 		IGene currentWinner = null;
 		
-		for (int i=0;i<tournamentSize;i++)
+		int tSize = (int)(tournamentSize*(double)poolSize);
+		
+		for (int i=0;i<tSize;i++)
 		{
 			IGene contender = getRandomIndividual(pool);
 			if (contender.getScore()>maxScore)
@@ -270,7 +312,7 @@ public class Evolver {
 			
 			IGene cpy = this.rouletteSelection(genePool);
 			
-			NewGenePool.add(cpy);
+			if (cpy!=null) NewGenePool.add(cpy);
 		}
 		
 		// Switch over.

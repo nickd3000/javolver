@@ -37,7 +37,7 @@ public class GeneWord implements IGene {
 	public void calculateScore() {
 		age++;
 		if (scored==true) return;
-			
+		
 		String targetWord = "GENETICS";
 		float theScore = 0.0f;
 		for (int i=0;i<targetWord.length();i++)
