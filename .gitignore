@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 # Created by https://www.gitignore.io/api/eclipse,java,maven
 
@@ -49,6 +50,8 @@ local.properties
 
 
 ### Java ###
+=======
+>>>>>>> 3f3fd00a30e758356d32b09f310b05d0686bf951
 *.class
 
 # Mobile Tools for Java (J2ME)
@@ -61,6 +64,7 @@ local.properties
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+<<<<<<< HEAD
 
 
 ### Maven ###
@@ -84,3 +88,5 @@ buildNumber.properties
 /bin/
 /bin/
 /bin/
+=======
+>>>>>>> 3f3fd00a30e758356d32b09f310b05d0686bf951
