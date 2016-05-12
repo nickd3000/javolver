@@ -11,14 +11,14 @@ import javax.script.ScriptException;
 
 
 
-public class Evolver2 {
+public class Javolver {
 
 	
 	private ArrayList<Individual> genePool = new ArrayList<>();
 	private Individual proto; // Copy of type of chromosome we will use.
 
 	
-	public Evolver2(Individual proto)
+	public Javolver(Individual proto)
 	{
 		this.proto = proto;
 		//init();

@@ -20,7 +20,7 @@ public class TestEvolver {
 
 	public static void testWord() {
 
-		Evolver2 testEvolver = new Evolver2(new CWord());
+		Javolver testEvolver = new Javolver(new CWord());
 
 		testEvolver.increasePopulation(20);
 		
