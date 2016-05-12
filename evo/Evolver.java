@@ -3,7 +3,7 @@ package evo;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
+//import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import javax.script.ScriptEngineManager;
@@ -67,14 +67,14 @@ public class Evolver {
 		
 		for (int i=0;i<genePool.size()-1;i++)
 		{
-			IGene g1 = tournamentSelection(genePool, 0.1);
-			IGene g2 = tournamentSelection(genePool, 0.1);
+			IGene g1 = tournamentSelection(genePool, 0.3);
+			IGene g2 = tournamentSelection(genePool, 0.3);
 			
 			//IGene g1 = rouletteSelection(genePool);
 			//IGene g2 = rouletteSelection(genePool);
 			
 			brood.clear();
-			for (int j=0;j<2;j++)
+			for (int j=0;j<4;j++)
 			{
 				brood.add(breed(g1,g2));
 			}
@@ -214,6 +214,7 @@ public class Evolver {
 		
 		IGene child = g1.createChild(g1, g2);
 		child.mutate();
+		
 		addGene(child);
 	}
 	

@@ -4,9 +4,9 @@ import java.awt.Color;
 
 import evo.*;
 
-import evo.BasicDisplay;
-import evo.Evolver;
-import evo.IGene;
+//import evo.BasicDisplay;
+//import evo.Evolver;
+//import evo.IGene;
 
 public class TestEvolver {
 
@@ -15,32 +15,28 @@ public class TestEvolver {
 		//testTree();
 		testWord();
 		//testProgram();
-		
 		//Utils.test();
 	}
 
 	public static void testWord() {
 
-		// Create the evolver:
-		Evolver testEvolver = new Evolver(new GeneWord());
+		Evolver2 testEvolver = new Evolver2(new CWord());
 
-		//GeneWord adam = new GeneWord();
-		//adam.word = "PEFNTISD"; // Target word is GENETICS
-		//testEvolver.addGene(adam);
-		testEvolver.addRandomPopulation(100);
+		testEvolver.increasePopulation(10);
 		
 		for (int j = 0; j < 50; j++) {
-			for (int i = 0; i < 10; i++) {
+			
+			for (int i = 0; i < 1; i++) {
 				testEvolver.doOneCycle();
 			}
-			// testEvolver.cullHalf();
+			
 			testEvolver.report();
-
 		}
 
 		System.out.print("END ");
 	}
 	
+	/*
 	public static void testProgram() {
 
 		// Create the evolver:
@@ -67,7 +63,7 @@ public class TestEvolver {
 			testEvolver.report();
 			
 			// Cataclysmic event!
-			if (cataclysmCounter>1000)
+			if (cataclysmCounter>100)
 			{
 				cataclysmCounter=0;
 				testEvolver.reduceSetTo(50);
@@ -77,7 +73,9 @@ public class TestEvolver {
 
 		System.out.print("END ");
 	}
+	*/
 	
+	/*
 	public static void testTextPic() {
 		
 		
@@ -99,30 +97,35 @@ public class TestEvolver {
 		disp.close();
 
 	}
-
+*/
+	
+	/*
 	public static void testTree() {
 		BasicDisplay disp = new BasicDisplay(800, 400);
 		// disp.drawLine(20,200,200,20);
 
+		int popTargetSize=200;
+		
 		System.out.print("START");
 		for (int n = 0; n < 500; n++) {
 			// Create the evolver:
 			Evolver testEvolver = new Evolver(new GeneTree());
 
-			testEvolver.addRandomPopulation(100);
+			testEvolver.addRandomPopulation(popTargetSize);
 			
-			/*
-			GeneTree adam = null;
-			for (int i = 0; i < 1000; i++) {
-				adam = new GeneTree();
-				adam.init();
-				testEvolver.addGene(adam);
-			}*/
-
+		
+			int iteration=0;
+			int cataclysmCounter=0;
+			
+			
 			for (int j = 0; j < 500000000; j++) {
 				for (int i = 0; i < 1; i++) {
 					testEvolver.doOneCycle();
+					iteration++;
+					cataclysmCounter++;
+					
 				}
+				
 				// testEvolver.cullHalf();
 				if (testEvolver.getGenePool().size() < 1)
 					continue;
@@ -149,12 +152,20 @@ public class TestEvolver {
 				disp.refresh();
 				//
 
-				System.out.print("---\n");
+				System.out.println("Iterations "+iteration);
+				
+				// Cataclysmic event!
+				if (cataclysmCounter>200)
+				{
+					cataclysmCounter=0;
+					testEvolver.reduceSetTo(50);
+					testEvolver.addRandomPopulation(popTargetSize-50);
+				}
 			}
 			System.out.print("END");
 		}
 
 	}
-
+*/
 
 }

@@ -5,12 +5,15 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 import evo.BasicDisplay;
+import evo.Chromosome;
 import evo.IGene;
 
 
 public class GeneTree implements IGene {
 
-	public float dna[];
+	public Chromosome dna = new Chromosome();
+	//public float dna[];
+	
 	public int dnaLength = 10;
 	static int VAL_trunkScale = 0; // How much the next segment is scaled by.
 	static int VAL_trunkAngle = 1;
@@ -22,8 +25,8 @@ public class GeneTree implements IGene {
 	static int VAL_branch2Angle = 7;
 	int age = 0;
 	// Lists of points used when scoring tree.
-	ArrayList<Point2D.Float> leafPoints = null;
-	ArrayList<Point2D.Float> branchPoints = null;
+	ArrayList<Point2D.Double> leafPoints = null;
+	ArrayList<Point2D.Double> branchPoints = null;
 	int branchCount = 0;
 	boolean scored = false;
 	
@@ -43,30 +46,33 @@ public class GeneTree implements IGene {
 	public void clampValues()
 	{
 		
-		float max = 0.86f;
-		float bam = 10.0f;
-		if (dna[VAL_trunkScale]>max) dna[VAL_trunkScale]=max;
-		if (dna[VAL_branch1Scale]>max) dna[VAL_branch1Scale]=max;
-		if (dna[VAL_branch2Scale]>max) dna[VAL_branch2Scale]=max;
-		if (dna[VAL_branch1Pos]>1.0f) dna[VAL_branch1Pos]=1.0f;
-		if (dna[VAL_branch2Pos]>1.0f) dna[VAL_branch2Pos]=1.0f;
-		if (dna[VAL_branch1Pos]<0.0f) dna[VAL_branch1Pos]=0.0f;
-		if (dna[VAL_branch2Pos]<0.0f) dna[VAL_branch2Pos]=0.0f;
-		if (dna[VAL_branch1Angle]<0.10f) dna[VAL_branch1Angle]=0.10f;
-		if (dna[VAL_branch2Angle]<0.10f) dna[VAL_branch2Angle]=0.10f;
-		if (dna[VAL_branch1Angle]>bam) dna[VAL_branch1Angle]=bam;
-		if (dna[VAL_branch2Angle]>bam) dna[VAL_branch2Angle]=bam;
-		if (dna[VAL_trunkAngle]>1.0f) dna[VAL_trunkAngle]=1.0f;
-		if (dna[VAL_trunkAngle]<-1.0f) dna[VAL_trunkAngle]=-1.0f;
+		double max = 0.86f;
+		double bam = 10.0f;
+		if (dna.get(VAL_trunkScale)>max) dna.set(VAL_trunkScale,max);
+		if (dna.get(VAL_branch1Scale)>max) dna.set(VAL_branch1Scale,max);
+		if (dna.get(VAL_branch2Scale)>max) dna.set(VAL_branch2Scale,max);
+		if (dna.get(VAL_branch1Pos)>1.0f) dna.set(VAL_branch1Pos,1.0);
+		if (dna.get(VAL_branch2Pos)>1.0f) dna.set(VAL_branch2Pos,1.0);
+		if (dna.get(VAL_branch1Pos)<0.0f) dna.set(VAL_branch1Pos,0.0);
+		if (dna.get(VAL_branch2Pos)<0.0f) dna.set(VAL_branch2Pos,0.0);
+		if (dna.get(VAL_branch1Angle)<0.10f) dna.set(VAL_branch1Angle,0.10);
+		if (dna.get(VAL_branch2Angle)<0.10f) dna.set(VAL_branch2Angle,0.10);
+		if (dna.get(VAL_branch1Angle)>bam) dna.set(VAL_branch1Angle,bam);
+		if (dna.get(VAL_branch2Angle)>bam) dna.set(VAL_branch2Angle,bam);
+		if (dna.get(VAL_trunkAngle)>1.0f) dna.set(VAL_trunkAngle,1.0);
+		if (dna.get(VAL_trunkAngle)<-1.0f) dna.set(VAL_trunkAngle,-1.0);
 		
 	}
 	
 	@Override
 	public void init() {
-		dna = new float[dnaLength];
+		//dna = new float[dnaLength];
+		dna.getDna().clear();
+		for (int i=0;i<dnaLength;i++) dna.add(0.0);
+		
 		randomise();
-		leafPoints = new ArrayList<Point2D.Float>();
-		branchPoints = new ArrayList<Point2D.Float>();
+		leafPoints = new ArrayList<Point2D.Double>();
+		branchPoints = new ArrayList<Point2D.Double>();
 		
 		branchPoints.ensureCapacity(5000);
 		//generation = 0;
@@ -74,17 +80,13 @@ public class GeneTree implements IGene {
 
 	@Override
 	public void mutate() {
-		/*
-		int id = (int)((float)(dnaLength) * Math.random());
-		float amount = ((float)Math.random()-0.5f) * 0.1f;
-		dna[id] += amount;
-		clampValues();
-		*/
-		float scale = 0.001f;
-		scale = (float) Math.random() * 10.0f; //10.125f;
+
+		double scale = 0.01;
+		scale =  Math.random() * 10.0; //10.125f;
 		for (int i=0;i<VAL_branch2Angle;i++)
 		{
-			dna[i] = (float) (dna[i] + ((Math.random()-0.5f)*scale));
+			if (Math.random()<0.3)
+				dna.set(i, (dna.get(i) + ((Math.random()-0.5)*scale)));
 		}
 		clampValues();
 	}
@@ -92,10 +94,10 @@ public class GeneTree implements IGene {
 	@Override
 	public void calculateScore() {
 		
-		float scaleHeight = 0.001f;
-		float scaleAverageDist=0.1f;
-		float scaleLeafBonus=0.1f;
-		float leafCost=0.01f;
+		double scaleHeight = 0.001f;
+		double scaleAverageDist=0.1f*0.1f;
+		double scaleLeafBonus=0.1f;
+		double leafCost=0.05f*1.0f;
 		
 		age++;
 		
@@ -108,10 +110,10 @@ public class GeneTree implements IGene {
 		
 		int numLeaves = leafPoints.size();
 		
-		float maxLeafHeight = 0;
-		float minLeafHeight = 0;
+		double maxLeafHeight = 0;
+		double minLeafHeight = 0;
 		int numLeavesBelowGround = 0;
-		for (Point2D.Float h : leafPoints)
+		for (Point2D.Double h : leafPoints)
 		{
 			if (h.y>maxLeafHeight) maxLeafHeight = h.y;
 			if (h.y<minLeafHeight) minLeafHeight = h.y;
@@ -120,31 +122,33 @@ public class GeneTree implements IGene {
 		
 		score -= numLeavesBelowGround * 0.1f;
 		
-		float idealDiff = Math.abs(maxLeafHeight - 300.0f);
+		double idealDiff = Math.abs(maxLeafHeight - 300.0f);
 		if (idealDiff<100.0f)
 		{
 			score += ((100.0f - idealDiff)/100.0f) * scaleHeight;
 		}
 		
-		float totalDist = 0.0f;
-		float totalMaxDist = 0.0f;
+		double totalDist = 0.0f;
+		double totalMaxDist = 0.0f;
 		//for (Point2D.Float l1 : leafPoints)
 		for (int i=0;i<numLeaves;i++)
 		{
-			Point2D.Float l1 = leafPoints.get(i);
-			float minDist = 500.0f;
-			float maxDist = 0.0f;
+			Point2D.Double l1 = leafPoints.get(i);
+			double minDist = 500.0f;
+			double maxDist = 0.0f;
+			double minXDist = 100.0f;
 			//for (Point2D.Float l2 : leafPoints)
 			for (int j=0;j<numLeaves;j++)
 			{
 				if (i==j) continue;
 				
-				Point2D.Float l2 = leafPoints.get(j);
-				float dx = l1.x-l2.x;
-				float dy = l1.y-l2.y;
-				float d = (float) Math.sqrt((double)((dx*dx)+(dy*dy)));
+				Point2D.Double l2 = leafPoints.get(j);
+				double dx = l1.x-l2.x;
+				double dy = l1.y-l2.y;
+				double d =  Math.sqrt((double)((dx*dx)+(dy*dy)));
 				if (d<minDist) minDist = d;
 				if (d>maxDist) maxDist = d;
+				if (Math.abs(dx)<minXDist) minXDist = Math.abs(dx);
 			}	 
 			totalDist+=minDist;
 			totalMaxDist+=maxDist;
@@ -155,6 +159,9 @@ public class GeneTree implements IGene {
 			if (minDist<=0.50f)
 				score-=0.001f;
 			
+			// Add points for not being in shadow.
+			if (minXDist>10) score+=leafCost*1;
+			
 			score-=leafCost;
 		}
 		
@@ -163,8 +170,8 @@ public class GeneTree implements IGene {
 		
 		
 		// Favour large branch angles.
-		score += dna[VAL_branch1Angle]*0.002;
-		score += dna[VAL_branch2Angle]*0.002;
+		score += dna.get(VAL_branch1Angle)*0.002;
+		score += dna.get(VAL_branch2Angle)*0.002;
 		
 		// Bonus for every leaf.
 		score += (float)leafPoints.size()*scaleLeafBonus;
@@ -183,6 +190,12 @@ public class GeneTree implements IGene {
 	public IGene createChild(IGene p1, IGene p2) {
 		
 		GeneTree child = new GeneTree();
+		child.dna = ((GeneTree)p1).dna.crossover(((GeneTree)p2).dna, 4);
+		child.init();
+		return child;
+		
+		/*
+		GeneTree child = new GeneTree();
 		child.init();
 		
 		boolean side=false;
@@ -200,6 +213,7 @@ public class GeneTree implements IGene {
 		child.generation = Math.max(p1.getGeneration(), p2.getGeneration()) + 1;
 		
 		return child;
+		*/
 	}
 
 	@Override
@@ -211,9 +225,9 @@ public class GeneTree implements IGene {
 		StringBuilder sb = new StringBuilder(200);
 		sb.append(String.format("Score:%f Gen:%d \n", score, generation));
 		
-		sb.append(String.format("TRS:%.2f TRA:%.2f  --  ", dna[VAL_trunkScale],dna[VAL_trunkAngle]));
-		sb.append(String.format("B1P:%.2f B1S:%.2f B1A:%.2f  --  ", dna[VAL_branch1Pos],dna[VAL_branch1Scale],dna[VAL_branch1Angle]));
-		sb.append(String.format("B2P:%.2f B2S:%.2f B2A:%.2f ", dna[VAL_branch2Pos],dna[VAL_branch2Scale],dna[VAL_branch2Angle]));
+		sb.append(String.format("TRS:%.2f TRA:%.2f  --  ", dna.get(VAL_trunkScale),dna.get(VAL_trunkAngle)));
+		sb.append(String.format("B1P:%.2f B1S:%.2f B1A:%.2f  --  ", dna.get(VAL_branch1Pos),dna.get(VAL_branch1Scale),dna.get(VAL_branch1Angle)));
+		sb.append(String.format("B2P:%.2f B2S:%.2f B2A:%.2f ", dna.get(VAL_branch2Pos),dna.get(VAL_branch2Scale),dna.get(VAL_branch2Angle)));
 				
 		
 		
@@ -234,71 +248,63 @@ public class GeneTree implements IGene {
 	public void draw(BasicDisplay disp, float offsx, float offsy)
 	{
 
-		
 		int numPoints = branchPoints.size();
 		//float offsx = 200.0f;
 		//float offsy = 350.0f;
 		for (int i=0;i<numPoints;i+=2)
 		{
-			float x1 = branchPoints.get(i).x + offsx;
-			float y1 = offsy - branchPoints.get(i).y;
-			float x2 = branchPoints.get(i+1).x + offsx;
-			float y2 = offsy - branchPoints.get(i+1).y;
+			double x1 = branchPoints.get(i).x + offsx;
+			double y1 = offsy - branchPoints.get(i).y;
+			double x2 = branchPoints.get(i+1).x + offsx;
+			double y2 = offsy - branchPoints.get(i+1).y;
 			
-			float dx = x1-x2;
-			float dy = y1-y2;
-			float d = (float) Math.sqrt((dx*dx)+(dy*dy));
-			float thickness = 1+((d*d)/500.0f);
+			double dx = x1-x2;
+			double dy = y1-y2;
+			double d = (double) Math.sqrt((dx*dx)+(dy*dy));
+			double thickness = 1+((d*d)/500.0f);
 			disp.drawLine(x1, y1, x2, y2, col_wood, thickness);
 		}
 		
 		for (int i=0;i<leafPoints.size();i++)
 		{
-			float x = offsx + leafPoints.get(i).x;
-			float y = offsy - leafPoints.get(i).y;
+			double x = offsx + leafPoints.get(i).x;
+			double y = offsy - leafPoints.get(i).y;
 			disp.drawCircle(x, y, 7, col_leaf);
 		}
 	}
 	
-	public void tree(float x, float y, float len, float angle)
+	public void tree(double x, double y, double len, double angle)
 	{
 		branchCount ++;
 		//if (branchCount>4000) return;
 		
-		
-		if (len<25.0f)
+		if (len<23.0) //25
 		{
 			// Record leaf point and exit iteration.
-			Point2D.Float leafPos = new Point2D.Float(x,y);
+			Point2D.Double leafPos = new Point2D.Double(x,y);
 			leafPoints.add(leafPos);
 			return;
 		}
-
-		
-
 			
-		float x2 = (float) (x + Math.sin((double)angle) * len);
-		float y2 = (float) (y + Math.cos((double)angle) * len);
+		double x2 = (float) (x + Math.sin((double)angle) * len);
+		double y2 = (float) (y + Math.cos((double)angle) * len);
 
-		float br1x = (float) (x + Math.sin((double)angle) * (len*dna[VAL_branch1Pos]));
-		float br1y = (float) (y + Math.cos((double)angle) * (len*dna[VAL_branch1Pos]));
+		double br1x = (float) (x + Math.sin((double)angle) * (len*dna.get(VAL_branch1Pos)));
+		double br1y = (float) (y + Math.cos((double)angle) * (len*dna.get(VAL_branch1Pos)));
 		
-		float br2x = (float) (x + Math.sin((double)angle) * (len*dna[VAL_branch2Pos]));
-		float br2y = (float) (y + Math.cos((double)angle) * (len*dna[VAL_branch2Pos]));
+		double br2x = (float) (x + Math.sin((double)angle) * (len*dna.get(VAL_branch2Pos)));
+		double br2y = (float) (y + Math.cos((double)angle) * (len*dna.get(VAL_branch2Pos)));
 
 		
 		// Record position for later scoring.
-		Point2D.Float branchPos = new Point2D.Float(x,y);
+		Point2D.Double branchPos = new Point2D.Double(x,y);
 		branchPoints.add(branchPos);
-		branchPos = new Point2D.Float(x2,y2);
+		branchPos = new Point2D.Double(x2,y2);
 		branchPoints.add(branchPos);
 
-
-		
-		tree(x2,y2,len*dna[VAL_trunkScale],angle+dna[VAL_trunkAngle]);
-		tree(br1x,br1y,len*dna[VAL_branch1Scale],angle-dna[VAL_branch1Angle]);
-		tree(br2x,br2y,len*dna[VAL_branch2Scale],angle+dna[VAL_branch2Angle]);
-		
+		tree(x2,y2,len*dna.get(VAL_trunkScale),angle+dna.get(VAL_trunkAngle));
+		tree(br1x,br1y,len*dna.get(VAL_branch1Scale),angle-dna.get(VAL_branch1Angle));
+		tree(br2x,br2y,len*dna.get(VAL_branch2Scale),angle+dna.get(VAL_branch2Angle));
 		
 	}
 
@@ -309,14 +315,12 @@ public class GeneTree implements IGene {
 
 	@Override
 	public boolean canMate(IGene partner, boolean excludeSimilar) {
-		
-		
-		
+
 		float diff = 0.0f;
 		
 		for (int i=0;i<VAL_branch2Angle;i++)
 		{
-			diff += Math.abs(dna[i]-((GeneTree)partner).dna[i]);
+			diff += Math.abs(dna.get(i)-((GeneTree)partner).dna.get(i));
 		}
 		
 		//if (excludeSimilar==true && diff<0.10f) return false;
@@ -337,7 +341,7 @@ public class GeneTree implements IGene {
 	public void randomise() {
 		for (int i=0;i<dnaLength;i++)
 		{
-			dna[i] = (float)Math.random();
+			dna.set(i, (Math.random()-0.5)*2.0);
 		}
 		clampValues();
 	}

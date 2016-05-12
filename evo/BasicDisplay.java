@@ -56,21 +56,21 @@ public class BasicDisplay extends JFrame {
         g.drawLine((int)x1,(int)y1,(int)x2,(int)y2);
         g.dispose();
 	}
-	public void drawLine(float x1, float y1, float x2, float y2, Color c, float thickness)
+	public void drawLine(double x1, double y1, double x2, double y2, Color c, double thickness)
 	{
 		Graphics g = img.getGraphics();
 		Graphics2D g2d = (Graphics2D)g;
 		
 		//g.setColor(c);
 		g2d.setColor(c);
-		g2d.setStroke(new BasicStroke(thickness));
+		g2d.setStroke(new BasicStroke((float)thickness));
 		g2d.drawLine((int)x1,(int)y1,(int)x2,(int)y2);
 		g2d.dispose();
 		
         //g.drawLine((int)x1,(int)y1,(int)x2,(int)y2);
         g.dispose();
 	}
-	public void drawCircle(float x, float y, float r, Color c)
+	public void drawCircle(double x, double y, double r, Color c)
 	{
 		Graphics g = img.getGraphics();
 		g.setColor(c);

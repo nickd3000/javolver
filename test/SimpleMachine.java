@@ -4,6 +4,8 @@ public class SimpleMachine {
 
 	public final int memSize = 256;
 	public int [] memory = new int[memSize];
+	public int [] memoryHits = new int[memSize];
+	public int maxMemoryHits = 0;
 	public String console = "";
 	int pc = 0; // program counter.
 	int cmp = 0; // comparison flag. (0:equal 1:greater 2:less)
@@ -35,7 +37,10 @@ public class SimpleMachine {
 		int tmp = 0;
 		
 		if (pc>memSize-4) return 1; // quit due to being out of bounds.
-			
+		
+		memoryHits[pc]++;
+		if (memoryHits[pc]>maxMemoryHits) maxMemoryHits=memoryHits[pc];
+		
 		switch (operator)
 		{
 		case NO_OP: pc++; break;
@@ -77,4 +82,9 @@ public class SimpleMachine {
 		console = console + (char)i;
 	}
 	
+	public int getMaxHits()
+	{
+		
+		return maxMemoryHits;
+	}
 }

@@ -14,9 +14,11 @@ public class GeneProgram implements IGene {
 	int age = 0;
 	public String targetWord = "GENETICS";
 	double cyclePenalty = 0.0; // number of cycles involved in running program.
-	
+	double scorePenalty = 0;
 	public ArrayList<Integer> dna = new ArrayList<Integer>();
 	String consoleOutput = "";
+	
+	public double location = 0;
 	
 	@Override
 	public void init() {
@@ -30,6 +32,8 @@ public class GeneProgram implements IGene {
 			else
 				dna.add((int)(Math.random()*255.0));
 		}
+		
+		location = Math.random();
 	}
 
 	@Override
@@ -40,26 +44,34 @@ public class GeneProgram implements IGene {
 
 	@Override
 	public void mutate() {
-		double mutationChance=0.001; // 0..1 value - higher means more chance of mutation.
-		double bigMutationChance=0.001; // 0..1 value - higher means more chance of mutation.
-		for (int i=0;i<dna.size();i++)
+		//double mutationChance=0.8; // 0..1 value - higher means more chance of mutation.
+		double bigMutationChance=0.2; // 0..1 value - higher means more chance of mutation.
+		
+		double mutationPercent = 0.25;
+		int numMutations = (int)(dna.size()*mutationPercent);
+		
+		for (int m=0;m<numMutations;m++)
 		{
+			int i = (int)(dna.size()*Math.random());
+		
 			// Mutate slightly
-			if (Math.random()<mutationChance) {
+			if (Math.random()>bigMutationChance) {
 				int bit = dna.get(i);
-				bit += (int)((Math.random()-0.5)*6.0);
+				bit += (int)((Math.random()-0.5)*8.0);
 				if (bit<0) bit=0;
 				if (bit>255) bit=255;
 				dna.set(i, bit);
+			}else{
+			
+				// Completely mutate.
+				if (Math.random()<bigMutationChance) dna.set(i, (int)(Math.random()*255.0));
 			}
 			
-			// Completely mutate.
-			if (Math.random()<bigMutationChance) dna.set(i, (int)(Math.random()*255.0));
 		}
 		
-		if (Math.random()<0.1) dna = mutateInsert(dna);
-		if (Math.random()<0.1) dna = mutateDelete(dna);
-		for (int i=0;i<1;i++) dna = mutateSwap(dna);
+		if (Math.random()<0.3) dna = mutateInsert(dna);
+		if (Math.random()<0.3) dna = mutateDelete(dna);
+		for (int j=0;j<3;j++) dna = mutateSwap(dna);
 	}
 	
 	public ArrayList<Integer> mutateInsert(ArrayList<Integer> d)
@@ -70,7 +82,8 @@ public class GeneProgram implements IGene {
 		{
 			int pos = i;
 			if (i>skip) pos=i+1;
-			nd.set(pos, d.get(i));
+			if (i==skip) nd.set(pos, 0);
+			else nd.set(pos, d.get(i));
 			
 		}
 			
@@ -85,7 +98,8 @@ public class GeneProgram implements IGene {
 		{
 			int pos = i;
 			if (i>skip) pos=i+1;
-			nd.set(i, d.get(pos));
+			if (i==skip) nd.set(i, 0);
+			else 	nd.set(i, d.get(pos));
 			
 		}
 			
@@ -118,13 +132,18 @@ public class GeneProgram implements IGene {
 			sm.memory[i] = d.get(i);
 		}
 		
-		
-		int maxCycles = 500;
+		scorePenalty = 0;
+		int maxCycles = 200;
 		int cycleCount = 0;
 		for (int i=0;i<maxCycles; i++)
 		{
-			int result = sm.runCycle();
 			cycleCount++;
+			int result = sm.runCycle();
+			if (sm.getMaxHits()>10) {
+				scorePenalty = 20;
+				break;
+			}
+				
 			if (result==1) break;
 		}
 		
@@ -174,6 +193,9 @@ public class GeneProgram implements IGene {
 		
 		if (cyclePenalty<0.01) score*=0.1f;
 		if (cyclePenalty>0.8) score*=0.8f;
+		
+		score-=scorePenalty;
+				
 	}
 
 	@Override
@@ -190,12 +212,22 @@ public class GeneProgram implements IGene {
 		ArrayList<Integer> DNA3 = new ArrayList<Integer>(DNA2);
 		//char[] chars = DNA3.toCharArray();
 		
+		boolean[] crossPoints = new boolean [DNA1.size()];
+		int numCrossoverPoints=10;
+		for (int i=0;i<crossPoints.length;i++) crossPoints[i]=false;
+		
+		// Calculate requested number of crossover points.
+		for (int i=0;i<numCrossoverPoints;i++)
+		{
+			crossPoints[(int)(Math.random()*(double)DNA1.size())]=true;
+		}
+		
 		boolean side = Math.random()<0.5?false:true;
-		int switchPosition = (int)(Math.random()*(double)DNA1.size());
+		
 		for (int i=0;i<DNA1.size();i++)
 		{
 			//if (Math.random()<0.01) { // Randomly switch side.
-			if (i==switchPosition || Math.random()<0.1) {
+			if (crossPoints[i]) {
 				if (side==true) side=false;
 				else side = true;
 			}
@@ -210,19 +242,22 @@ public class GeneProgram implements IGene {
 		child.dna = DNA3;
 		
 		child.generation = Math.max(p1.getGeneration(), p2.getGeneration()) + 1;
-				
+		
+		child.location = (((GeneProgram)p1).location+((GeneProgram)p2).location)/2.0;
+		
 		return child;
 	}
 
 	float getScoreForCharacter(char a, char b)
 	{
-		int maxDiff = 5;
+		int maxDiff = 20;
 		int diff = Math.abs(a-b);
 		if (diff>maxDiff) return 0.0f;
 		float s = ((maxDiff-diff)/(float)maxDiff);
 		
-		if (diff<2) s*=2.0f;
-		if (diff<1) s*=5.0f;
+		if (diff<3) s*=2.0f;
+		if (diff<2) s*=5.0f;
+		if (diff==0) s*=5.0f;
 		
 		
 		return s;
@@ -248,8 +283,20 @@ public class GeneProgram implements IGene {
 
 	@Override
 	public boolean canMate(IGene partner, boolean excludeSimilar) {
-		// TODO Auto-generated method stub
-		return true;
+
+		// Compare dna
+		int differences = 0;
+		for (int i=0;i<this.dna.size();i++)
+		{
+			if (this.dna.get(i)!=((GeneProgram)partner).dna.get(i)) differences++;
+		}
+		
+		if (differences<3) return false;
+		
+		double distance = Math.abs(this.location-((GeneProgram)partner).location);
+		if (distance<0.5) return true;
+		
+		return false;
 	}
 
 
