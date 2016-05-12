@@ -1,4 +1,4 @@
-package evo;
+package javolver;
 
 import java.util.ArrayList;
 import javax.script.ScriptEngineManager;
@@ -29,6 +29,27 @@ public class Evolver2 {
 		//genePool = new ArrayList<Individual>();
 	}
 	
+	public double getBestScore() {
+		return findBestScoringGene(genePool).getScore();
+	}
+	
+	public void runUntilMaximum() {
+		
+		double previousBestScore = 0;
+		int runOfNoImprovements = 0;
+		int i=0;
+		for (i=0;i<100;i++) {
+			doOneCycle();
+			double s = getBestScore();
+			double imp = previousBestScore-s;
+			previousBestScore = s;
+			if (imp<0.1) runOfNoImprovements++;
+			else runOfNoImprovements=0;
+			if (runOfNoImprovements>50) break;
+		}
+		System.out.println("Iterations: " + i + " result:" + findBestScoringGene(genePool).toString());
+	}
+	
 	
 	/**
 	 * Add a number of randomly initialized genes to the population, until it reaches specified size.
@@ -50,7 +71,6 @@ public class Evolver2 {
 	
 	public void doOneCycle()
 	{
-
 		scoreGenes(genePool);
 		//cullHalf();
 	
@@ -59,32 +79,30 @@ public class Evolver2 {
 		newGenePool = new ArrayList<Individual>();
 		brood = new ArrayList<Individual>();
 		
-		// Elitism.
+		// Elitism - keep the best individual in the new pool.
 		newGenePool.add(findBestScoringGene(genePool));
 		
 		for (int i=0;i<genePool.size()-1;i++)
 		{
-			Individual g1 = tournamentSelection(genePool, 0.3);
-			Individual g2 = tournamentSelection(genePool, 0.3);
+			//Individual g1 = tournamentSelection(genePool, 0.3);
+			//Individual g2 = tournamentSelection(genePool, 0.3);
 			
-			//IGene g1 = rouletteSelection(genePool);
-			//IGene g2 = rouletteSelection(genePool);
+			Individual g1 = rouletteSelection(genePool);
+			Individual g2 = rouletteSelection(genePool);
 			
 			brood.clear();
 			for (int j=0;j<4;j++)
 			{
 				brood.add(breed(g1,g2));
 			}
-			//scoreGenesParallel(brood);
+			
 			scoreGenes(brood);
 			newGenePool.add(findBestScoringGene(brood));
 		}
 		
 		// Copy new pool over main pool.
 		genePool = newGenePool;
-		
-		
-		
+
 	}
 	
 	public void report()
@@ -99,7 +117,7 @@ public class Evolver2 {
 	{
 		for (Individual gene : pool)
 		{
-			gene.calculateScore();
+			gene.getScore();
 		}
 	}
 	

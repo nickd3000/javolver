@@ -1,7 +1,11 @@
 package test;
 
-import evo.Individual;
+import javolver.Individual;
 
+/**
+ * @author nick
+ * Example individual type that evolves towards the supplied string.
+ */
 public class CWord extends Individual {
 
 	static String targetWord = "ABCDEFGHIJKLMNOP";
@@ -25,24 +29,29 @@ public class CWord extends Individual {
 		return str;
 	}
 	
+	// Compare each character in the string to the target string and return a score.
+	// Each character gets a higher score the closer it is to the target character.
 	public double calculateScore() {
-		score = 0.0;
+		double total = 0.0;
 		
 		for (int i=0;i<targetWord.length();i++)
 		{
-			score += getScoreForCharacter(dna.getChar(i), targetWord.charAt(i));
+			total += getScoreForCharacter(dna.getChar(i), targetWord.charAt(i));
 		}
 		processed = true;
-		return score;
+
+		return total;
 	}
 	
 	
 	// Helper methods
+	// Returns a higher value the closer the characters are.
 	double getScoreForCharacter(char a, char b)
 	{
+		int maxDiff = 15;
 		int diff = Math.abs(a-b);
-		if (diff>10) return 0.0;
-		return (double)((10-diff)/10.0);
+		if (diff>maxDiff) return 0.0;
+		return (double)((maxDiff-diff)/10.0);
 	}
 	
 		

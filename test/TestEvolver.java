@@ -2,7 +2,7 @@ package test;
 
 import java.awt.Color;
 
-import evo.*;
+import javolver.*;
 
 //import evo.BasicDisplay;
 //import evo.Evolver;
@@ -22,16 +22,19 @@ public class TestEvolver {
 
 		Evolver2 testEvolver = new Evolver2(new CWord());
 
-		testEvolver.increasePopulation(10);
+		testEvolver.increasePopulation(20);
 		
+		/*
 		for (int j = 0; j < 50; j++) {
 			
-			for (int i = 0; i < 1; i++) {
+			for (int i = 0; i < 10; i++) {
 				testEvolver.doOneCycle();
 			}
 			
 			testEvolver.report();
-		}
+		}*/
+		
+		testEvolver.runUntilMaximum();
 
 		System.out.print("END ");
 	}
