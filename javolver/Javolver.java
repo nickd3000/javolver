@@ -10,7 +10,14 @@ import javax.script.ScriptException;
 // TODO: add settings to evolver to control mutation rate, breed rate etc.
 
 
-
+/**
+ * Javolver is a simple engine that processes a pool of individuals using genetic selection.
+ * The user must derive a class from the Individual class and supply an object of this derived type to the constructor.
+ * 
+ * @author	Nick Donnelly (Twitter: @nickd3000)
+ * @version	1.0
+ * @since	2016-04-01
+ */
 public class Javolver {
 
 	
@@ -33,6 +40,10 @@ public class Javolver {
 		return findBestScoringIndividual(genePool).getScore();
 	}
 	
+	
+	/**
+	 * experimental function to run the system until improvement slows.
+	 */
 	public void runUntilMaximum() {
 		
 		double previousBestScore = 0;
@@ -229,7 +240,7 @@ public class Javolver {
 	/***
 	 * Return an individual randomly selected from the supplied list of individuals.
 	 * @param	pool	The pool of individuals to select from.
-	 * @returns			Random member of the supplied list.
+	 * @return			Random member of the supplied list.
 	 */
 	public Individual getRandomIndividual(ArrayList<Individual> pool)
 	{
@@ -242,7 +253,7 @@ public class Javolver {
 	/***
 	 * Search the supplied pool of individuals and return the highest scoring one.
 	 * @param	pool	The pool of individuals to select from.
-	 * @returns			Highest scoring member of the supplied list.
+	 * @return			Highest scoring member of the supplied list.
 	 */
 	public Individual findBestScoringIndividual(ArrayList<Individual> pool)
 	{
