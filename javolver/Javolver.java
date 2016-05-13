@@ -8,7 +8,7 @@ import javax.script.ScriptException;
 
 // TODO: add randomize function to igene to make things more explicit
 // TODO: add settings to evolver to control mutation rate, breed rate etc.
-
+// TODO: pass pool to breeding functions, let the function add children to the pool?
 
 /**
  * Javolver is a simple engine that processes a pool of individuals using genetic selection.
@@ -86,6 +86,8 @@ public class Javolver {
 	 * 1. All individuals scoring mechanisms get called.<br>
 	 * 2. The best scoring individual is automatically moved to the next generation.<br>
 	 * 3. A new generation of individuals is created by breeding selected member from the current generation.<br>
+	 * <br>
+	 * The size of the new pool will match the previous generation population.
 	 */
 	public void doOneCycle()
 	{
@@ -97,25 +99,32 @@ public class Javolver {
 		newGenePool = new ArrayList<Individual>();
 		brood = new ArrayList<Individual>();
 		
+		int targetPop = genePool.size();
+		
 		// Elitism - keep the best individual in the new pool.
 		newGenePool.add(findBestScoringIndividual(genePool));
+
 		
-		for (int i=0;i<genePool.size()-1;i++)
+		while (newGenePool.size()<targetPop)
 		{
-			//Individual g1 = tournamentSelection(genePool, 0.3);
-			//Individual g2 = tournamentSelection(genePool, 0.3);
+			Individual g1 = tournamentSelection(genePool, 0.9);
+			Individual g2 = tournamentSelection(genePool, 0.9);
 			
-			Individual g1 = rouletteSelection(genePool);
-			Individual g2 = rouletteSelection(genePool);
+			//Individual g1 = rouletteSelection(genePool);
+			//Individual g2 = rouletteSelection(genePool);
 			
+			Individual child = breed(g1,g2); 
+			newGenePool.add(child);
+			
+			/*
 			brood.clear();
 			for (int j=0;j<4;j++)
 			{
 				brood.add(breed(g1,g2));
-			}
-			
+			}			
 			scoreGenes(brood);
 			newGenePool.add(findBestScoringIndividual(brood));
+			*/
 		}
 		
 		// Copy new pool over main pool.

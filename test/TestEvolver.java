@@ -24,17 +24,16 @@ public class TestEvolver {
 
 		testEvolver.increasePopulation(20);
 		
-		/*
-		for (int j = 0; j < 50; j++) {
-			
-			for (int i = 0; i < 10; i++) {
-				testEvolver.doOneCycle();
-			}
-			
-			testEvolver.report();
-		}*/
 		
-		testEvolver.runUntilMaximum();
+		for (int j = 0; j < 500; j++) {
+			
+			testEvolver.doOneCycle();
+			
+			if ((j%15)==0) // Print report every few iterations.
+				System.out.println(testEvolver.report());
+		}
+		
+		//testEvolver.runUntilMaximum();
 
 		System.out.print("END ");
 	}
