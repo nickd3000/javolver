@@ -30,7 +30,7 @@ public class Javolver {
 	}
 	
 	public double getBestScore() {
-		return findBestScoringGene(genePool).getScore();
+		return findBestScoringIndividual(genePool).getScore();
 	}
 	
 	public void runUntilMaximum() {
@@ -41,18 +41,20 @@ public class Javolver {
 		for (i=0;i<100;i++) {
 			doOneCycle();
 			double s = getBestScore();
-			double imp = previousBestScore-s;
+			double imp = Math.abs(previousBestScore-s);
 			previousBestScore = s;
-			if (imp<0.1) runOfNoImprovements++;
+			if (imp<0.001) runOfNoImprovements++;
 			else runOfNoImprovements=0;
 			if (runOfNoImprovements>50) break;
 		}
-		System.out.println("Iterations: " + i + " result:" + findBestScoringGene(genePool).toString());
+		System.out.println("Iterations: " + i + " result:" + findBestScoringIndividual(genePool).toString());
 	}
 	
 	
 	/**
 	 * Add a number of randomly initialized genes to the population, until it reaches specified size.
+	 * 
+	 * @param	targetCount	The target number of individuals that the population will reach.
 	 */
 	public void increasePopulation(int targetCount)
 	{
@@ -68,7 +70,12 @@ public class Javolver {
 		}
 	}
 	
-	
+	/**
+	 * The main function that does most of the work to evolve the system.<br>
+	 * 1. All individuals scoring mechanisms get called.<br>
+	 * 2. The best scoring individual is automatically moved to the next generation.<br>
+	 * 3. A new generation of individuals is created by breeding selected member from the current generation.<br>
+	 */
 	public void doOneCycle()
 	{
 		scoreGenes(genePool);
@@ -80,7 +87,7 @@ public class Javolver {
 		brood = new ArrayList<Individual>();
 		
 		// Elitism - keep the best individual in the new pool.
-		newGenePool.add(findBestScoringGene(genePool));
+		newGenePool.add(findBestScoringIndividual(genePool));
 		
 		for (int i=0;i<genePool.size()-1;i++)
 		{
@@ -97,7 +104,7 @@ public class Javolver {
 			}
 			
 			scoreGenes(brood);
-			newGenePool.add(findBestScoringGene(brood));
+			newGenePool.add(findBestScoringIndividual(brood));
 		}
 		
 		// Copy new pool over main pool.
@@ -105,14 +112,21 @@ public class Javolver {
 
 	}
 	
-	public void report()
+	/***
+	 * Return a string containing some basic information about the state of the system.
+	 * @return		String containing simple report
+	 */
+	public String report()
 	{
-		Individual best = findBestScoringGene(genePool);
-		
-		System.out.printf("\nNum Genes: %d   ", getGenePool().size());
-		System.out.printf("%s\n",best.toString());
+		Individual best = findBestScoringIndividual(genePool);
+		String retStr = "\nNum Genes: " + genePool.size() + " Best: " + best.toString();
+		return retStr;
 	}
 	
+	/***
+	 * Triggers each individual in the pool to calculate it's score.
+	 * @param	pool	ArrayList of individuals to be scored.
+	 */
 	public void scoreGenes(ArrayList<Individual> pool)
 	{
 		for (Individual gene : pool)
@@ -123,8 +137,10 @@ public class Javolver {
 	
 	
 	/***
-	 * Select a pair of genes, mate them and add the children to the pool.
-	 * 
+	 * Select a pair of genes, mate them and return the new child.
+	 * @param	g1	First parent
+	 * @param	g2	Second parent
+	 * @return		The child
 	 */
 	public Individual breed(Individual g1, Individual g2)
 	{
@@ -156,7 +172,7 @@ public class Javolver {
 	
 	/**
 	 * Return the fittest individual from a pool, from a random selection.
-	 * @param	pool				The pool of genes to select from.
+	 * @param	pool			The pool of individuals to select from.
 	 * @param	tournamentSize	0..1 value, percentage of pool to include in tournament
 	 * @return					The winner of the tournament
 	 */
@@ -183,7 +199,8 @@ public class Javolver {
 	
 	/**
 	 * Select a random gene from the pool weighted towards the fittest individuals.
-	 * @return
+	 * @param 	pool	The pool of individuals to select from.
+	 * @return			The winner of the selection process.
 	 */
 	public Individual rouletteSelection(ArrayList<Individual> pool)
 	{
@@ -209,18 +226,25 @@ public class Javolver {
 	    return null;
 	}
 	
+	/***
+	 * Return an individual randomly selected from the supplied list of individuals.
+	 * @param	pool	The pool of individuals to select from.
+	 * @returns			Random member of the supplied list.
+	 */
 	public Individual getRandomIndividual(ArrayList<Individual> pool)
 	{
 		int id = (int)((float)(pool.size()-1) * Math.random());
 		return pool.get(id);
 	}
 	
-	public void addGene(Individual newGene)
-	{
-		getGenePool().add(newGene);
-	}
+
 	
-	public Individual findBestScoringGene(ArrayList<Individual> pool)
+	/***
+	 * Search the supplied pool of individuals and return the highest scoring one.
+	 * @param	pool	The pool of individuals to select from.
+	 * @returns			Highest scoring member of the supplied list.
+	 */
+	public Individual findBestScoringIndividual(ArrayList<Individual> pool)
 	{
 		double highestScore = 0.0f;
 		Individual highestGene = pool.get(0);
@@ -235,61 +259,6 @@ public class Javolver {
 		return highestGene;
 	}
 	
-	
-	public void reduceSetTo(int amount)
-	{
-		if (getGenePool().size()<amount) return;
-		ArrayList<Individual> NewGenePool = null;
-		NewGenePool = new ArrayList<Individual>();
-		
-		for (int i=0;i<amount;i++)
-		{
-			//int id = (int)((float)(getGenePool().size()-1) * Math.random());
-			//IGene cpy = getGenePool().get(id);
-			
-			Individual cpy = this.rouletteSelection(genePool);
-			
-			if (cpy!=null) NewGenePool.add(cpy);
-		}
-		
-		// Switch over.
-		setGenePool(NewGenePool);
-	}
-	
-	public float mysteryFunction(float x)
-	{
-		return x*x;
-	}
-	
-	// Not random, selected from list of math characters.
-	public char getRandomCharacter()
-	{
-		String base = "0123456789./+-*()x      ";
-		return base.charAt((int)(Math.random()*base.length()));
-	}
-	
-	public double evaluateString(String str, float x)
-	{
-		ScriptEngineManager mgr = new ScriptEngineManager();
-		ScriptEngine engine = mgr.getEngineByName("JavaScript");
-		String result="";
-		try {
-			result = engine.eval(str).toString();
-		} catch (ScriptException e) {
-			
-			e.printStackTrace();
-		}
-		
-		return new Double(result);
-	}
-
-	public ArrayList<Individual> getGenePool() {
-		return this.genePool;
-	}
-
-	public void setGenePool(ArrayList<Individual> genePool) {
-		this.genePool = genePool;
-	}
 	
 	
 	
