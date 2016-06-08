@@ -4,11 +4,16 @@ import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
-import evo.BasicDisplay;
+/*import evo.BasicDisplay;
 import evo.Chromosome;
 import evo.IGene;
+*/
 
+public class GeneTree
+{
+}
 
+/*
 public class GeneTree implements IGene {
 
 	public Chromosome dna = new Chromosome();
@@ -194,26 +199,7 @@ public class GeneTree implements IGene {
 		child.init();
 		return child;
 		
-		/*
-		GeneTree child = new GeneTree();
-		child.init();
 		
-		boolean side=false;
-		for (int i=0;i<dnaLength;i++)
-		{
-			if (Math.random()<0.25) { // Randomly switch side.
-				if (side==true) side=false;
-				else side = true;
-			}
-			
-			if (side==true) child.dna[i] = ((GeneTree)p1).dna[i];
-			else child.dna[i] = ((GeneTree)p2).dna[i];
-		}
-		
-		child.generation = Math.max(p1.getGeneration(), p2.getGeneration()) + 1;
-		
-		return child;
-		*/
 	}
 
 	@Override
@@ -234,16 +220,7 @@ public class GeneTree implements IGene {
 		return sb.toString();
 	}
 	
-	/*
-	 * 	static int VAL_trunkScale = 0; // How much the next segment is scaled by.
-	static int VAL_trunkAngle = 1;
-	static int VAL_branch1Pos = 2;
-	static int VAL_branch1Scale = 3;
-	static int VAL_branch1Angle = 4;
-	static int VAL_branch2Pos = 5;
-	static int VAL_branch2Scale = 6;
-	static int VAL_branch2Angle = 7;
-	*/
+
 
 	public void draw(BasicDisplay disp, float offsx, float offsy)
 	{
@@ -348,7 +325,7 @@ public class GeneTree implements IGene {
 	
 }
 
-
+*/
 
 
 

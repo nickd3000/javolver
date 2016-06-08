@@ -8,7 +8,7 @@ import javolver.Individual;
  */
 public class CWord extends Individual {
 
-	static String targetWord = "ABCDEFGHIJKLMNOP";
+	static String targetWord = "EVOLUTION";
 
 	public CWord() {
 		dna.init(targetWord.length());

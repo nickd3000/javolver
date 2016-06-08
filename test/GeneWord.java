@@ -1,9 +1,14 @@
 package test;
 
-import evo.Chromosome;
-import evo.IGene;
+//import evo.Chromosome;
+//import evo.IGene;
 
+public class GeneWord {
+}
+
+/*
 public class GeneWord implements IGene {
+
 
 	public Chromosome dna = new Chromosome();
 	
@@ -117,3 +122,4 @@ public class GeneWord implements IGene {
 
 
 }
+*/

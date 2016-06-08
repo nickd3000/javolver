@@ -12,7 +12,8 @@ import javax.script.ScriptException;
 
 /**
  * Javolver is a simple engine that processes a pool of individuals using genetic selection.
- * The user must derive a class from the Individual class and supply an object of this derived type to the constructor.
+ * The user must derive a class from the Individual class and supply an object of this derived 
+ * type to the constructor.
  * 
  * @author	Nick Donnelly (Twitter: @nickd3000)
  * @version	1.0
@@ -107,8 +108,8 @@ public class Javolver {
 		
 		while (newGenePool.size()<targetPop)
 		{
-			Individual g1 = tournamentSelection(genePool, 0.9);
-			Individual g2 = tournamentSelection(genePool, 0.9);
+			Individual g1 = tournamentSelection(genePool, 0.2);
+			Individual g2 = tournamentSelection(genePool, 0.2);
 			
 			//Individual g1 = rouletteSelection(genePool);
 			//Individual g2 = rouletteSelection(genePool);
