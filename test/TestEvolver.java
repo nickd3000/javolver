@@ -12,8 +12,8 @@ public class TestEvolver {
 
 	public static void main(String[] args) {
 
-		testSpherePacker();
-		//testWord();
+		//testSpherePacker();
+		testWord();
 		//testTree();
 		
 		//testProgram();
@@ -24,14 +24,14 @@ public class TestEvolver {
 
 		Javolver testEvolver = new Javolver(new CWord());
 
-		testEvolver.increasePopulation(30);
+		testEvolver.increasePopulation(100);
 		
 		
-		for (int j = 0; j < 500; j++) {
+		for (int j = 0; j < 30; j++) {
 			
 			testEvolver.doOneCycle();
 			
-			if ((j%15)==0) // Print report every few iterations.
+			if ((j%5)==0) // Print report every few iterations.
 				System.out.println(testEvolver.report());
 		}
 		

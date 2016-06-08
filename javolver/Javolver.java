@@ -20,7 +20,9 @@ import javax.script.ScriptException;
  */
 public class Javolver {
 
+	public enum SELECTION_TYPE {tournament,  roulette};
 	
+	SELECTION_TYPE selectionType = SELECTION_TYPE.tournament;
 	private ArrayList<Individual> genePool = new ArrayList<>();
 	private Individual proto; // Copy of type of chromosome we will use.
 
@@ -104,16 +106,27 @@ public class Javolver {
 		// Elitism - keep the best individual in the new pool.
 		//newGenePool.add(findBestScoringIndividual(genePool));
 
+		Individual g1=null,g2=null;
 		
 		while (newGenePool.size()<targetPop)
 		{
-			Individual g1 = tournamentSelection(genePool, 0.25);
-			Individual g2 = tournamentSelection(genePool, 0.25);
+			g1=null;
+			g2=null;
+			while (g1==g2) {
+			if (selectionType==SELECTION_TYPE.tournament) {
+				g1 = tournamentSelection(genePool, 0.25);
+				g2 = tournamentSelection(genePool, 0.25);
+			}
+			else {
+			//if (selectionType==SELECTION_TYPE.roulette) {
+				g1 = rouletteSelection(genePool);
+				g2 = rouletteSelection(genePool);
+			}} 
 			
-			//Individual g1 = rouletteSelection(genePool);
-			//Individual g2 = rouletteSelection(genePool);
 			
+
 			Individual child = breed(g1,g2); 
+			mutate(child,1,1.0/20.0);
 			newGenePool.add(child);
 			
 			/*
@@ -167,10 +180,7 @@ public class Javolver {
 		Individual child = proto.clone();
 		int dnaSize = g1.dna.getData().size();
 		double d1=0,d2=0;
-		
-		double jiggle = (Math.random()-0.5) * 0.2;
-		if (Math.random()<0.9) jiggle=0;
-		
+				
 		int crossover=(int)(Math.random()*(double)dnaSize);
 		
 		for (int i=0;i<dnaSize;i++)
@@ -179,18 +189,30 @@ public class Javolver {
 			d2 = g2.dna.getDouble(i);
 			
 			if (i<crossover)
-				child.dna.getData().set(i,d1+jiggle);
+				child.dna.getData().set(i,d1);
 			else
-				child.dna.getData().set(i,d2+jiggle);
-			
-			// Mutate
-			//child.dna.set(i, child.mutate(child.dna.getDna().get(i)));
+				child.dna.getData().set(i,d2);
+
 		}
-		
 		
 		return child;
 	}
 	
+	/**
+	 * @param ind		The individual to mutate.
+	 * @param count		Number of DNA elements to mutate. 
+	 * @param amount	Amount to mutate by.
+	 */
+	public void mutate(Individual ind, int count, double amount) {
+		double jiggle = 0, value = 0;
+		int index = 0;
+		for (int i=0;i<count;i++) {
+			index = (int)((double)ind.dna.data.size()*Math.random());
+			jiggle = (Math.random()-0.5) * amount * 2.0;
+			value = ind.dna.getDouble(index);
+			ind.dna.set(index, value+jiggle);
+		}
+	}
 	
 	
 	/**
