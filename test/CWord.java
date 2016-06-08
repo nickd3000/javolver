@@ -3,22 +3,32 @@ package test;
 import javolver.Individual;
 
 /**
- * @author nick
+ * Nick Donnelly (Twitter: @nickd3000)
  * Example individual type that evolves towards the supplied string.
  */
 public class CWord extends Individual {
 
+	/**
+	 * The word that we are trying to get our genetic algorithm to find.
+	 */
 	static String targetWord = "ABCDEFGHIJKLMNOP";
 
+	
 	public CWord() {
 		dna.init(targetWord.length());
 	}
 	
+	/**
+	 * 
+	 */
 	public Individual clone()
 	{
 		return (Individual)(new CWord());
 	}
 
+	/**
+	 * 
+	 */
 	public String toString()
 	{
 		String str = "";
@@ -29,8 +39,10 @@ public class CWord extends Individual {
 		return str;
 	}
 	
-	// Compare each character in the string to the target string and return a score.
-	// Each character gets a higher score the closer it is to the target character.
+	/**
+	 * Compare each character in the string to the target string and return a score.
+	 * Each character gets a higher score the closer it is to the target character.
+	 */
 	public double calculateScore() {
 		double total = 0.0;
 		
@@ -45,7 +57,10 @@ public class CWord extends Individual {
 	
 	
 	// Helper methods
-	// Returns a higher value the closer the characters are.
+	
+	/**
+	 * Returns a higher value the closer the characters are.
+	 */
 	double getScoreForCharacter(char a, char b)
 	{
 		int maxDiff = 15;

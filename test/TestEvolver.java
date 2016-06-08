@@ -12,8 +12,10 @@ public class TestEvolver {
 
 	public static void main(String[] args) {
 
+		testSpherePacker();
+		//testWord();
 		//testTree();
-		testWord();
+		
 		//testProgram();
 		//Utils.test();
 	}
@@ -31,6 +33,36 @@ public class TestEvolver {
 			
 			if ((j%15)==0) // Print report every few iterations.
 				System.out.println(testEvolver.report());
+		}
+		
+		//testEvolver.runUntilMaximum();
+
+		System.out.print("END ");
+	}
+	
+	public static void testSpherePacker() {
+
+		BasicDisplay disp = new BasicDisplay(300, 300);
+		
+		Javolver testEvolver = new Javolver(new CSpherePacker());
+
+		testEvolver.increasePopulation(200);
+		
+		
+		for (int j = 0; j < 5000000; j++) {
+			
+			testEvolver.doOneCycle();
+			
+			CSpherePacker top = (CSpherePacker)testEvolver.findBestScoringIndividual(null);
+			
+			if ((j%25)==0) {
+				disp.cls(new Color(149, 183, 213));
+				top.draw(disp, 0,0);
+				disp.refresh();
+			}
+			
+			//if ((j%15)==0) // Print report every few iterations.
+			//	System.out.println(testEvolver.report());
 		}
 		
 		//testEvolver.runUntilMaximum();

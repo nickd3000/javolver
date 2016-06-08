@@ -33,5 +33,7 @@ public class Chromosome {
 		double span = (double) ((char)'Z'-(char)'A');
 		return (char) ((char)'A'+(char)(span*data.get(i)));
 	}
+	
+	public void set(int i, double v) { data.set(i,v); }
 
 }

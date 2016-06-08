@@ -102,13 +102,13 @@ public class Javolver {
 		int targetPop = genePool.size();
 		
 		// Elitism - keep the best individual in the new pool.
-		newGenePool.add(findBestScoringIndividual(genePool));
+		//newGenePool.add(findBestScoringIndividual(genePool));
 
 		
 		while (newGenePool.size()<targetPop)
 		{
-			Individual g1 = tournamentSelection(genePool, 0.9);
-			Individual g2 = tournamentSelection(genePool, 0.9);
+			Individual g1 = tournamentSelection(genePool, 0.25);
+			Individual g2 = tournamentSelection(genePool, 0.25);
 			
 			//Individual g1 = rouletteSelection(genePool);
 			//Individual g2 = rouletteSelection(genePool);
@@ -168,14 +168,17 @@ public class Javolver {
 		int dnaSize = g1.dna.getData().size();
 		double d1=0,d2=0;
 		
-		double jiggle = (Math.random()-0.5) * 0.10;
+		double jiggle = (Math.random()-0.5) * 0.2;
+		if (Math.random()<0.9) jiggle=0;
+		
+		int crossover=(int)(Math.random()*(double)dnaSize);
 		
 		for (int i=0;i<dnaSize;i++)
 		{
 			d1 = g1.dna.getDouble(i);
 			d2 = g2.dna.getDouble(i);
 			
-			if (Math.random()<0.5)
+			if (i<crossover)
 				child.dna.getData().set(i,d1+jiggle);
 			else
 				child.dna.getData().set(i,d2+jiggle);
@@ -203,6 +206,7 @@ public class Javolver {
 		Individual currentWinner = null;
 		
 		int tSize = (int)(tournamentSize*(double)poolSize);
+		if (tSize<2) tSize=2;
 		
 		for (int i=0;i<tSize;i++)
 		{
@@ -266,6 +270,8 @@ public class Javolver {
 	 */
 	public Individual findBestScoringIndividual(ArrayList<Individual> pool)
 	{
+		if (pool==null) pool = genePool;
+		
 		double highestScore = 0.0f;
 		Individual highestGene = pool.get(0);
 		for (Individual gene : pool)

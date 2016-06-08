@@ -70,12 +70,12 @@ public class BasicDisplay extends JFrame {
         //g.drawLine((int)x1,(int)y1,(int)x2,(int)y2);
         g.dispose();
 	}
-	public void drawCircle(double x, double y, double r, Color c)
+	public void drawCircle(double x, double y, double d, Color c)
 	{
 		Graphics g = img.getGraphics();
 		g.setColor(c);
         //g.drawLine((int)x1,(int)y1,(int)x2,(int)y2);
-		g.fillOval((int)(x-(r/2)), (int)(y-(r/2)), (int)(r), (int)(r));
+		g.fillOval((int)(x-(d/2)), (int)(y-(d/2)), (int)(d), (int)(d));
         g.dispose();
 	}
 	public void cls(Color c)

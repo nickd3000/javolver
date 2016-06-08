@@ -2,7 +2,9 @@ package javolver;
 
 
 /**
- * This is the base class that should be used to create custom individual types to feed into the evolver.
+ * This is the base class that should be used to create custom individual types to feed into the evolver.<br>
+ * Individual provides a simple array of floats to represent the 'DNA' of the individual, <br>
+ * these floats can be mapped by the user to any data type they require.
  * 
  * @author	Nick Donnelly (Twitter: @nickd3000)
  * @version	1.0
@@ -20,16 +22,17 @@ public abstract class Individual {
 	{
 		dna = new Chromosome();
 	}
-	
-	// Must be provided / overridden.
+	 
 	
 	/**
 	 * Return a new copy of the subclass.
+	 * @return	New individual.
 	 */
 	abstract public Individual clone();
 	
 	/**
 	 * Return simple string representation of the individual.
+	 * @return	String representation of the individual. 
 	 */
 	abstract public String toString();
 	
