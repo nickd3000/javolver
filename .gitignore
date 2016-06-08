@@ -1,5 +1,9 @@
 <<<<<<< HEAD
 
+.DS_Store
+*.db
+*.db-wal
+
 # Created by https://www.gitignore.io/api/eclipse,java,maven
 
 ### Eclipse ###
