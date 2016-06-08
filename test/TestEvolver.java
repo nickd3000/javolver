@@ -24,7 +24,7 @@ public class TestEvolver {
 
 		Javolver testEvolver = new Javolver(new CWord());
 
-		testEvolver.increasePopulation(20);
+		testEvolver.increasePopulation(30);
 		
 		
 		for (int j = 0; j < 500; j++) {

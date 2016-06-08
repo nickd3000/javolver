@@ -2,9 +2,11 @@ package javolver;
 
 import java.util.ArrayList;
 
-
-// Chromosome is a simple list of double values (0..1), that supports some general functionality.
-// Values will be mapped to the required data ranges.
+/**
+ * @author nick
+ *	Chromosome is a simple list of double values (0..1), that supports some general functionality.
+ *	Values will be mapped to the required data ranges.
+ */
 public class Chromosome {
 
 	ArrayList<Double> data; //= new ArrayList<Double>(); 
@@ -24,10 +26,20 @@ public class Chromosome {
 	
 	public ArrayList<Double> getData() { return data; };
 	
+	/**
+	 * Get raw double value.
+	 * @param i	Index
+	 * @return	Double value
+	 */
 	public double getDouble(int i) {
 		return data.get(i);
 	}
 	
+	
+	/**
+	 * @param i		Index of the chromosome value to return.
+	 * @return		Upper case Char representation of the chromosome value. 
+	 */
 	public char getChar(int i) {
 		if (i>=data.size()) return 'x';
 		double span = (double) ((char)'Z'-(char)'A');
@@ -36,4 +48,5 @@ public class Chromosome {
 	
 	public void set(int i, double v) { data.set(i,v); }
 
+	
 }

@@ -8,10 +8,14 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.RenderingHints;
 
-import evo.BasicDisplay;
-import evo.IGene;
+//import evo.BasicDisplay;
+//import evo.IGene;
 
+public class GeneTextPic {
+// dummy class
+}
 
+/*
 public class GeneTextPic implements IGene {
 
 	int dnaSize = (20)*2; // Must be a multiple of 2.
@@ -147,3 +151,5 @@ public class GeneTextPic implements IGene {
 	
 
 }
+*/
+

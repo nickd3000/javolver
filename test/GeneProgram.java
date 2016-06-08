@@ -3,8 +3,13 @@ package test;
 import java.net.NetworkInterface;
 import java.util.ArrayList;
 
-import evo.IGene;
+//import evo.IGene;
 
+public class GeneProgram {
+// dummy class.
+}
+
+/*
 public class GeneProgram implements IGene {
 
 	//public String word = "";
@@ -77,7 +82,7 @@ public class GeneProgram implements IGene {
 	public ArrayList<Integer> mutateInsert(ArrayList<Integer> d)
 	{
 		int skip = (int)(d.size()*Math.random());
-		ArrayList<Integer> nd = new ArrayList<>(d);
+		ArrayList<Integer> nd = new ArrayList<Integer>(d);
 		for (int i=0;i<d.size()-1;i++)
 		{
 			int pos = i;
@@ -121,12 +126,7 @@ public class GeneProgram implements IGene {
 	// Setup and also run simple machine, return console result.
 	public String setupSimpleMachineFromDNA(SimpleMachine sm, ArrayList<Integer> d)
 	{
-		/* the old way.
-		for (int i=0;i<d.size();i+=2)
-		{
-			sm.memory[d.get(i)] = d.get(i+1);
-		}
-		*/
+
 		for (int i=0;i<d.size();i++)
 		{
 			sm.memory[i] = d.get(i);
@@ -315,3 +315,5 @@ public class GeneProgram implements IGene {
 
 
 }
+*/
+
