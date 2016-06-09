@@ -5,6 +5,7 @@ import java.awt.Color;
 import javolver.*;
 import javolver.Javolver.SELECTION_TYPE;
 
+
 //import evo.BasicDisplay;
 //import evo.Evolver;
 //import evo.IGene;
@@ -14,8 +15,8 @@ public class TestEvolver {
 	public static void main(String[] args) {
 
 		//testSpherePacker();
-		testWord();
-		//testTree();
+		//testWord();
+		testTree();
 		
 		//testProgram();
 		//Utils.test();
@@ -26,6 +27,7 @@ public class TestEvolver {
 		int populationSize = 100;
 		Javolver testEvolver = new Javolver(new CWord(), populationSize);
 		
+		// Configure the engine (Not required).
 		testEvolver.setKeepBestIndividualAlive(true);
 		testEvolver.setMutationCount(1);
 		testEvolver.setMutationAmount(1.0/20.0);
@@ -138,52 +140,38 @@ public class TestEvolver {
 	}
 */
 	
-	/*
+	
 	public static void testTree() {
 		BasicDisplay disp = new BasicDisplay(800, 400);
-		// disp.drawLine(20,200,200,20);
+		disp.drawCircle(100, 100, 50, new Color(255,0,128));
 
-		int popTargetSize=200;
+		int popTargetSize=20;
 		
 		System.out.print("START");
 		for (int n = 0; n < 500; n++) {
 			// Create the evolver:
-			Evolver testEvolver = new Evolver(new GeneTree());
-
-			testEvolver.addRandomPopulation(popTargetSize);
-			
+			Javolver testEvolver = new Javolver(new GeneTree(), popTargetSize);
+		
+			// Configure the engine (Not required).
+			testEvolver.setKeepBestIndividualAlive(false);
+			testEvolver.setMutationCount(2);
+			testEvolver.setMutationAmount(0.021);
+			testEvolver.setSelectionType(SELECTION_TYPE.tournament);
+			testEvolver.setSelectionRange(0.015);
 		
 			int iteration=0;
-			int cataclysmCounter=0;
-			
 			
 			for (int j = 0; j < 500000000; j++) {
 				for (int i = 0; i < 1; i++) {
 					testEvolver.doOneCycle();
 					iteration++;
-					cataclysmCounter++;
-					
 				}
 				
-				// testEvolver.cullHalf();
-				if (testEvolver.getGenePool().size() < 1)
-					continue;
 				testEvolver.report();
-				GeneTree best = (GeneTree) testEvolver.findBestScoringGene(testEvolver.getGenePool());
-				GeneTree secondBest = null;
-				float runningScore = 0.0f;
-				for (IGene gene : testEvolver.getGenePool()) {
-					if (gene.canMate(best, false) == false && gene.getScore() > runningScore) {
-						secondBest = (GeneTree) gene;
-						runningScore = gene.getScore();
-						break;
-					}
-				}
+				
+				GeneTree best = (GeneTree) testEvolver.findBestScoringIndividual(null);
 
 				disp.cls(new Color(149, 183, 213));
-
-				if (secondBest != null)
-					secondBest.draw(disp, 200.0f + 300.0f, 350.0f);
 
 				best.draw(disp, 200.0f, 350.0f);
 
@@ -192,19 +180,12 @@ public class TestEvolver {
 				//
 
 				System.out.println("Iterations "+iteration);
-				
-				// Cataclysmic event!
-				if (cataclysmCounter>200)
-				{
-					cataclysmCounter=0;
-					testEvolver.reduceSetTo(50);
-					testEvolver.addRandomPopulation(popTargetSize-50);
-				}
+
 			}
 			System.out.print("END");
 		}
 
 	}
-*/
+
 
 }

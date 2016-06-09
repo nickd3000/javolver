@@ -6,6 +6,10 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.*;
 
+/**
+ * @author nick
+ *	A basic display module with simplified drawing operations.
+ */
 public class BasicDisplay extends JFrame {
 
 	BufferedImage img;

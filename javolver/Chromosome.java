@@ -48,5 +48,9 @@ public class Chromosome {
 	
 	public void set(int i, double v) { data.set(i,v); }
 
+	public void clamp(int i, double min, double max) {
+		if (data.get(i)<min) data.set(i, min);
+		if (data.get(i)>max) data.set(i, max);
+	}
 	
 }
