@@ -14,7 +14,7 @@ public class CSpherePacker extends Individual {
 	/**
 	 * The word that we are trying to get our genetic algorithm to find.
 	 */
-	static int numSpheres=15;
+	static int numSpheres=15; // 9
 	
 	//static String targetWord = "ABCDEFGHIJKLMNOP";
 
@@ -84,7 +84,7 @@ public class CSpherePacker extends Individual {
 		}
 
 		for (int i=0;i<numSpheres*3;i+=3) {
-			total+= dna.getDouble(i+2); // add radii to score.
+			total += dna.getDouble(i+2); // add radii to score.
 		}
 		
 		total -= (penalty*1.0);

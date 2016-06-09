@@ -3,6 +3,7 @@ package test;
 import java.awt.Color;
 
 import javolver.*;
+import javolver.Javolver.SELECTION_TYPE;
 
 //import evo.BasicDisplay;
 //import evo.Evolver;
@@ -22,16 +23,20 @@ public class TestEvolver {
 
 	public static void testWord() {
 
-		Javolver testEvolver = new Javolver(new CWord());
-
-		testEvolver.increasePopulation(100);
+		int populationSize = 100;
+		Javolver testEvolver = new Javolver(new CWord(), populationSize);
 		
+		testEvolver.setKeepBestIndividualAlive(true);
+		testEvolver.setMutationCount(1);
+		testEvolver.setMutationAmount(1.0/20.0);
+		testEvolver.setSelectionType(SELECTION_TYPE.tournament);
+		testEvolver.setSelectionRange(0.25);
 		
 		for (int j = 0; j < 30; j++) {
 			
 			testEvolver.doOneCycle();
 			
-			if ((j%5)==0) // Print report every few iterations.
+			if ((j%1)==0) // Print report every few iterations.
 				System.out.println(testEvolver.report());
 		}
 		

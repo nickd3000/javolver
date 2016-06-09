@@ -1,9 +1,6 @@
 package javolver;
 
 import java.util.ArrayList;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptEngine;
-import javax.script.ScriptException;
 
 
 // TODO: add randomize function to igene to make things more explicit
@@ -23,20 +20,33 @@ public class Javolver {
 	public enum SELECTION_TYPE {tournament,  roulette};
 	
 	SELECTION_TYPE selectionType = SELECTION_TYPE.tournament;
+	double selectionRange = 0.2;
+	double mutationAmount = 0.10;
+	int mutationCount = 2;
+	boolean keepBestIndividualAlive = false;
+	
 	private ArrayList<Individual> genePool = new ArrayList<>();
 	private Individual proto; // Copy of type of chromosome we will use.
 
 	
+	/**
+	 * @param proto
+	 */
 	public Javolver(Individual proto)
 	{
 		this.proto = proto;
-		//init();
 	}
 	
-	public void init()
-	{
-		//genePool = new ArrayList<Individual>();
+	/**
+	 * Create Javolver object with prototype individual and set the population size.
+	 * @param proto
+	 * @param populationSize
+	 */
+	public Javolver(Individual proto, int populationSize) {
+		this(proto);
+		increasePopulation(populationSize);
 	}
+	
 	
 	public double getBestScore() {
 		return findBestScoringIndividual(genePool).getScore();
@@ -104,29 +114,28 @@ public class Javolver {
 		int targetPop = genePool.size();
 		
 		// Elitism - keep the best individual in the new pool.
-		//newGenePool.add(findBestScoringIndividual(genePool));
-
+		if (keepBestIndividualAlive) {
+			newGenePool.add(findBestScoringIndividual(genePool));
+		}
+		
 		Individual g1=null,g2=null;
 		
 		while (newGenePool.size()<targetPop)
 		{
-			g1=null;
-			g2=null;
+			g1=g2=null;
+			
 			while (g1==g2) {
-			if (selectionType==SELECTION_TYPE.tournament) {
-				g1 = tournamentSelection(genePool, 0.25);
-				g2 = tournamentSelection(genePool, 0.25);
-			}
-			else {
-			//if (selectionType==SELECTION_TYPE.roulette) {
-				g1 = rouletteSelection(genePool);
-				g2 = rouletteSelection(genePool);
+				if (selectionType==SELECTION_TYPE.tournament) {
+					g1 = tournamentSelection(genePool, selectionRange);
+					g2 = tournamentSelection(genePool, selectionRange);
+				}
+				else if (selectionType==SELECTION_TYPE.roulette) {
+					g1 = rouletteSelection(genePool);
+					g2 = rouletteSelection(genePool);
 			}} 
-			
-			
 
 			Individual child = breed(g1,g2); 
-			mutate(child,1,1.0/20.0);
+			mutate(child,mutationCount,mutationAmount);
 			newGenePool.add(child);
 			
 			/*
@@ -305,6 +314,77 @@ public class Javolver {
 			}
 		}
 		return highestGene;
+	}
+
+	/**
+	 * @return the selectionType
+	 */
+	public SELECTION_TYPE getSelectionType() {
+		return selectionType;
+	}
+
+	/**
+	 * @param selectionType the selectionType to set
+	 */
+	public void setSelectionType(SELECTION_TYPE selectionType) {
+		this.selectionType = selectionType;
+	}
+
+	/**
+	 * @return the mutationAmount
+	 */
+	public double getMutationAmount() {
+		return mutationAmount;
+	}
+
+	/**
+	 * The mutation amount is the maximum amount that a DNA element can be mutated by in a mutation.
+	 * @param mutationAmount the mutationAmount to set
+	 */
+	public void setMutationAmount(double mutationAmount) {
+		this.mutationAmount = mutationAmount;
+	}
+
+	/**
+	 * @return the mutationCount
+	 */
+	public int getMutationCount() {
+		return mutationCount;
+	}
+
+	/**
+	 * @param mutationCount the mutationCount to set
+	 */
+	public void setMutationCount(int mutationCount) {
+		this.mutationCount = mutationCount;
+	}
+
+	/**
+	 * @return the keepBestIndividualAlive
+	 */
+	public boolean isKeepBestIndividualAlive() {
+		return keepBestIndividualAlive;
+	}
+
+	/**
+	 * @param keepBestIndividualAlive the keepBestIndividualAlive to set
+	 */
+	public void setKeepBestIndividualAlive(boolean keepBestIndividualAlive) {
+		this.keepBestIndividualAlive = keepBestIndividualAlive;
+	}
+
+	/**
+	 * @return the selectionRange
+	 */
+	public double getSelectionRange() {
+		return selectionRange;
+	}
+
+	/**
+	 * @param selectionRange the selectionRange to set
+	 */
+	public void setSelectionRange(double selectionRange) {
+		this.selectionRange = selectionRange;
 	}
 	
 	
