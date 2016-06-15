@@ -3,9 +3,6 @@ package javolver;
 import java.util.ArrayList;
 
 
-// TODO: add randomize function to igene to make things more explicit
-// TODO: add settings to evolver to control mutation rate, breed rate etc.
-// TODO: pass pool to breeding functions, let the function add children to the pool?
 
 /**
  * Javolver is a simple engine that processes a pool of individuals using genetic selection.
@@ -17,20 +14,25 @@ import java.util.ArrayList;
  */
 public class Javolver {
 
+	/**
+	 * @author nick
+	 *
+	 */
 	public enum SELECTION_TYPE {tournament,  roulette};
 	
-	SELECTION_TYPE selectionType = SELECTION_TYPE.tournament;
-	double selectionRange = 0.2;
-	double mutationAmount = 0.10;
-	int mutationCount = 2;
-	boolean keepBestIndividualAlive = false;
+	SELECTION_TYPE	selectionType = SELECTION_TYPE.tournament;
+	double			selectionRange = 0.2;
+	double			mutationAmount = 0.10;
+	int				mutationCount = 2;
+	boolean			keepBestIndividualAlive = false;
 	
-	private ArrayList<Individual> genePool = new ArrayList<>();
-	private Individual proto; // Copy of type of chromosome we will use.
+	private			ArrayList<Individual> genePool = new ArrayList<>();
+	private			Individual proto; // Copy of type of chromosome we will use.
 
 	
 	/**
-	 * @param proto
+	 * Default constructor.
+	 * @param proto		A subclassed object from Individual, from which to clone the other members of the generation.
 	 */
 	public Javolver(Individual proto)
 	{
@@ -39,8 +41,8 @@ public class Javolver {
 	
 	/**
 	 * Create Javolver object with prototype individual and set the population size.
-	 * @param proto
-	 * @param populationSize
+	 * @param proto				A subclassed object from Individual, from which to clone the other members of the generation.
+	 * @param populationSize	Required population size.
 	 */
 	public Javolver(Individual proto, int populationSize) {
 		this(proto);
@@ -48,9 +50,14 @@ public class Javolver {
 	}
 	
 	
+	/**
+	 * Find the best score of any individual in the current generation.
+	 * @return	The best score of any individual in the current generation.
+	 */
 	public double getBestScore() {
 		return findBestScoringIndividual(genePool).getScore();
 	}
+	
 	
 	
 	/**
@@ -138,15 +145,7 @@ public class Javolver {
 			mutate(child,mutationCount,mutationAmount);
 			newGenePool.add(child);
 			
-			/*
-			brood.clear();
-			for (int j=0;j<4;j++)
-			{
-				brood.add(breed(g1,g2));
-			}			
-			scoreGenes(brood);
-			newGenePool.add(findBestScoringIndividual(brood));
-			*/
+	
 		}
 		
 		// Copy new pool over main pool.
@@ -386,10 +385,5 @@ public class Javolver {
 	public void setSelectionRange(double selectionRange) {
 		this.selectionRange = selectionRange;
 	}
-	
-	
-	
-	
-
-	
+		
 }

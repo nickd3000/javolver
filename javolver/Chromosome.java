@@ -3,20 +3,30 @@ package javolver;
 import java.util.ArrayList;
 
 /**
- * @author nick
  *	Chromosome is a simple list of double values (0..1), that supports some general functionality.
  *	Values will be mapped to the required data ranges.
+ *	@author nick
  */
 public class Chromosome {
 
-	ArrayList<Double> data; //= new ArrayList<Double>(); 
+	/**
+	 * Genetic data store, stored as a list of real numbers.
+	 */
+	ArrayList<Double> data; 
 	
 	
+	/**
+	 * Default constructor.
+	 */
 	public Chromosome() {
 		data = new ArrayList<Double>();
 	}
 	
-	// Init data to specified size with random values in the range 0..1
+
+	/**
+	 * Init data to specified size with random values in the range 0..1
+	 * @param size	Length of DNA structure.
+	 */
 	public void init(int size) {
 		data.clear();
 		for (int i=0;i<size;i++) {
@@ -24,7 +34,14 @@ public class Chromosome {
 		}
 	}
 	
-	public ArrayList<Double> getData() { return data; };
+	
+	/**
+	 * Accessor for DNA data.
+	 * @return	Chromosome data.
+	 */
+	public ArrayList<Double> getData() {
+		return data;
+	};
 	
 	/**
 	 * Get raw double value.
@@ -37,6 +54,7 @@ public class Chromosome {
 	
 	
 	/**
+	 * Get a chromosome element mapped to an uppercase char.
 	 * @param i		Index of the chromosome value to return.
 	 * @return		Upper case Char representation of the chromosome value. 
 	 */
@@ -46,8 +64,23 @@ public class Chromosome {
 		return (char) ((char)'A'+(char)(span*data.get(i)));
 	}
 	
-	public void set(int i, double v) { data.set(i,v); }
+	
+	/**
+	 * Set an element of the chromosome.
+	 * @param i		Index
+	 * @param v		Value
+	 */
+	public void set(int i, double v) {
+		data.set(i,v);
+	}
 
+	
+	/**
+	 * Clamp an element of the chromosome to the supplied range.
+	 * @param i		Index
+	 * @param min	Min value of range
+	 * @param max	Max value of range
+	 */
 	public void clamp(int i, double min, double max) {
 		if (data.get(i)<min) data.set(i, min);
 		if (data.get(i)>max) data.set(i, max);

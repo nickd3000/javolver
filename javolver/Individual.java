@@ -12,11 +12,23 @@ package javolver;
  */
 public abstract class Individual {
 
+	/**
+	 * Holds the genetic information for the individual as an array of doubles
+	 * Each type of individual should map double values to theie required data ranages.
+	 */
 	public Chromosome dna = new Chromosome();
+	
+	/**
+	 * A latch variable that represents whether the individual has being scored or not.
+	 * Scoring can be computationally intensive so this helps prevent multiple scoring events.
+	 */
 	protected boolean processed = false;
+	
+	/**
+	 * The score of this individual, higher is better.
+	 */
 	protected double score = 0.0;
-	protected int generation = 0;
-
+	
 	
 	public Individual()
 	{

@@ -14,9 +14,9 @@ public class TestEvolver {
 
 	public static void main(String[] args) {
 
-		//testSpherePacker();
+		testSpherePacker();
 		//testWord();
-		testTree();
+		//testTree();
 		
 		//testProgram();
 		//Utils.test();
@@ -51,10 +51,18 @@ public class TestEvolver {
 
 		BasicDisplay disp = new BasicDisplay(300, 300);
 		
-		Javolver testEvolver = new Javolver(new CSpherePacker());
+		Javolver testEvolver = new Javolver(new CSpherePacker(20),50);
 
-		testEvolver.increasePopulation(200);
+
+		// Configure the engine (Not required).
+		testEvolver.setKeepBestIndividualAlive(false);
+		testEvolver.setMutationCount(1);
+		testEvolver.setMutationAmount(0.25);
+		testEvolver.setSelectionType(SELECTION_TYPE.tournament);
+		testEvolver.setSelectionRange(0.125);
 		
+		int boxSize = 200;
+		Color boxCol = Color.DARK_GRAY;
 		
 		for (int j = 0; j < 5000000; j++) {
 			
@@ -65,6 +73,9 @@ public class TestEvolver {
 			if ((j%25)==0) {
 				disp.cls(new Color(149, 183, 213));
 				top.draw(disp, 0,0);
+				
+				disp.drawRect(0, 0+30, boxSize, boxSize+30, boxCol);
+				
 				disp.refresh();
 			}
 			
@@ -76,6 +87,55 @@ public class TestEvolver {
 
 		System.out.print("END ");
 	}
+	
+	
+
+	public static void testTree() {
+		BasicDisplay disp = new BasicDisplay(800, 400);
+		disp.drawCircle(100, 100, 50, new Color(255,0,128));
+
+		int popTargetSize=20;
+		
+		System.out.print("START");
+		for (int n = 0; n < 500; n++) {
+			// Create the evolver:
+			Javolver testEvolver = new Javolver(new GeneTree(), popTargetSize);
+		
+			// Configure the engine (Not required).
+			testEvolver.setKeepBestIndividualAlive(false);
+			testEvolver.setMutationCount(4);
+			testEvolver.setMutationAmount(0.051);
+			testEvolver.setSelectionType(SELECTION_TYPE.tournament);
+			testEvolver.setSelectionRange(0.025);
+		
+			int iteration=0;
+			
+			for (int j = 0; j < 500000000; j++) {
+				for (int i = 0; i < 1; i++) {
+					testEvolver.doOneCycle();
+					iteration++;
+				}
+				
+				testEvolver.report();
+				
+				GeneTree best = (GeneTree) testEvolver.findBestScoringIndividual(null);
+
+				disp.cls(new Color(149, 183, 213));
+
+				best.draw(disp, 200.0f, 350.0f);
+
+				disp.drawLine(j, 50, j, 70, Color.GREEN);
+				disp.refresh();
+				//
+
+				System.out.println("Iterations "+iteration);
+
+			}
+			System.out.print("END");
+		}
+
+	}
+	
 	
 	/*
 	public static void testProgram() {
@@ -141,51 +201,6 @@ public class TestEvolver {
 */
 	
 	
-	public static void testTree() {
-		BasicDisplay disp = new BasicDisplay(800, 400);
-		disp.drawCircle(100, 100, 50, new Color(255,0,128));
-
-		int popTargetSize=20;
-		
-		System.out.print("START");
-		for (int n = 0; n < 500; n++) {
-			// Create the evolver:
-			Javolver testEvolver = new Javolver(new GeneTree(), popTargetSize);
-		
-			// Configure the engine (Not required).
-			testEvolver.setKeepBestIndividualAlive(false);
-			testEvolver.setMutationCount(2);
-			testEvolver.setMutationAmount(0.021);
-			testEvolver.setSelectionType(SELECTION_TYPE.tournament);
-			testEvolver.setSelectionRange(0.015);
-		
-			int iteration=0;
-			
-			for (int j = 0; j < 500000000; j++) {
-				for (int i = 0; i < 1; i++) {
-					testEvolver.doOneCycle();
-					iteration++;
-				}
-				
-				testEvolver.report();
-				
-				GeneTree best = (GeneTree) testEvolver.findBestScoringIndividual(null);
-
-				disp.cls(new Color(149, 183, 213));
-
-				best.draw(disp, 200.0f, 350.0f);
-
-				disp.drawLine(j, 50, j, 70, Color.GREEN);
-				disp.refresh();
-				//
-
-				System.out.println("Iterations "+iteration);
-
-			}
-			System.out.print("END");
-		}
-
-	}
 
 
 }

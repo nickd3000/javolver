@@ -14,12 +14,13 @@ public class CSpherePacker extends Individual {
 	/**
 	 * The word that we are trying to get our genetic algorithm to find.
 	 */
-	static int numSpheres=15; // 9
+	int numSpheres=9; // 9
 	
 	//static String targetWord = "ABCDEFGHIJKLMNOP";
 
 	
-	public CSpherePacker() {
+	public CSpherePacker(int numSpheres) {
+		this.numSpheres = numSpheres;
 		dna.init(numSpheres*3);
 		for (int i=0;i<numSpheres*3;i+=3) {
 			dna.set(i, 20 + Math.random()*150);
@@ -33,7 +34,7 @@ public class CSpherePacker extends Individual {
 	 */
 	public Individual clone()
 	{
-		return (Individual)(new CSpherePacker());
+		return (Individual)(new CSpherePacker(this.numSpheres));
 	}
 
 	/**
