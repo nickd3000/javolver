@@ -51,15 +51,15 @@ public class TestEvolver {
 
 		BasicDisplay disp = new BasicDisplay(300, 300);
 		
-		Javolver testEvolver = new Javolver(new CSpherePacker(20),50);
+		Javolver testEvolver = new Javolver(new CSpherePacker(8),50);
 
 
 		// Configure the engine (Not required).
-		testEvolver.setKeepBestIndividualAlive(false);
-		testEvolver.setMutationCount(1);
-		testEvolver.setMutationAmount(0.25);
-		testEvolver.setSelectionType(SELECTION_TYPE.tournament);
-		testEvolver.setSelectionRange(0.125);
+		testEvolver.setKeepBestIndividualAlive(true);
+		testEvolver.setMutationCount(2);
+		testEvolver.setMutationAmount(0.15);
+		testEvolver.setSelectionType(SELECTION_TYPE.roulette);
+		testEvolver.setSelectionRange(0.25);
 		
 		int boxSize = 200;
 		Color boxCol = Color.DARK_GRAY;
@@ -94,7 +94,7 @@ public class TestEvolver {
 		BasicDisplay disp = new BasicDisplay(800, 400);
 		disp.drawCircle(100, 100, 50, new Color(255,0,128));
 
-		int popTargetSize=20;
+		int popTargetSize=200;
 		
 		System.out.print("START");
 		for (int n = 0; n < 500; n++) {
@@ -102,10 +102,10 @@ public class TestEvolver {
 			Javolver testEvolver = new Javolver(new GeneTree(), popTargetSize);
 		
 			// Configure the engine (Not required).
-			testEvolver.setKeepBestIndividualAlive(false);
+			testEvolver.setKeepBestIndividualAlive(true);
 			testEvolver.setMutationCount(4);
 			testEvolver.setMutationAmount(0.051);
-			testEvolver.setSelectionType(SELECTION_TYPE.tournament);
+			testEvolver.setSelectionType(SELECTION_TYPE.roulette);
 			testEvolver.setSelectionRange(0.025);
 		
 			int iteration=0;

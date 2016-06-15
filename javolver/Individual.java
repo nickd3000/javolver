@@ -30,6 +30,9 @@ public abstract class Individual {
 	protected double score = 0.0;
 	
 	
+	/**
+	 * Default constructor.
+	 */
 	public Individual()
 	{
 		dna = new Chromosome();
@@ -67,6 +70,20 @@ public abstract class Individual {
 		
 		return score;
 	};
+	
+	
+	/**
+	 * Return score*score.
+	 * @return	Score value squared.
+	 */
+	public double getScoreSquared() {
+		if (processed==false) {
+			score = calculateScore();
+			processed = true;
+		}
+		
+		return (score*score);
+	}
 	
 	/**
 	 * Sets the individuals score.

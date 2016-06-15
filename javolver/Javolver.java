@@ -262,7 +262,7 @@ public class Javolver {
 	    float runningScore = 0;
 	    for (Individual g : pool)
 	    {
-	        totalScore += g.getScore();
+	        totalScore += g.getScoreSquared();
 	    }
 
 	    float rnd = (float) (Math.random() * totalScore);
@@ -270,11 +270,11 @@ public class Javolver {
 	    for (Individual g : pool)
 	    {   
 	        if (    rnd>=runningScore &&
-	                rnd<=runningScore+g.getScore())
+	                rnd<=runningScore+g.getScoreSquared())
 	        {
 	            return g;
 	        }
-	        runningScore+=g.getScore();
+	        runningScore+=g.getScoreSquared();
 	    }
 
 	    return null;

@@ -96,11 +96,12 @@ public class CSpherePacker extends Individual {
 	public double getWallPenalty(double x, double y, double r) {
 		double w=200;
 		double penalty = 0;
+		double scale = 1.5;
 		
-		if (x<r) penalty+=r-x;
-		if (y<r) penalty+=r-y;
-		if (x>w-r) penalty+=(r+w)-x;
-		if (y>w-r) penalty+=(r+w)-y;
+		if (x<r) penalty+=(r-x)*scale;
+		if (y<r) penalty+=(r-y)*scale;
+		if (x>w-r) penalty+=((r+w)-x)*scale;
+		if (y>w-r) penalty+=((r+w)-y)*scale;
 		
 		
 		return penalty;
