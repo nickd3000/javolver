@@ -86,4 +86,11 @@ public class Chromosome {
 		if (data.get(i)>max) data.set(i, max);
 	}
 	
+	
+	public void swap(int index1, int index2) {
+		double v1 = data.get(index1);
+		double v2 = data.get(index2);
+		data.set(index1, v2);
+		data.set(index2, v1);
+	}
 }

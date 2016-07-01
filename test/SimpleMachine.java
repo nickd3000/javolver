@@ -2,7 +2,7 @@ package test;
 
 public class SimpleMachine {
 
-	public final int memSize = 256;
+	public final int memSize = 256+10;
 	public int [] memory = new int[memSize];
 	public int [] memoryHits = new int[memSize];
 	public int maxMemoryHits = 0;
@@ -30,13 +30,16 @@ public class SimpleMachine {
 	final int SUB_A_B = 15;		// result in a
 	final int SWITCH_REGS = 16;	// swap a and b;
 	final int QUIT = 17;
+	final int LAST_OP = 18;
 	
 	public int runCycle()
 	{
+		if (pc>memSize-4 || pc<0) return 1; // quit due to being out of bounds.
+		
+		
 		int operator = memory[pc];
 		int tmp = 0;
 		
-		if (pc>memSize-4) return 1; // quit due to being out of bounds.
 		
 		memoryHits[pc]++;
 		if (memoryHits[pc]>maxMemoryHits) maxMemoryHits=memoryHits[pc];

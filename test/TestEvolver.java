@@ -14,11 +14,11 @@ public class TestEvolver {
 
 	public static void main(String[] args) {
 
-		testSpherePacker();
+		//testSpherePacker();
 		//testWord();
 		//testTree();
 		
-		//testProgram();
+		testProgram();
 		//Utils.test();
 	}
 
@@ -28,7 +28,7 @@ public class TestEvolver {
 		Javolver testEvolver = new Javolver(new CWord(), populationSize);
 		
 		// Configure the engine (Not required).
-		testEvolver.setKeepBestIndividualAlive(true);
+		testEvolver.setKeepBestIndividualAlive(false);
 		testEvolver.setMutationCount(1);
 		testEvolver.setMutationAmount(1.0/20.0);
 		testEvolver.setSelectionType(SELECTION_TYPE.tournament);
@@ -94,7 +94,7 @@ public class TestEvolver {
 		BasicDisplay disp = new BasicDisplay(800, 400);
 		disp.drawCircle(100, 100, 50, new Color(255,0,128));
 
-		int popTargetSize=200;
+		int popTargetSize=50;
 		
 		System.out.print("START");
 		for (int n = 0; n < 500; n++) {
@@ -104,9 +104,9 @@ public class TestEvolver {
 			// Configure the engine (Not required).
 			testEvolver.setKeepBestIndividualAlive(true);
 			testEvolver.setMutationCount(4);
-			testEvolver.setMutationAmount(0.051);
-			testEvolver.setSelectionType(SELECTION_TYPE.roulette);
-			testEvolver.setSelectionRange(0.025);
+			testEvolver.setMutationAmount(0.085);
+			testEvolver.setSelectionType(SELECTION_TYPE.tournament);
+			testEvolver.setSelectionRange(0.005);
 		
 			int iteration=0;
 			
@@ -137,44 +137,54 @@ public class TestEvolver {
 	}
 	
 	
-	/*
+	
 	public static void testProgram() {
 
-		// Create the evolver:
-		Evolver testEvolver = new Evolver(new GeneProgram());
 
-		testEvolver.addRandomPopulation(150);
+		int popTargetSize = 250;
+		Javolver testEvolver = new Javolver(new GeneProgram(), popTargetSize);
+
+		// Configure the engine (Not required).
+		testEvolver.setKeepBestIndividualAlive(true);
+		testEvolver.setMutationCount(20);
+		testEvolver.setMutationAmount((1.0/250.0)*10.0);
+		testEvolver.setSelectionType(SELECTION_TYPE.tournament);
+		testEvolver.setSelectionRange(0.15);
+		testEvolver.setAllowSwapMutation(true);
+	
+		
 		int iteration=0;
-		int cataclysmCounter=0;
+
 		
 		long realStart = System.nanoTime();
 		long startTime =0, endTime = 0, duration = 0;
 		
 		for (int j = 0; j < 50000; j++) {
 			startTime = System.nanoTime();
-			for (int i = 0; i < 100; i++) {
+			for (int i = 0; i < 1000; i++) {
 				testEvolver.doOneCycle();
 				iteration++;
-				cataclysmCounter++;
+				
 			}
 			endTime = System.nanoTime();
 			duration = (endTime-startTime);
 			long totalTime = (endTime - realStart) / (1000000000);
-			System.out.print("iteration: " + iteration + "  Time in ms: " + (duration/1000000) + " total:" + totalTime);
+			System.out.print("iteration: " + iteration + "  Time in ms: " + (duration/1000000) + " total:" + totalTime + "  ");
 			testEvolver.report();
+			System.out.println(testEvolver.findBestScoringIndividual(null).toString());
 			
 			// Cataclysmic event!
-			if (cataclysmCounter>100)
+			/*if (cataclysmCounter>100)
 			{
 				cataclysmCounter=0;
 				testEvolver.reduceSetTo(50);
 				testEvolver.addRandomPopulation(100);
-			}
+			}*/
 		}
 
 		System.out.print("END ");
 	}
-	*/
+	
 	
 	/*
 	public static void testTextPic() {

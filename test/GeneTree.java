@@ -17,7 +17,7 @@ public class GeneTree extends Individual {
 
 
 	// Id's used to identify purpose of each DNA element.
-	public int dnaLength = 10;
+	public int dnaLength = 16;
 	static int VAL_trunkScale = 0; // How much the next segment is scaled by.
 	static int VAL_trunkAngle = 1;
 	static int VAL_branch1Pos = 2;
@@ -26,7 +26,14 @@ public class GeneTree extends Individual {
 	static int VAL_branch2Pos = 5;
 	static int VAL_branch2Scale = 6;
 	static int VAL_branch2Angle = 7;
-	
+	static int VAL_trunkScale2 = 8; // How much the next segment is scaled by.
+	static int VAL_trunkAngle2 = 9;
+	static int VAL_branch1Pos2 = 10;
+	static int VAL_branch1Scale2 = 11;
+	static int VAL_branch1Angle2 = 12;
+	static int VAL_branch2Pos2 = 13;
+	static int VAL_branch2Scale2 = 14;
+	static int VAL_branch2Angle2 = 15;	
 	
 	// Lists of points used when scoring tree.
 	ArrayList<Point2D.Double> leafPoints = null;
@@ -65,7 +72,24 @@ public class GeneTree extends Individual {
 		dna.clamp(VAL_branch1Angle, 0.1, 20.0);
 		dna.clamp(VAL_branch2Angle, 0.1, 20.0);
 		
-		dna.clamp(VAL_trunkAngle, -1.0, 1.0);		
+		dna.clamp(VAL_trunkAngle, -1.0, 1.0);
+		//dna.clamp(VAL_trunkAngle, 0.0, 00);
+		
+		///
+		
+		dna.clamp(VAL_trunkScale2, 0, 0.86);
+		
+		dna.clamp(VAL_branch1Scale2, 0.25, 0.87); // 0.86
+		dna.clamp(VAL_branch2Scale2, 0.25, 0.87);
+		
+		dna.clamp(VAL_branch1Pos2, 0.25, 1.0);
+		dna.clamp(VAL_branch2Pos2, 0.25, 1.0);
+		
+		dna.clamp(VAL_branch1Angle2, 0.1, 20.0);
+		dna.clamp(VAL_branch2Angle2, 0.1, 20.0);
+		
+		dna.clamp(VAL_trunkAngle2, -1.0, 1.0);
+		//dna.clamp(VAL_trunkAngle2, 0.0, 0.0);
 	}
 	
 	
@@ -92,7 +116,7 @@ public class GeneTree extends Individual {
 		branchPoints.clear();
 		leafPoints.clear();
 		branchCount = 0;
-		tree(0.0f, 0.0f, 60.0f, 0.0f);
+		tree(0.0f, 0.0f, 60.0f, 0.0f, 0);
 		
 		int numLeaves = leafPoints.size();
 		double maxLeafHeight = 0;
@@ -224,12 +248,12 @@ public class GeneTree extends Individual {
 		}
 	}
 	
-	public void tree(double x, double y, double len, double angle)
+	public void tree(double x, double y, double len, double angle, int iteration)
 	{
 		branchCount ++;
 		//if (branchCount>4000) return;
 		
-		if (len<25.0) //23.0 25
+		if (len<23.0) //23.0 25
 		{
 			// Record leaf point and exit iteration.
 			Point2D.Double leafPos = new Point2D.Double(x,y);
@@ -240,11 +264,11 @@ public class GeneTree extends Individual {
 		double x2 = (float) (x + Math.sin((double)angle) * len);
 		double y2 = (float) (y + Math.cos((double)angle) * len);
 
-		double br1x = (float) (x + Math.sin((double)angle) * (len*dna.getDouble(VAL_branch1Pos)));
-		double br1y = (float) (y + Math.cos((double)angle) * (len*dna.getDouble(VAL_branch1Pos)));
+		double br1x = (float) (x + Math.sin((double)angle) * (len*getBlended(VAL_branch1Pos, iteration)));
+		double br1y = (float) (y + Math.cos((double)angle) * (len*getBlended(VAL_branch1Pos, iteration)));
 		
-		double br2x = (float) (x + Math.sin((double)angle) * (len*dna.getDouble(VAL_branch2Pos)));
-		double br2y = (float) (y + Math.cos((double)angle) * (len*dna.getDouble(VAL_branch2Pos)));
+		double br2x = (float) (x + Math.sin((double)angle) * (len*getBlended(VAL_branch2Pos, iteration)));
+		double br2y = (float) (y + Math.cos((double)angle) * (len*getBlended(VAL_branch2Pos, iteration)));
 
 		
 		// Record position for later scoring.
@@ -253,11 +277,32 @@ public class GeneTree extends Individual {
 		branchPos = new Point2D.Double(x2,y2);
 		branchPoints.add(branchPos);
 
-		tree(x2,y2,len*dna.getDouble(VAL_trunkScale),angle+dna.getDouble(VAL_trunkAngle));
-		tree(br1x,br1y,len*dna.getDouble(VAL_branch1Scale),angle-dna.getDouble(VAL_branch1Angle));
-		tree(br2x,br2y,len*dna.getDouble(VAL_branch2Scale),angle+dna.getDouble(VAL_branch2Angle));
+		tree(x2,y2,len*getBlended(VAL_trunkScale, iteration),angle+getBlended(VAL_trunkAngle, iteration), iteration+1);
+		tree(br1x,br1y,len*getBlended(VAL_branch1Scale, iteration),angle-getBlended(VAL_branch1Angle, iteration), iteration+1);
+		tree(br2x,br2y,len*getBlended(VAL_branch2Scale, iteration),angle+getBlended(VAL_branch2Angle, iteration), iteration+1);
 		
 	}
+	
+	
+	// Blend between a and b variation of the dna element based on the iteration number.
+	public double getBlended(int id, int iteration) {
+		
+		int indexDiff = VAL_trunkScale2-VAL_trunkScale;
+		
+		double maxIterations = 10.0;
+		double d1 = dna.getDouble(id);
+		double d2 = dna.getDouble(id+indexDiff);
+		double d = 0;
+		double f = (double)iteration/maxIterations;
+		if (f>1.0) f=1.0;
+		
+		d = d1+((double)(d2-d1)*f);
+		
+		
+		return d;
+	}
+	
+	
 
 	
 	public boolean canMate(Individual partner, boolean excludeSimilar) {

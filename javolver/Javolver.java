@@ -25,6 +25,7 @@ public class Javolver {
 	double			mutationAmount = 0.10;
 	int				mutationCount = 2;
 	boolean			keepBestIndividualAlive = false;
+	boolean			allowSwapMutation = false;
 	
 	private			ArrayList<Individual> genePool = new ArrayList<>();
 	private			Individual proto; // Copy of type of chromosome we will use.
@@ -143,6 +144,7 @@ public class Javolver {
 
 			Individual child = breed(g1,g2); 
 			mutate(child,mutationCount,mutationAmount);
+			if (allowSwapMutation) mutateSwap(child, 1);
 			newGenePool.add(child);
 			
 	
@@ -215,10 +217,25 @@ public class Javolver {
 		double jiggle = 0, value = 0;
 		int index = 0;
 		for (int i=0;i<count;i++) {
-			index = (int)((double)ind.dna.data.size()*Math.random());
+			index = getRandomDnaIndexForIindividual(ind); //(int)((double)ind.dna.data.size()*Math.random());
 			jiggle = (Math.random()-0.5) * amount * 2.0;
 			value = ind.dna.getDouble(index);
 			ind.dna.set(index, value+jiggle);
+		}
+	}
+	
+	
+	public int getRandomDnaIndexForIindividual(Individual ind) {
+		return (int)((double)ind.dna.data.size()*Math.random());
+	}
+	
+	
+	//
+	public void mutateSwap(Individual ind, int count) {
+		for (int i=0;i<count;i++) {
+			int index1 = getRandomDnaIndexForIindividual(ind);
+			int index2 = getRandomDnaIndexForIindividual(ind);
+			ind.dna.swap(index1, index2);
 		}
 	}
 	
@@ -384,6 +401,10 @@ public class Javolver {
 	 */
 	public void setSelectionRange(double selectionRange) {
 		this.selectionRange = selectionRange;
+	}
+	
+	public void setAllowSwapMutation(boolean opt) {
+		allowSwapMutation = opt;
 	}
 		
 }
