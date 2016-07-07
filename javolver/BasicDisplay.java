@@ -9,7 +9,7 @@ import javax.swing.*;
 /**
  * A basic display module with simplified drawing operations.
  * 
- * @author nick
+ * @author nickd3000
  */
 public class BasicDisplay extends JFrame {
 
@@ -134,7 +134,7 @@ public class BasicDisplay extends JFrame {
 
 	
 	/**
-	 * Draw a circle to display with dupplied colour.
+	 * Draw a circle to display with supplied colour.
 	 * @param x		x position
 	 * @param y		y position
 	 * @param d		diameter

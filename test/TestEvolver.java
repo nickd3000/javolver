@@ -6,33 +6,71 @@ import javolver.*;
 import javolver.Javolver.SELECTION_TYPE;
 
 
-//import evo.BasicDisplay;
-//import evo.Evolver;
-//import evo.IGene;
-
-
+/*
+ * Test / Example class.
+ */
 public class TestEvolver {
 
+	//
 	public static void main(String[] args) {
 
-		testSpherePacker();
+		/*
+		 * A few example classes, each one sets up an evolver with
+		 * the required individuals and starts the evolution running.
+		 * Simply uncomment the one you want to try.
+		 */
+		
+		/*
+		 * CWord - A very simple example where the goal is to match the output to
+		 * a supplied string.
+		 */
 		//testWord();
+		
+		/*
+		 * CSpherePacker - Attempts to fit a number of arbitrarily sized circles
+		 * into a square as tightly as possible with graphical output.
+		 */
+		testSpherePacker();
+		
+		/*
+		 * GeneTree - Attempts to evolve a tree that fits certain structural
+		 * criteria: height, not escaping the bounding box. The score of each
+		 * individual is reduced for leaves that are 'under' other leaves, in an
+		 * attempt to simulate leaves requiring sunlight.
+		 */
 		//testTree();
 		
-		//testProgram();
-		//Utils.test();
+		
+		//testProgram(); // Not working very well (or at all).
 	}
 
+	/**
+	 * Anneal function is used to pass values to the evolver config settings.
+	 * This is a helper function to blend two doubles between each other
+	 * spanning the expected number of iterations required.
+	 * 
+	 * @param v1			First value in range.
+	 * @param v2			Second value in range.
+	 * @param maxIterations	Number of iterations diring which return value will blend from v1 to v2
+	 * @param i				Current iteration.
+	 * @return				Blended value based on v1 and v2
+	 */
 	public static double anneal(double v1, double v2, int maxIterations, int i) {
 		if (i>maxIterations) i=maxIterations;
 		double p = (double)i / (double)maxIterations;
 		return v1+((v2-v1)*p);
 	}
 	
+	/**
+	 * Example testing the CWord class.
+	 * Individuals of type CWord are scored by how well they spell
+	 * out a string compared to the supplied target word.
+	 */
 	public static void testWord() {
 
 		int populationSize = 100;
-		Javolver testEvolver = new Javolver(new CWord("HELLOWORLD"), populationSize);
+		String targetWord = "HELLOWORLD";
+		Javolver testEvolver = new Javolver(new CWord(targetWord), populationSize);
 		
 		// Configure the engine (Not required).
 		testEvolver.setKeepBestIndividualAlive(false);
@@ -42,15 +80,15 @@ public class TestEvolver {
 		testEvolver.setSelectionRange(0.25);
 		testEvolver.setDiversityAmount(1.0);
 		
+		// Perform a few iterations of evolution.
 		for (int j = 0; j < 30; j++) {
 			
+			// Call the evolver class to perform one evolution step.
 			testEvolver.doOneCycle();
 			
-			if ((j%1)==0) // Print report every few iterations.
-				System.out.println("Iteration " + j + "  " + testEvolver.report());
+			// Print output every so often.
+			System.out.println("Iteration " + j + "  " + testEvolver.report());
 		}
-		
-		//testEvolver.runUntilMaximum();
 
 		System.out.print("END ");
 	}
@@ -79,17 +117,22 @@ public class TestEvolver {
 		
 		for (int j = 0; j < 5000000; j++) {
 			
-			testEvolver.setMutationAmount(anneal(15,0.05,5000,j));
+			// Change the mutation amount during the simulation.
+			testEvolver.setMutationAmount(anneal(15,0.1,5000,j));
 			
+			// The main evolution function.
 			testEvolver.doOneCycle();
 			
+			// Find the best individual for drawing.
 			CSpherePacker top = (CSpherePacker)testEvolver.findBestScoringIndividual(null);
 			
+			// Draw fittest individual every n frames.
 			if ((j%25)==0) {
+				int pad = 50;
 				disp.cls(new Color(149, 183, 213));
-				top.draw(disp, 0,0);
+				top.draw(disp, pad,pad);
 				
-				disp.drawRect(0, 0+30, boxSize, boxSize+30, boxCol);
+				disp.drawRect(pad+0, pad+0, pad+boxSize, pad+boxSize, boxCol);
 				
 				disp.refresh();
 			}
@@ -109,7 +152,7 @@ public class TestEvolver {
 	
 
 	public static void testTree() {
-		BasicDisplay disp = new BasicDisplay(800, 400);
+		BasicDisplay disp = new BasicDisplay(400, 400);
 		disp.drawCircle(100, 100, 50, new Color(255,0,128));
 
 		int popTargetSize=20;

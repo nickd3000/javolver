@@ -57,30 +57,26 @@ public class CSpherePacker extends Individual {
 	public double calculateScore() {
 		double total = 0.0;
 		double cover = 0.0;
-		/*
-		for (int i=0;i<targetWord.length();i++)
-		{
-			total += getScoreForCharacter(dna.getChar(i), targetWord.charAt(i));
-		}
-		processed = true;
-		 */
+		
 		double x1,y1,r1,x2,y2,r2,d;
-		int penalty=0;
-		for (int i=0;i<numSpheres*3;i+=3) {
+		double penalty=0;
+		
+		for (int i=0;i<numSpheres*3;i+=3) {	// Sphere loop 1
 			x1=dna.getDouble(i);
 			y1=dna.getDouble(i+1);
 			r1=dna.getDouble(i+2);
 			penalty+=getWallPenalty(x1, y1, r1);
-			for (int j=0;j<numSpheres*3;j+=3) {
-				if (i==j) continue;
+			
+			for (int j=0;j<numSpheres*3;j+=3) {	// Sphere loop 2
+				if (i==j) continue;	// Don't compare against self.
 				
 				x2=dna.getDouble(j);
 				y2=dna.getDouble(j+1);
 				r2=dna.getDouble(j+2);
 				d = getDistance(x1, y1, x2, y2);
+				
 				if (d<(r1+r2)) penalty+=(r1+r2)-d;
-				//if (x1<r1 || y1<r1 || x1+r1>200 || y1+r1>200) penalty++;
-				//if (x2<r2 || y2<r2 || x2+r2>200 || y2+r2>200) penalty++;
+				
 			}
 			cover += Math.PI * (r1*r1);
 		}
@@ -109,22 +105,10 @@ public class CSpherePacker extends Individual {
 		if (x>w-r) penalty+=Math.abs(((r+w)-x)*scale);
 		if (y>w-r) penalty+=Math.abs(((r+w)-y)*scale);
 		
-		
 		return penalty;
 	}
 	
 	// Helper methods
-	
-	/**
-	 * Returns a higher value the closer the characters are.
-	 */
-	double getScoreForCharacter(char a, char b)
-	{
-		int maxDiff = 15;
-		int diff = Math.abs(a-b);
-		if (diff>maxDiff) return 0.0;
-		return (double)((maxDiff-diff)/10.0);
-	}
 	
 	double getDistance(double x1, double y1, double x2, double y2) {
 		double dx = x2-x1;
@@ -140,32 +124,12 @@ public class CSpherePacker extends Individual {
 		Color col_leaf = new Color(60,60,140,150);
 				
 		for (int i=0;i<numSpheres*3;i+=3) {
-			disp.drawCircle(dna.getDouble(i), 30 + dna.getDouble(i+1),dna.getDouble(i+2)*2, col_leaf );
+			disp.drawCircle(
+					offsx + dna.getDouble(i), 
+					offsy + dna.getDouble(i+1),
+					dna.getDouble(i+2)*2,
+					col_leaf );
 		}
 			
-		/*
-		int numPoints = branchPoints.size();
-		//float offsx = 200.0f;
-		//float offsy = 350.0f;
-		for (int i=0;i<numPoints;i+=2)
-		{
-			double x1 = branchPoints.get(i).x + offsx;
-			double y1 = offsy - branchPoints.get(i).y;
-			double x2 = branchPoints.get(i+1).x + offsx;
-			double y2 = offsy - branchPoints.get(i+1).y;
-			
-			double dx = x1-x2;
-			double dy = y1-y2;
-			double d = (double) Math.sqrt((dx*dx)+(dy*dy));
-			double thickness = 1+((d*d)/500.0f);
-			disp.drawLine(x1, y1, x2, y2, col_wood, thickness);
-		}
-		
-		for (int i=0;i<leafPoints.size();i++)
-		{
-			double x = offsx + leafPoints.get(i).x;
-			double y = offsy - leafPoints.get(i).y;
-			disp.drawCircle(x, y, 7, col_leaf);
-		}*/
 	}
 }

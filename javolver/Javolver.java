@@ -15,8 +15,8 @@ import java.util.ArrayList;
 public class Javolver {
 
 	/**
-	 * @author nick
-	 *
+	 * tournament	chose fittest of a set number of individuals.
+	 * roulette		chose fittest randomly, best individuals more likely to be selected.
 	 */
 	public enum SELECTION_TYPE {tournament,  roulette};
 	
