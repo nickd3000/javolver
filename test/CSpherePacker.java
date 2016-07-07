@@ -15,7 +15,7 @@ public class CSpherePacker extends Individual {
 	 * The word that we are trying to get our genetic algorithm to find.
 	 */
 	int numSpheres=9; // 9
-	
+	double coverage = 0;
 	//static String targetWord = "ABCDEFGHIJKLMNOP";
 
 	
@@ -25,7 +25,7 @@ public class CSpherePacker extends Individual {
 		for (int i=0;i<numSpheres*3;i+=3) {
 			dna.set(i, 20 + Math.random()*150);
 			dna.set(i+1, 20 + Math.random()*150);
-			dna.set(i+2, Math.random()*5);
+			dna.set(i+2, Math.random()*50);
 		}
 	}
 	
@@ -56,7 +56,7 @@ public class CSpherePacker extends Individual {
 	 */
 	public double calculateScore() {
 		double total = 0.0;
-		
+		double cover = 0.0;
 		/*
 		for (int i=0;i<targetWord.length();i++)
 		{
@@ -82,6 +82,7 @@ public class CSpherePacker extends Individual {
 				//if (x1<r1 || y1<r1 || x1+r1>200 || y1+r1>200) penalty++;
 				//if (x2<r2 || y2<r2 || x2+r2>200 || y2+r2>200) penalty++;
 			}
+			cover += Math.PI * (r1*r1);
 		}
 
 		for (int i=0;i<numSpheres*3;i+=3) {
@@ -89,19 +90,24 @@ public class CSpherePacker extends Individual {
 		}
 		
 		total -= (penalty*1.0);
+		coverage = cover;
 		
 		return total;
+	}
+	
+	public double getCoverage() {
+		return coverage;
 	}
 	
 	public double getWallPenalty(double x, double y, double r) {
 		double w=200;
 		double penalty = 0;
-		double scale = 1.5;
+		double scale = 5; //12.5;
 		
-		if (x<r) penalty+=(r-x)*scale;
-		if (y<r) penalty+=(r-y)*scale;
-		if (x>w-r) penalty+=((r+w)-x)*scale;
-		if (y>w-r) penalty+=((r+w)-y)*scale;
+		if (x<r) penalty+=Math.abs((r-x)*scale);
+		if (y<r) penalty+=Math.abs((r-y)*scale);
+		if (x>w-r) penalty+=Math.abs(((r+w)-x)*scale);
+		if (y>w-r) penalty+=Math.abs(((r+w)-y)*scale);
 		
 		
 		return penalty;

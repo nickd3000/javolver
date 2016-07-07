@@ -24,12 +24,13 @@ public class Javolver {
 	double			selectionRange = 0.2;
 	double			mutationAmount = 0.10;
 	int				mutationCount = 2;
+	double			diversityAmount = 0.0;
 	boolean			keepBestIndividualAlive = false;
 	boolean			allowSwapMutation = false;
 	
 	private			ArrayList<Individual> genePool = new ArrayList<>();
 	private			Individual proto; // Copy of type of chromosome we will use.
-
+	private			Chromosome averageChromosome; //
 	
 	/**
 	 * Default constructor.
@@ -112,6 +113,7 @@ public class Javolver {
 	public void doOneCycle()
 	{
 		scoreGenes(genePool);
+		averageChromosome = CalculateAverageChromosome(genePool);
 		//cullHalf();
 	
 		ArrayList<Individual> newGenePool = null;
@@ -142,7 +144,9 @@ public class Javolver {
 					g2 = rouletteSelection(genePool);
 			}} 
 
-			Individual child = breed(g1,g2); 
+			//Individual child = breed(g1,g2); 
+			Individual child = blend(g1,g2);
+			
 			mutate(child,mutationCount,mutationAmount);
 			if (allowSwapMutation) mutateSwap(child, 1);
 			newGenePool.add(child);
@@ -209,6 +213,28 @@ public class Javolver {
 	}
 	
 	/**
+	 * A breed function that returns the average of the parents - experimental.
+	 * @param g1
+	 * @param g2
+	 * @return
+	 */
+	public Individual blend(Individual g1, Individual g2)
+	{
+		Individual child = proto.clone();
+		int dnaSize = g1.dna.getData().size();
+		double d1=0,d2=0;
+		
+		for (int i=0;i<dnaSize;i++)
+		{
+			d1 = g1.dna.getDouble(i);
+			d2 = g2.dna.getDouble(i);
+			child.dna.getData().set(i,(d1+d2)*0.5);
+		}
+		
+		return child;
+	}
+	
+	/**
 	 * @param ind		The individual to mutate.
 	 * @param count		Number of DNA elements to mutate. 
 	 * @param amount	Amount to mutate by.
@@ -258,14 +284,34 @@ public class Javolver {
 		for (int i=0;i<tSize;i++)
 		{
 			Individual contender = getRandomIndividual(pool);
-			if (contender.getScore()>maxScore)
+			//if (contender.getScore()>maxScore)
+			if (getSelectionScore(contender)>maxScore || maxScore==-1000)
 			{
-				maxScore = contender.getScore();
+				//maxScore = contender.getScore();
+				maxScore = getSelectionScore(contender);
 				currentWinner = contender;
 			}
 		}
 		
+		if (currentWinner==null) {
+			int n=0;
+			n++;
+		}
+		
 		return currentWinner;
+	}
+	
+	/**
+	 * Used to get score for an individual while performing selection.
+	 * This takes into account any extra affects like preferring diversity.
+	 * @param ind
+	 * @return
+	 */
+	public double getSelectionScore(Individual ind) {
+		double s = ind.getScore();
+		double diversity = getDeviation(averageChromosome, ind);
+		s+=diversity*diversityAmount;
+		return s;
 	}
 	
 	/**
@@ -332,6 +378,51 @@ public class Javolver {
 		return highestGene;
 	}
 
+	
+	/**
+	 * Create a chromosome that represents the average chromosome of the pool.
+	 * @param pool
+	 * @return
+	 */
+	public Chromosome CalculateAverageChromosome(ArrayList<Individual> pool) {
+		int numElements = pool.get(0).dna.getData().size();
+		Chromosome average = new Chromosome();
+		average.init(numElements);
+		
+		// Clear average structure.
+		for (int i=0;i<average.data.size();i++) {
+			average.set(i, 0.0);
+		}
+		
+		for (Individual i : pool) {
+			for (int j=0;j<numElements;j++) {
+				double val = i.dna.getData().get(j) / (double)numElements;
+				val = val + average.data.get(j);
+				average.data.set(j, val);
+			}
+		}
+		
+		return average;
+	}
+	
+	
+	public double getDeviation(Chromosome average, Individual ind) {
+		int numElements = average.getData().size();
+		int numIndElements = ind.dna.getData().size();
+		int count = 0;
+		double totalDiff = 0;
+		for (int i=0;i<numElements;i++) {
+			if (i>numIndElements) continue;
+			totalDiff = Math.abs(average.getDouble(i)-ind.dna.getDouble(i));
+			count++;
+		}
+		
+		if (count==0) return 0;
+		
+		return totalDiff/(double)count;
+	}
+	
+	
 	/**
 	 * @return the selectionType
 	 */
@@ -406,5 +497,8 @@ public class Javolver {
 	public void setAllowSwapMutation(boolean opt) {
 		allowSwapMutation = opt;
 	}
-		
+	
+	public void setDiversityAmount(double amount) {
+		this.diversityAmount = amount;
+	}
 }

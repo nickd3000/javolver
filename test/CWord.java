@@ -8,15 +8,16 @@ import javolver.Individual;
  */
 public class CWord extends Individual {
 
-	static String targetWord = "EVOLUTION";
+	public String targetWord = "EVOLUTION";
 
-	public CWord() {
+	public CWord(String target) {
+		targetWord = target;
 		dna.init(targetWord.length());
 	}
 	
 	public Individual clone()
 	{
-		return (Individual)(new CWord());
+		return (Individual)(new CWord(targetWord));
 	}
 
 	public String toString()
@@ -38,7 +39,7 @@ public class CWord extends Individual {
 		{
 			total += getScoreForCharacter(dna.getChar(i), targetWord.charAt(i));
 		}
-		processed = true;
+		//processed = true;
 
 		return total;
 	}

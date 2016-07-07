@@ -23,7 +23,7 @@ public class GeneProgram extends Individual  {
 	
 		
 	public GeneProgram() {
-		dna.init(200);
+		dna.init(50); // 200
 	}
 	
 	@Override
