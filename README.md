@@ -1,6 +1,8 @@
 # Javolver
 **Javolver** is a simple yet powerful **genetic algorithm** system in Java.
 
+![Evolved Tree](https://i.imgur.com/YQOhyQV.png "Evolved tree")
+
 The library is designed to be extremely simple to set up and run.  The user simply needs to create a derived class from the Individual class, and implement three functions:
     clone()
     toString();
@@ -43,3 +45,7 @@ Simple Example
 		System.out.print("END ");
 	}
 ```
+
+![Sphere Packing](https://i.imgur.com/sidizaf.png "Sphere Packing")
+![Basic test](https://i.imgur.com/TT5nKZB.png "Basic test")
+
