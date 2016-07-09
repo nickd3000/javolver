@@ -28,7 +28,10 @@ public abstract class Individual {
 	 * The score of this individual, higher is better.
 	 */
 	protected double score = 0.0;
+	protected double diversity = 0.0;
 	
+	protected int rankScore = 0;
+	protected int rankDiversity = 0;
 	
 	/**
 	 * Default constructor.
@@ -71,6 +74,9 @@ public abstract class Individual {
 		return score;
 	};
 	
+	public double getDiversity() {
+		return diversity;
+	};
 	
 	/**
 	 * Return score*score.

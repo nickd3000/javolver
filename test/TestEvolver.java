@@ -1,9 +1,10 @@
 package test;
 
 import java.awt.Color;
+import java.text.DecimalFormat;
 
 import javolver.*;
-import javolver.Javolver.SELECTION_TYPE;
+//import javolver.Javolver.SelectionType;
 
 
 /*
@@ -11,6 +12,8 @@ import javolver.Javolver.SELECTION_TYPE;
  */
 public class TestEvolver {
 
+	
+	
 	//
 	public static void main(String[] args) {
 
@@ -30,7 +33,7 @@ public class TestEvolver {
 		 * CSpherePacker - Attempts to fit a number of arbitrarily sized circles
 		 * into a square as tightly as possible with graphical output.
 		 */
-		testSpherePacker();
+		//testSpherePacker();
 		
 		/*
 		 * GeneTree - Attempts to evolve a tree that fits certain structural
@@ -38,7 +41,7 @@ public class TestEvolver {
 		 * individual is reduced for leaves that are 'under' other leaves, in an
 		 * attempt to simulate leaves requiring sunlight.
 		 */
-		//testTree();
+		testTree();
 		
 		
 		//testProgram(); // Not working very well (or at all).
@@ -73,12 +76,12 @@ public class TestEvolver {
 		Javolver testEvolver = new Javolver(new CWord(targetWord), populationSize);
 		
 		// Configure the engine (Not required).
-		testEvolver.setKeepBestIndividualAlive(false);
-		testEvolver.setMutationCount(1);
-		testEvolver.setMutationAmount(1.0/20.0);
-		testEvolver.setSelectionType(SELECTION_TYPE.tournament);
-		testEvolver.setSelectionRange(0.25);
-		testEvolver.setDiversityAmount(1.0);
+		testEvolver.config.keepBestIndividualAlive = false;
+		testEvolver.config.mutationCount = 1;
+		testEvolver.config.mutationAmount = 1.0/20.0;
+		testEvolver.config.selectionType = JavolverSelection.SelectionType.TOURNAMENT;
+		testEvolver.config.selectionRange = 0.25;
+		//testEvolver.setDiversityAmount(1.0);
 		
 		// Perform a few iterations of evolution.
 		for (int j = 0; j < 30; j++) {
@@ -100,17 +103,20 @@ public class TestEvolver {
 
 		BasicDisplay disp = new BasicDisplay(300, 300);
 		int populationSize = 50;
-		int numberOfSpheres = 9;
+		int numberOfSpheres = 6;
 		Javolver testEvolver = new Javolver(new CSpherePacker(numberOfSpheres),populationSize);
 
 
 		// Configure the engine (Not required).
-		testEvolver.setKeepBestIndividualAlive(false);
-		testEvolver.setMutationCount(2);
-		testEvolver.setMutationAmount(0.15*20);
-		testEvolver.setSelectionType(SELECTION_TYPE.tournament);
-		testEvolver.setSelectionRange(0.25);
-		testEvolver.setDiversityAmount(0.1);
+		testEvolver.config.keepBestIndividualAlive = false;
+		testEvolver.config.mutationCount=2;
+		testEvolver.config.mutationAmount=0.15*20;
+		testEvolver.config.allowSwapMutation=true;
+		testEvolver.config.selectionType = JavolverSelection.SelectionType.TOURNAMENT;
+		testEvolver.config.selectionRange = 0.15;
+		testEvolver.config.selectionUseScoreRank = true;
+		testEvolver.config.selectionUseDiversityRank = true;
+		
 		
 		int boxSize = 200;
 		Color boxCol = Color.DARK_GRAY;
@@ -118,7 +124,7 @@ public class TestEvolver {
 		for (int j = 0; j < 5000000; j++) {
 			
 			// Change the mutation amount during the simulation.
-			testEvolver.setMutationAmount(anneal(15,0.1,5000,j));
+			testEvolver.config.mutationAmount = anneal(15,0.1,5000,j);
 			
 			// The main evolution function.
 			testEvolver.doOneCycle();
@@ -152,10 +158,12 @@ public class TestEvolver {
 	
 
 	public static void testTree() {
+		
+		DecimalFormat doubleFormat = new DecimalFormat("#.000");
 		BasicDisplay disp = new BasicDisplay(400, 400);
 		disp.drawCircle(100, 100, 50, new Color(255,0,128));
 
-		int popTargetSize=20;
+		int popTargetSize=30;
 		
 		System.out.print("START");
 		for (int n = 0; n < 500; n++) {
@@ -163,27 +171,36 @@ public class TestEvolver {
 			Javolver testEvolver = new Javolver(new GeneTree(), popTargetSize);
 		
 			// Configure the engine (Not required).
-			testEvolver.setKeepBestIndividualAlive(true);
-			testEvolver.setMutationCount(1);
-			testEvolver.setMutationAmount(0.085);
-			testEvolver.setSelectionType(SELECTION_TYPE.tournament);
-			testEvolver.setSelectionRange(0.005);
-			testEvolver.setDiversityAmount(0);
+			testEvolver.config.keepBestIndividualAlive = false;
+			testEvolver.config.mutationCount=1;
+			testEvolver.config.mutationAmount=0.085;
+			testEvolver.config.allowSwapMutation=true;
+			testEvolver.config.selectionType = JavolverSelection.SelectionType.TOURNAMENT;
+			testEvolver.config.selectionRange = 0.005;
+			testEvolver.config.selectionUseScoreRank = true;
+			testEvolver.config.selectionUseDiversityRank = true;
+			
 			
 			int iteration=0;
-			int runLength=300;
+			int runLength=400;
 			for (int j = 0; j < runLength; j++) {
-				for (int i = 0; i < 1; i++) {
-					testEvolver.setMutationAmount(anneal(0.2,0.01,runLength,j));
-					testEvolver.setDiversityAmount(anneal(5,0.01,runLength,j));
+				GeneTree best = (GeneTree) testEvolver.findBestScoringIndividual(null);
+				
+				//for (int i = 0; i < 1; i++) {
+					double mutationAmount = best.dna.getDouble(GeneTree.VAL_configMutationAmount);
+					testEvolver.config.mutationAmount = mutationAmount;
+					double selectionRange = best.dna.getDouble(GeneTree.VAL_configSelectionRange);
+					testEvolver.config.selectionRange = selectionRange;
+					//testEvolver.config.mutationAmount = anneal(0.2,0.01,runLength,j);
+					//testEvolver.setDiversityAmount = anneal(5,0.01,runLength,j);
 					
 					testEvolver.doOneCycle();
 					iteration++;
-				}
+				//}
 				
 				testEvolver.report();
 				
-				GeneTree best = (GeneTree) testEvolver.findBestScoringIndividual(null);
+				//GeneTree best = (GeneTree) testEvolver.findBestScoringIndividual(null);
 
 				disp.cls(new Color(149, 183, 213));
 
@@ -193,7 +210,10 @@ public class TestEvolver {
 				disp.refresh();
 				//
 
-				System.out.println("Iterations "+iteration);
+				System.out.println(
+						"Iterations "+iteration +
+						" MutAmount: "+doubleFormat.format(mutationAmount)+
+						" SelectionRange: "+doubleFormat.format(selectionRange));
 
 			}
 			System.out.print("END");
@@ -206,17 +226,20 @@ public class TestEvolver {
 	public static void testProgram() {
 
 
-		int popTargetSize = 100;
+		int popTargetSize = 1000;
 		Javolver testEvolver = new Javolver(new GeneProgram(), popTargetSize);
 
 		// Configure the engine (Not required).
-		testEvolver.setKeepBestIndividualAlive(true);
-		testEvolver.setMutationCount(5);
-		testEvolver.setMutationAmount((1.0/250.0)*2060.0);
-		testEvolver.setSelectionType(SELECTION_TYPE.tournament);
-		testEvolver.setSelectionRange(0.15);
-		testEvolver.setAllowSwapMutation(true);
-		testEvolver.setDiversityAmount(50);
+		testEvolver.config.keepBestIndividualAlive = true;
+		
+		testEvolver.config.mutationCount = 5;
+		testEvolver.config.mutationAmount = ((1.0/250.0)*2060.0);
+		testEvolver.config.allowSwapMutation=true;
+		
+		testEvolver.config.selectionType = JavolverSelection.SelectionType.TOURNAMENT;
+		testEvolver.config.selectionRange = 0.15;
+		
+		//testEvolver.setDiversityAmount(50);
 	
 		
 		int iteration=0;

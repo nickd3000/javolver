@@ -2,6 +2,8 @@ package javolver;
 
 import java.util.ArrayList;
 
+import javolver.JavolverBreed.BreedMethod;
+
 
 
 /**
@@ -14,23 +16,11 @@ import java.util.ArrayList;
  */
 public class Javolver {
 
-	/**
-	 * tournament	chose fittest of a set number of individuals.
-	 * roulette		chose fittest randomly, best individuals more likely to be selected.
-	 */
-	public enum SELECTION_TYPE {tournament,  roulette};
+	public JavolverConfig config = new JavolverConfig();
 	
-	SELECTION_TYPE	selectionType = SELECTION_TYPE.tournament;
-	double			selectionRange = 0.2;
-	double			mutationAmount = 0.10;
-	int				mutationCount = 2;
-	double			diversityAmount = 0.0;
-	boolean			keepBestIndividualAlive = false;
-	boolean			allowSwapMutation = false;
+	private ArrayList<Individual> genePool = new ArrayList<>();
+	private Individual proto; // Copy of type of chromosome we will use.
 	
-	private			ArrayList<Individual> genePool = new ArrayList<>();
-	private			Individual proto; // Copy of type of chromosome we will use.
-	private			Chromosome averageChromosome; //
 	
 	/**
 	 * Default constructor.
@@ -59,8 +49,6 @@ public class Javolver {
 	public double getBestScore() {
 		return findBestScoringIndividual(genePool).getScore();
 	}
-	
-	
 	
 	/**
 	 * experimental function to run the system until improvement slows.
@@ -113,18 +101,19 @@ public class Javolver {
 	public void doOneCycle()
 	{
 		scoreGenes(genePool);
-		averageChromosome = CalculateAverageChromosome(genePool);
-		//cullHalf();
+		
+		JavolverRanking.calculateFitnessRank(genePool);
+		JavolverRanking.calculateDiversityRank(genePool);
 	
 		ArrayList<Individual> newGenePool = null;
-		ArrayList<Individual> brood = null;
+		//ArrayList<Individual> brood = null;
 		newGenePool = new ArrayList<Individual>();
-		brood = new ArrayList<Individual>();
+		//brood = new ArrayList<Individual>();
 		
 		int targetPop = genePool.size();
 		
 		// Elitism - keep the best individual in the new pool.
-		if (keepBestIndividualAlive) {
+		if (config.keepBestIndividualAlive) {
 			newGenePool.add(findBestScoringIndividual(genePool));
 		}
 		
@@ -135,22 +124,15 @@ public class Javolver {
 			g1=g2=null;
 			
 			while (g1==g2) {
-				if (selectionType==SELECTION_TYPE.tournament) {
-					g1 = tournamentSelection(genePool, selectionRange);
-					g2 = tournamentSelection(genePool, selectionRange);
-				}
-				else if (selectionType==SELECTION_TYPE.roulette) {
-					g1 = rouletteSelection(genePool);
-					g2 = rouletteSelection(genePool);
-			}} 
+				g1 = JavolverSelection.selectIndividual(genePool, config);
+				g2 = JavolverSelection.selectIndividual(genePool, config);
+			}
 
-			//Individual child = breed(g1,g2); 
-			Individual child = blend(g1,g2);
-			
-			mutate(child,mutationCount,mutationAmount);
-			if (allowSwapMutation) mutateSwap(child, 1);
+			Individual child = JavolverBreed.breed(config,g1,g2); 
+
+			JavolverMutate.mutate(config, child);
+
 			newGenePool.add(child);
-			
 	
 		}
 		
@@ -183,176 +165,8 @@ public class Javolver {
 	}
 	
 	
-	/***
-	 * Select a pair of genes, mate them and return the new child.
-	 * @param	g1	First parent
-	 * @param	g2	Second parent
-	 * @return		The child
-	 */
-	public Individual breed(Individual g1, Individual g2)
-	{
-		Individual child = proto.clone();
-		int dnaSize = g1.dna.getData().size();
-		double d1=0,d2=0;
-				
-		int crossover=(int)(Math.random()*(double)dnaSize);
-		
-		for (int i=0;i<dnaSize;i++)
-		{
-			d1 = g1.dna.getDouble(i);
-			d2 = g2.dna.getDouble(i);
-			
-			if (i<crossover)
-				child.dna.getData().set(i,d1);
-			else
-				child.dna.getData().set(i,d2);
+	
 
-		}
-		
-		return child;
-	}
-	
-	/**
-	 * A breed function that returns the average of the parents - experimental.
-	 * @param g1
-	 * @param g2
-	 * @return
-	 */
-	public Individual blend(Individual g1, Individual g2)
-	{
-		Individual child = proto.clone();
-		int dnaSize = g1.dna.getData().size();
-		double d1=0,d2=0;
-		
-		for (int i=0;i<dnaSize;i++)
-		{
-			d1 = g1.dna.getDouble(i);
-			d2 = g2.dna.getDouble(i);
-			child.dna.getData().set(i,(d1+d2)*0.5);
-		}
-		
-		return child;
-	}
-	
-	/**
-	 * @param ind		The individual to mutate.
-	 * @param count		Number of DNA elements to mutate. 
-	 * @param amount	Amount to mutate by.
-	 */
-	public void mutate(Individual ind, int count, double amount) {
-		double jiggle = 0, value = 0;
-		int index = 0;
-		for (int i=0;i<count;i++) {
-			index = getRandomDnaIndexForIindividual(ind); //(int)((double)ind.dna.data.size()*Math.random());
-			jiggle = (Math.random()-0.5) * amount * 2.0;
-			value = ind.dna.getDouble(index);
-			ind.dna.set(index, value+jiggle);
-		}
-	}
-	
-	
-	public int getRandomDnaIndexForIindividual(Individual ind) {
-		return (int)((double)ind.dna.data.size()*Math.random());
-	}
-	
-	
-	//
-	public void mutateSwap(Individual ind, int count) {
-		for (int i=0;i<count;i++) {
-			int index1 = getRandomDnaIndexForIindividual(ind);
-			int index2 = getRandomDnaIndexForIindividual(ind);
-			ind.dna.swap(index1, index2);
-		}
-	}
-	
-	
-	/**
-	 * Return the fittest individual from a pool, from a random selection.
-	 * @param	pool			The pool of individuals to select from.
-	 * @param	tournamentSize	0..1 value, percentage of pool to include in tournament
-	 * @return					The winner of the tournament
-	 */
-	public Individual tournamentSelection(ArrayList<Individual> pool, double tournamentSize)
-	{
-		int poolSize = pool.size();
-		double maxScore = -1000;
-		Individual currentWinner = null;
-		
-		int tSize = (int)(tournamentSize*(double)poolSize);
-		if (tSize<2) tSize=2;
-		
-		for (int i=0;i<tSize;i++)
-		{
-			Individual contender = getRandomIndividual(pool);
-			//if (contender.getScore()>maxScore)
-			if (getSelectionScore(contender)>maxScore || maxScore==-1000)
-			{
-				//maxScore = contender.getScore();
-				maxScore = getSelectionScore(contender);
-				currentWinner = contender;
-			}
-		}
-		
-		if (currentWinner==null) {
-			int n=0;
-			n++;
-		}
-		
-		return currentWinner;
-	}
-	
-	/**
-	 * Used to get score for an individual while performing selection.
-	 * This takes into account any extra affects like preferring diversity.
-	 * @param ind
-	 * @return
-	 */
-	public double getSelectionScore(Individual ind) {
-		double s = ind.getScore();
-		double diversity = getDeviation(averageChromosome, ind);
-		s+=diversity*diversityAmount;
-		return s;
-	}
-	
-	/**
-	 * Select a random gene from the pool weighted towards the fittest individuals.
-	 * @param 	pool	The pool of individuals to select from.
-	 * @return			The winner of the selection process.
-	 */
-	public Individual rouletteSelection(ArrayList<Individual> pool)
-	{
-	    float totalScore = 0;
-	    float runningScore = 0;
-	    for (Individual g : pool)
-	    {
-	        totalScore += g.getScoreSquared();
-	    }
-
-	    float rnd = (float) (Math.random() * totalScore);
-
-	    for (Individual g : pool)
-	    {   
-	        if (    rnd>=runningScore &&
-	                rnd<=runningScore+g.getScoreSquared())
-	        {
-	            return g;
-	        }
-	        runningScore+=g.getScoreSquared();
-	    }
-
-	    return null;
-	}
-	
-	/***
-	 * Return an individual randomly selected from the supplied list of individuals.
-	 * @param	pool	The pool of individuals to select from.
-	 * @return			Random member of the supplied list.
-	 */
-	public Individual getRandomIndividual(ArrayList<Individual> pool)
-	{
-		int id = (int)((float)(pool.size()-1) * Math.random());
-		return pool.get(id);
-	}
 	
 
 	
@@ -379,126 +193,9 @@ public class Javolver {
 	}
 
 	
-	/**
-	 * Create a chromosome that represents the average chromosome of the pool.
-	 * @param pool
-	 * @return
-	 */
-	public Chromosome CalculateAverageChromosome(ArrayList<Individual> pool) {
-		int numElements = pool.get(0).dna.getData().size();
-		Chromosome average = new Chromosome();
-		average.init(numElements);
-		
-		// Clear average structure.
-		for (int i=0;i<average.data.size();i++) {
-			average.set(i, 0.0);
-		}
-		
-		for (Individual i : pool) {
-			for (int j=0;j<numElements;j++) {
-				double val = i.dna.getData().get(j) / (double)numElements;
-				val = val + average.data.get(j);
-				average.data.set(j, val);
-			}
-		}
-		
-		return average;
-	}
 	
 	
-	public double getDeviation(Chromosome average, Individual ind) {
-		int numElements = average.getData().size();
-		int numIndElements = ind.dna.getData().size();
-		int count = 0;
-		double totalDiff = 0;
-		for (int i=0;i<numElements;i++) {
-			if (i>numIndElements) continue;
-			totalDiff = Math.abs(average.getDouble(i)-ind.dna.getDouble(i));
-			count++;
-		}
-		
-		if (count==0) return 0;
-		
-		return totalDiff/(double)count;
-	}
+
 	
-	
-	/**
-	 * @return the selectionType
-	 */
-	public SELECTION_TYPE getSelectionType() {
-		return selectionType;
-	}
 
-	/**
-	 * @param selectionType the selectionType to set
-	 */
-	public void setSelectionType(SELECTION_TYPE selectionType) {
-		this.selectionType = selectionType;
-	}
-
-	/**
-	 * @return the mutationAmount
-	 */
-	public double getMutationAmount() {
-		return mutationAmount;
-	}
-
-	/**
-	 * The mutation amount is the maximum amount that a DNA element can be mutated by in a mutation.
-	 * @param mutationAmount the mutationAmount to set
-	 */
-	public void setMutationAmount(double mutationAmount) {
-		this.mutationAmount = mutationAmount;
-	}
-
-	/**
-	 * @return the mutationCount
-	 */
-	public int getMutationCount() {
-		return mutationCount;
-	}
-
-	/**
-	 * @param mutationCount the mutationCount to set
-	 */
-	public void setMutationCount(int mutationCount) {
-		this.mutationCount = mutationCount;
-	}
-
-	/**
-	 * @return the keepBestIndividualAlive
-	 */
-	public boolean isKeepBestIndividualAlive() {
-		return keepBestIndividualAlive;
-	}
-
-	/**
-	 * @param keepBestIndividualAlive the keepBestIndividualAlive to set
-	 */
-	public void setKeepBestIndividualAlive(boolean keepBestIndividualAlive) {
-		this.keepBestIndividualAlive = keepBestIndividualAlive;
-	}
-
-	/**
-	 * @return the selectionRange
-	 */
-	public double getSelectionRange() {
-		return selectionRange;
-	}
-
-	/**
-	 * @param selectionRange the selectionRange to set
-	 */
-	public void setSelectionRange(double selectionRange) {
-		this.selectionRange = selectionRange;
-	}
-	
-	public void setAllowSwapMutation(boolean opt) {
-		allowSwapMutation = opt;
-	}
-	
-	public void setDiversityAmount(double amount) {
-		this.diversityAmount = amount;
-	}
 }

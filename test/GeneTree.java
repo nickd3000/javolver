@@ -17,7 +17,7 @@ public class GeneTree extends Individual {
 
 
 	// Id's used to identify purpose of each DNA element.
-	public int dnaLength = 16;
+	public int dnaLength = 20;
 	static int VAL_trunkScale = 0; // How much the next segment is scaled by.
 	static int VAL_trunkAngle = 1;
 	static int VAL_branch1Pos = 2;
@@ -33,7 +33,11 @@ public class GeneTree extends Individual {
 	static int VAL_branch1Angle2 = 12;
 	static int VAL_branch2Pos2 = 13;
 	static int VAL_branch2Scale2 = 14;
-	static int VAL_branch2Angle2 = 15;	
+	static int VAL_branch2Angle2 = 15;
+	public static int VAL_configMutationAmount = 16;
+	public static int VAL_configSelectionRange = 17;
+	public static int VAL_blendIteration = 18;
+	
 	
 	// Lists of points used when scoring tree.
 	ArrayList<Point2D.Double> leafPoints = null;
@@ -90,6 +94,10 @@ public class GeneTree extends Individual {
 		
 		dna.clamp(VAL_trunkAngle2, -1.0, 1.0);
 		//dna.clamp(VAL_trunkAngle2, 0.0, 0.0);
+		
+		dna.clamp(VAL_configMutationAmount,0.001,1.0);
+		dna.clamp(VAL_configSelectionRange,0.001,1.0);
+		dna.clamp(VAL_blendIteration,0.001,2.0);
 	}
 	
 	
@@ -290,6 +298,10 @@ public class GeneTree extends Individual {
 		int indexDiff = VAL_trunkScale2-VAL_trunkScale;
 		
 		double maxIterations = 10.0;
+		maxIterations = dna.getDouble(VAL_blendIteration) * 10.0;
+		if (maxIterations<1) maxIterations=1;
+		if (maxIterations>15) maxIterations=15;
+		
 		double d1 = dna.getDouble(id);
 		double d2 = dna.getDouble(id+indexDiff);
 		double d = 0;
