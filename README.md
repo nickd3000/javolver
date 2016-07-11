@@ -3,12 +3,15 @@
 
 ![Evolved Tree](https://i.imgur.com/YQOhyQV.png "Evolved tree")
 
-The library is designed to be extremely simple to set up and run.  The user simply needs to create a derived class from the [Individual](https://github.com/nickd3000/javolver/blob/master/javolver/Individual.java) class, and implement three functions:
+The library is designed to be extremely simple to set up and run.  To get strted, create a derived class from the [Individual](https://github.com/nickd3000/javolver/blob/master/javolver/Individual.java) class, and implement three functions:
     clone()
     toString();
     calculateScore();
     
-An object of Javolver is then created and passed in the user's derived type, and then the evolving can be started.
+An object of Javolver is then created and passed in the user's derived type, and then the fun can begin.
+
+*Documentation*
+Java docs for the library are available [here](http://htmlpreview.github.com/?https://github.com/nickd3000/javolver/blob/master/docs/index.html)
 
 Simple Example
 
