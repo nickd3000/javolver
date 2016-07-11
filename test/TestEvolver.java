@@ -54,7 +54,7 @@ public class TestEvolver {
 	 * 
 	 * @param v1			First value in range.
 	 * @param v2			Second value in range.
-	 * @param maxIterations	Number of iterations diring which return value will blend from v1 to v2
+	 * @param maxIterations	Number of iterations during which return value will blend from v1 to v2
 	 * @param i				Current iteration.
 	 * @return				Blended value based on v1 and v2
 	 */
@@ -171,10 +171,10 @@ public class TestEvolver {
 			Javolver testEvolver = new Javolver(new GeneTree(), popTargetSize);
 		
 			// Configure the engine (Not required).
-			testEvolver.config.keepBestIndividualAlive = false;
-			testEvolver.config.mutationCount=1;
+			testEvolver.config.keepBestIndividualAlive = true;
+			testEvolver.config.mutationCount=5;
 			testEvolver.config.mutationAmount=0.085;
-			testEvolver.config.allowSwapMutation=true;
+			testEvolver.config.allowSwapMutation=false;
 			testEvolver.config.selectionType = JavolverSelection.SelectionType.TOURNAMENT;
 			testEvolver.config.selectionRange = 0.005;
 			testEvolver.config.selectionUseScoreRank = true;
@@ -187,11 +187,11 @@ public class TestEvolver {
 				GeneTree best = (GeneTree) testEvolver.findBestScoringIndividual(null);
 				
 				//for (int i = 0; i < 1; i++) {
-					double mutationAmount = best.dna.getDouble(GeneTree.VAL_configMutationAmount);
-					testEvolver.config.mutationAmount = mutationAmount;
-					double selectionRange = best.dna.getDouble(GeneTree.VAL_configSelectionRange);
-					testEvolver.config.selectionRange = selectionRange;
-					//testEvolver.config.mutationAmount = anneal(0.2,0.01,runLength,j);
+					//double mutationAmount = best.dna.getDouble(GeneTree.VAL_configMutationAmount);
+					//testEvolver.config.mutationAmount = mutationAmount;
+					//double selectionRange = best.dna.getDouble(GeneTree.VAL_configSelectionRange);
+					//testEvolver.config.selectionRange = selectionRange;
+					testEvolver.config.mutationAmount = anneal(0.2,0.01,runLength,j);
 					//testEvolver.setDiversityAmount = anneal(5,0.01,runLength,j);
 					
 					testEvolver.doOneCycle();
@@ -211,9 +211,9 @@ public class TestEvolver {
 				//
 
 				System.out.println(
-						"Iterations "+iteration +
-						" MutAmount: "+doubleFormat.format(mutationAmount)+
-						" SelectionRange: "+doubleFormat.format(selectionRange));
+						"Iterations "+iteration );
+						//" MutAmount: "+doubleFormat.format(mutationAmount)+
+						//" SelectionRange: "+doubleFormat.format(selectionRange));
 
 			}
 			System.out.print("END");

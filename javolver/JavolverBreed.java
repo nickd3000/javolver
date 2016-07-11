@@ -1,41 +1,55 @@
 package javolver;
 
+/**
+ * @author nick
+ *	Various breeding strategies that take two parent individuals and return
+ *	a child derived from them.
+ */
 public class JavolverBreed {
 
 	public enum BreedMethod {CROSSOVER, UNIFORM, AVERAGE};
 	
-	public static Individual breed(JavolverConfig config, Individual g1, Individual g2)
+	/**
+	 * Breed two parents and return the resulting child.
+	 * The breeding method is selected from the config structure.
+	 * @param config	Program settings.
+	 * @param	parent1	First parent
+	 * @param	parent2	Second parent
+	 * @return			child Individual
+	 */
+	public static Individual breed(JavolverConfig config, Individual parent1, Individual parent2)
 	{
 		switch (config.breedMethod) {
 		case CROSSOVER:
-			return breedCrossover(g1,g2);
+			return breedCrossover(parent1,parent2);
 		case UNIFORM:
-			return breedUniform(g1,g2);
+			return breedUniform(parent1,parent2);
 		case AVERAGE:
-			return breedAverage(g1,g2);
+			return breedAverage(parent1,parent2);
 		default:
-			return breedUniform(g1,g2);
+			return breedUniform(parent1,parent2);
 		}
 	}
 	
 	/***
 	 * Select a pair of genes, mate them and return the new child.
-	 * @param	g1	First parent
-	 * @param	g2	Second parent
+	 * Using crossover method, there is one crossover point.
+	 * @param	parent1	First parent
+	 * @param	parent2	Second parent
 	 * @return		The child
 	 */
-	public static Individual breedCrossover(Individual g1, Individual g2)
+	public static Individual breedCrossover(Individual parent1, Individual parent2)
 	{
-		Individual child = g1.clone(); //proto.clone();
-		int dnaSize = g1.dna.getData().size();
+		Individual child = parent1.clone(); //proto.clone();
+		int dnaSize = parent1.dna.getData().size();
 		double d1=0,d2=0;
 				
 		int crossover=(int)(Math.random()*(double)dnaSize);
 		
 		for (int i=0;i<dnaSize;i++)
 		{
-			d1 = g1.dna.getDouble(i);
-			d2 = g2.dna.getDouble(i);
+			d1 = parent1.dna.getDouble(i);
+			d2 = parent2.dna.getDouble(i);
 			
 			if (i<crossover)
 				child.dna.getData().set(i,d1);
@@ -49,20 +63,21 @@ public class JavolverBreed {
 	
 	/***
 	 * Select a pair of genes, mate them and return the new child.
-	 * @param	g1	First parent
-	 * @param	g2	Second parent
+	 * Using uniform method, each element is taken from a random parent.
+	 * @param	parent1	First parent
+	 * @param	parent2	Second parent
 	 * @return		The child
 	 */
-	public static Individual breedUniform(Individual g1, Individual g2)
+	public static Individual breedUniform(Individual parent1, Individual parent2)
 	{
-		Individual child = g1.clone();
-		int dnaSize = g1.dna.getData().size();
+		Individual child = parent1.clone();
+		int dnaSize = parent1.dna.getData().size();
 		double d1=0,d2=0;
 
 		for (int i=0;i<dnaSize;i++)
 		{
-			d1 = g1.dna.getDouble(i);
-			d2 = g2.dna.getDouble(i);
+			d1 = parent1.dna.getDouble(i);
+			d2 = parent2.dna.getDouble(i);
 			
 			if (Math.random()<0.5)
 				child.dna.getData().set(i,d1);
@@ -76,20 +91,21 @@ public class JavolverBreed {
 	
 	/**
 	 * A breed function that returns the average of the parents - experimental.
-	 * @param g1
-	 * @param g2
-	 * @return
+	 * Elements are taken as the average of both parents.
+	 * @param	parent1	First parent
+	 * @param	parent2	Second parent
+	 * @return	The child
 	 */
-	public static Individual breedAverage(Individual g1, Individual g2)
+	public static Individual breedAverage(Individual parent1, Individual parent2)
 	{
-		Individual child = g1.clone();//proto.clone();
-		int dnaSize = g1.dna.getData().size();
+		Individual child = parent1.clone();//proto.clone();
+		int dnaSize = parent1.dna.getData().size();
 		double d1=0,d2=0;
 		
 		for (int i=0;i<dnaSize;i++)
 		{
-			d1 = g1.dna.getDouble(i);
-			d2 = g2.dna.getDouble(i);
+			d1 = parent1.dna.getDouble(i);
+			d2 = parent2.dna.getDouble(i);
 			child.dna.getData().set(i,(d1+d2)*0.5);
 		}
 		

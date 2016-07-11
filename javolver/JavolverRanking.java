@@ -3,6 +3,11 @@ package javolver;
 import java.util.ArrayList;
 import java.util.Comparator;
 
+/**
+ * @author nick
+ *	Functionality to rank each individual in a pool by both score and 
+ *	by deviation from the average individual.
+ */
 public class JavolverRanking {
 
 	
@@ -64,8 +69,8 @@ public class JavolverRanking {
 	
 	/**
 	 * Create a chromosome that represents the average chromosome of the pool.
-	 * @param pool
-	 * @return
+	 * @param pool	The pool of individuals we want to calculate from.
+	 * @return		Chromosome containing average of whole pool.
 	 */
 	public static Chromosome CalculateAverageChromosome(ArrayList<Individual> pool) {
 		int numElements = pool.get(0).dna.getData().size();

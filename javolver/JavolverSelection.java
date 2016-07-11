@@ -10,6 +10,12 @@ public class JavolverSelection {
 	 */
 	public enum SelectionType {TOURNAMENT,  ROULETTE};
 	
+	/**
+	 * Use the selection method specified in config to select an individual from the supplied pool.
+	 * @param pool		Pool of individuals to search in.
+	 * @param config	Program settings.
+	 * @return			Selected individual.
+	 */
 	public static Individual selectIndividual(ArrayList<Individual> pool, JavolverConfig config) {
 		
 		switch (config.selectionType) {
@@ -26,7 +32,7 @@ public class JavolverSelection {
 	/**
 	 * Return the fittest individual from a pool, from a random selection.
 	 * @param	pool			The pool of individuals to select from.
-	 * @param	tournamentSize	0..1 value, percentage of pool to include in tournament
+	 * @param	config			Program settings
 	 * @return					The winner of the tournament
 	 */
 	public static Individual tournamentSelection(ArrayList<Individual> pool, JavolverConfig config)
@@ -58,6 +64,7 @@ public class JavolverSelection {
 	/**
 	 * Select a random gene from the pool weighted towards the fittest individuals.
 	 * @param 	pool	The pool of individuals to select from.
+	 * @param	config			Program settings
 	 * @return			The winner of the selection process.
 	 */
 	public static Individual rouletteSelection(ArrayList<Individual> pool, JavolverConfig config)
@@ -99,10 +106,13 @@ public class JavolverSelection {
 	/**
 	 * Used to get score for an individual while performing selection.
 	 * This takes into account any extra affects like preferring diversity.
-	 * @param ind
-	 * @return
+	 * @param	config	Program settings
+	 * @param	ind		The Individual
+	 * @return	Score or rank value.
 	 */
 	public static double getSelectionScore(JavolverConfig config, Individual ind) {
+
+		// Special handling if we are using the rank method.
 		if (config.selectionUseScoreRank==true) {
 			double score = (double)ind.rankScore;
 			
@@ -113,10 +123,8 @@ public class JavolverSelection {
 			return score;
 		}
 		
-		double s = ind.getScore();
-		//double diversity = getDeviation(averageChromosome, ind);
-		//s+=diversity*diversityAmount;
-		return s;
+		// Otherwise just return the individuals score.
+		return ind.getScore();
 	
 	}
 	
