@@ -171,14 +171,15 @@ public class TestEvolver {
 			Javolver testEvolver = new Javolver(new GeneTree(), popTargetSize);
 		
 			// Configure the engine (Not required).
-			testEvolver.config.keepBestIndividualAlive = true;
+			testEvolver.config.keepBestIndividualAlive = false;
 			testEvolver.config.mutationCount=5;
 			testEvolver.config.mutationAmount=0.085;
 			testEvolver.config.allowSwapMutation=false;
 			testEvolver.config.selectionType = JavolverSelection.SelectionType.TOURNAMENT;
-			testEvolver.config.selectionRange = 0.005;
+			testEvolver.config.selectionRange = 0.05;
 			testEvolver.config.selectionUseScoreRank = true;
 			testEvolver.config.selectionUseDiversityRank = true;
+			testEvolver.config.breedMethod = JavolverBreed.BreedMethod.CROSSOVER;
 			
 			
 			int iteration=0;

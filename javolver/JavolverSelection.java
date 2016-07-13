@@ -117,7 +117,7 @@ public class JavolverSelection {
 			double score = (double)ind.rankScore;
 			
 			if (config.selectionUseDiversityRank==true) {
-				score+=(double)ind.rankDiversity/10;
+				score+=(double)ind.rankDiversity*0.5;
 			}
 			
 			return score;
