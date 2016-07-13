@@ -1,6 +1,7 @@
 package javolver;
 
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
 
 import javolver.JavolverBreed.BreedMethod;
 
@@ -101,9 +102,16 @@ public class Javolver {
 	public void doOneCycle()
 	{
 		scoreGenes(genePool);
+
+		// make the fitness calculations run in another thread
+		CompletableFuture<Void> fitnessCalculation = CompletableFuture.runAsync(() -> {
+			JavolverRanking.calculateFitnessRank(genePool);
+		});
 		
-		JavolverRanking.calculateFitnessRank(genePool);
 		JavolverRanking.calculateDiversityRank(genePool);
+		
+		// wait for the fitness calculations to finish
+		fitnessCalculation.join();
 	
 		ArrayList<Individual> newGenePool = null;
 		//ArrayList<Individual> brood = null;
@@ -158,9 +166,16 @@ public class Javolver {
 	 */
 	public void scoreGenes(ArrayList<Individual> pool)
 	{
-		for (Individual gene : pool)
-		{
-			gene.getScore();
+		// switch to parallel processing for large populations
+		// TODO: if the scoring is done in parallel should be set via config instead
+		if (pool.size() >= 2000) {
+			// create a parallel stream of all Individuals
+			// and tell the stream to call "getScore" on every one of them.
+			pool.parallelStream().forEach(Individual::getScore);
+		} else {
+			for (Individual gene : pool) {
+				gene.getScore();
+			}
 		}
 	}
 	
