@@ -42,7 +42,12 @@ public class JavolverConfig {
 	public double mutationAmount = 0.10;
 	public int mutationCount = 2;
 	public boolean allowSwapMutation = false;
-	
-	
+
+	/**
+	 * Use multi-threading for the scoring process.
+	 * Set this to true if your {@link Individual#calculateScore()} method
+	 * is expensive to run and may benefit from parallelization.
+	 */
+	public boolean parallelScoring = false;
 	
 }

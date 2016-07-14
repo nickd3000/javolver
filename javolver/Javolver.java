@@ -2,9 +2,6 @@ package javolver;
 
 import java.util.ArrayList;
 
-import javolver.JavolverBreed.BreedMethod;
-
-
 
 /**
  * Javolver is a simple engine that processes a pool of individuals using genetic selection.
@@ -100,7 +97,11 @@ public class Javolver {
 	 */
 	public void doOneCycle()
 	{
-		scoreGenes(genePool);
+		if (config.parallelScoring) {
+			scoreGenesParallel(genePool);
+		} else {
+			scoreGenes(genePool);
+		}
 		
 		JavolverRanking.calculateFitnessRank(genePool);
 		JavolverRanking.calculateDiversityRank(genePool);
@@ -162,6 +163,10 @@ public class Javolver {
 		{
 			gene.getScore();
 		}
+	}
+	
+	public void scoreGenesParallel(ArrayList<Individual> pool) {
+		pool.parallelStream().unordered().forEach(Individual::getScore);
 	}
 	
 	
