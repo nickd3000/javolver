@@ -23,8 +23,8 @@ public class CSpherePacker extends Individual {
 		this.numSpheres = numSpheres;
 		dna.init(numSpheres*3);
 		for (int i=0;i<numSpheres*3;i+=3) {
-			dna.set(i, 20 + Math.random()*150);
-			dna.set(i+1, 20 + Math.random()*150);
+			dna.set(i, 20 + Math.random()*100);
+			dna.set(i+1, 20 + Math.random()*100);
 			dna.set(i+2, Math.random()*50);
 		}
 	}

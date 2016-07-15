@@ -12,8 +12,7 @@ import javolver.*;
  */
 public class TestEvolver {
 
-	
-	
+
 	//
 	public static void main(String[] args) {
 
@@ -41,10 +40,10 @@ public class TestEvolver {
 		 * individual is reduced for leaves that are 'under' other leaves, in an
 		 * attempt to simulate leaves requiring sunlight.
 		 */
-		testTree();
+		//testTree();
 		
 		
-		//testProgram(); // Not working very well (or at all).
+		testProgram(); // Not working very well (or at all).
 	}
 
 	/**
@@ -102,7 +101,7 @@ public class TestEvolver {
 	public static void testSpherePacker() {
 
 		BasicDisplay disp = new BasicDisplay(300, 300);
-		int populationSize = 50;
+		int populationSize = 2000;
 		int numberOfSpheres = 6;
 		Javolver testEvolver = new Javolver(new CSpherePacker(numberOfSpheres),populationSize);
 
@@ -115,25 +114,28 @@ public class TestEvolver {
 		testEvolver.config.selectionType = JavolverSelection.SelectionType.TOURNAMENT;
 		testEvolver.config.selectionRange = 0.15;
 		testEvolver.config.selectionUseScoreRank = true;
-		testEvolver.config.selectionUseDiversityRank = true;
-		
+		testEvolver.config.selectionUseDiversityRank = false;
+		testEvolver.config.breedMethod = JavolverBreed.BreedMethod.UNIFORM;
+		testEvolver.config.parallelScoring = true;
 		
 		int boxSize = 200;
 		Color boxCol = Color.DARK_GRAY;
+		BasicDisplay.startTimer();
 		
 		for (int j = 0; j < 5000000; j++) {
 			
 			// Change the mutation amount during the simulation.
-			testEvolver.config.mutationAmount = anneal(15,0.1,5000,j);
+			testEvolver.config.mutationAmount = anneal(25,0.1,5000,j);
 			
 			// The main evolution function.
 			testEvolver.doOneCycle();
 			
-			// Find the best individual for drawing.
-			CSpherePacker top = (CSpherePacker)testEvolver.findBestScoringIndividual(null);
 			
 			// Draw fittest individual every n frames.
 			if ((j%25)==0) {
+				// Find the best individual for drawing.
+				CSpherePacker top = (CSpherePacker)testEvolver.findBestScoringIndividual(null);
+				
 				int pad = 50;
 				disp.cls(new Color(149, 183, 213));
 				top.draw(disp, pad,pad);
@@ -143,11 +145,14 @@ public class TestEvolver {
 				disp.refresh();
 			}
 			
-			if ((j%500)==0) { // Print report every few iterations.
+			if ((j%50)==0) { // Print report every few iterations.
+				
 				double coverage = ((CSpherePacker)(testEvolver.findBestScoringIndividual(null))).getCoverage();
 				
-				System.out.println("Coverage " + coverage / (200.0*200.0));
+				System.out.println("Coverage " + coverage / (200.0*200.0) + "  Time: " + BasicDisplay.getEllapsedTime());
+				BasicDisplay.startTimer();
 			}
+			
 		}
 		
 		//testEvolver.runUntilMaximum();
@@ -163,7 +168,7 @@ public class TestEvolver {
 		BasicDisplay disp = new BasicDisplay(400, 400);
 		disp.drawCircle(100, 100, 50, new Color(255,0,128));
 
-		int popTargetSize=30;
+		int popTargetSize=100;
 		
 		System.out.print("START");
 		for (int n = 0; n < 500; n++) {
@@ -180,12 +185,14 @@ public class TestEvolver {
 			testEvolver.config.selectionUseScoreRank = true;
 			testEvolver.config.selectionUseDiversityRank = true;
 			testEvolver.config.breedMethod = JavolverBreed.BreedMethod.CROSSOVER;
-			
+			testEvolver.config.parallelScoring = true;
 			
 			int iteration=0;
 			int runLength=400;
 			for (int j = 0; j < runLength; j++) {
 				GeneTree best = (GeneTree) testEvolver.findBestScoringIndividual(null);
+				
+				BasicDisplay.startTimer();
 				
 				//for (int i = 0; i < 1; i++) {
 					//double mutationAmount = best.dna.getDouble(GeneTree.VAL_configMutationAmount);
@@ -198,6 +205,9 @@ public class TestEvolver {
 					testEvolver.doOneCycle();
 					iteration++;
 				//}
+				
+				
+				System.out.println("Timer: " + BasicDisplay.getEllapsedTime());
 				
 				testEvolver.report();
 				
@@ -227,49 +237,39 @@ public class TestEvolver {
 	public static void testProgram() {
 
 
-		int popTargetSize = 1000;
+		int popTargetSize = 10000;
 		Javolver testEvolver = new Javolver(new GeneProgram(), popTargetSize);
 
 		// Configure the engine (Not required).
 		testEvolver.config.keepBestIndividualAlive = true;
-		
 		testEvolver.config.mutationCount = 5;
 		testEvolver.config.mutationAmount = ((1.0/250.0)*2060.0);
-		testEvolver.config.allowSwapMutation=true;
-		
+		testEvolver.config.allowSwapMutation=true;	
 		testEvolver.config.selectionType = JavolverSelection.SelectionType.TOURNAMENT;
 		testEvolver.config.selectionRange = 0.15;
+		testEvolver.config.selectionUseScoreRank = true;
+		testEvolver.config.selectionUseDiversityRank = true;
+		testEvolver.config.breedMethod = JavolverBreed.BreedMethod.CROSSOVER;
+		testEvolver.config.parallelScoring = false;
 		
 		//testEvolver.setDiversityAmount(50);
 	
 		
 		int iteration=0;
 
-		
-		long realStart = System.nanoTime();
-		long startTime =0, endTime = 0, duration = 0;
-		
 		for (int j = 0; j < 50000; j++) {
-			startTime = System.nanoTime();
+			
+			BasicDisplay.startTimer();
+			
 			for (int i = 0; i < 100; i++) {
 				testEvolver.doOneCycle();
 				iteration++;
-				
 			}
-			endTime = System.nanoTime();
-			duration = (endTime-startTime);
-			long totalTime = (endTime - realStart) / (1000000000);
-			System.out.print("iteration: " + iteration + "  Time in ms: " + (duration/1000000) + " total:" + totalTime + "  ");
+			
+			System.out.print("iteration: " + iteration + "  Time in ms: " + BasicDisplay.getEllapsedTime() + "  ");
 			testEvolver.report();
 			System.out.println(testEvolver.findBestScoringIndividual(null).toString());
 			
-			// Cataclysmic event!
-			/*if (cataclysmCounter>100)
-			{
-				cataclysmCounter=0;
-				testEvolver.reduceSetTo(50);
-				testEvolver.addRandomPopulation(100);
-			}*/
 		}
 
 		System.out.print("END ");

@@ -16,7 +16,6 @@ public class GeneProgram extends Individual  {
 	public String targetWord = "GENETICS";
 	double cyclePenalty = 0.0; // number of cycles involved in running program.
 	double scorePenalty = 0;
-	//public ArrayList<Integer> dna = new ArrayList<Integer>();
 	String consoleOutput = "";
 	
 	public double location = 0;
@@ -49,7 +48,7 @@ public class GeneProgram extends Individual  {
 		{
 			cycleCount++;
 			int result = sm.runCycle();
-			if (sm.getMaxHits()>10) {
+			if (sm.getMaxHits()>20) {
 				scorePenalty = 20;
 				break;
 			}
@@ -125,9 +124,6 @@ public class GeneProgram extends Individual  {
 	}
 
 
-
-	
-
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder(200);
@@ -135,7 +131,6 @@ public class GeneProgram extends Individual  {
 		return sb.toString();
 		
 	}
-
 
 }
 

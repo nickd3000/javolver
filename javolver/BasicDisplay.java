@@ -16,7 +16,7 @@ public class BasicDisplay extends JFrame {
 	BufferedImage img;
 	Color currentColor;
 	int width, height;
-
+	static long timerStart = 0;
 	
 	/**
 	 * Default constructor - creates display with default size
@@ -161,6 +161,16 @@ public class BasicDisplay extends JFrame {
 	public Image getImage() {
 		return img;
 	}
-
+	
+	
+	public static void startTimer() {
+		timerStart = System.nanoTime();
+	}
+	
+	// Returns milliseconds since startTimr() was called.
+	public static long getEllapsedTime() {
+		long t = (System.nanoTime() - timerStart) / 1_000_000;
+		return t;
+	}
 
 }

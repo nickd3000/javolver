@@ -17,7 +17,7 @@ public class Javolver {
 	
 	private ArrayList<Individual> genePool = new ArrayList<>();
 	private Individual proto; // Copy of type of chromosome we will use.
-	
+	private boolean allScored = false;
 	
 	/**
 	 * Default constructor.
@@ -97,19 +97,15 @@ public class Javolver {
 	 */
 	public void doOneCycle()
 	{
-		if (config.parallelScoring) {
-			scoreGenesParallel(genePool);
-		} else {
-			scoreGenes(genePool);
-		}
+		// Request that all individuals perform scoring. 
+		scoreGenes(genePool);
 		
 		JavolverRanking.calculateFitnessRank(genePool);
 		JavolverRanking.calculateDiversityRank(genePool);
 	
 		ArrayList<Individual> newGenePool = null;
-		//ArrayList<Individual> brood = null;
+
 		newGenePool = new ArrayList<Individual>();
-		//brood = new ArrayList<Individual>();
 		
 		int targetPop = genePool.size();
 		
@@ -134,12 +130,14 @@ public class Javolver {
 			JavolverMutate.mutate(config, child);
 
 			newGenePool.add(child);
-	
 		}
 		
 		// Copy new pool over main pool.
 		genePool = newGenePool;
+		allScored = false;
 
+		// Request that all individuals perform scoring. 
+		scoreGenes(genePool);
 	}
 	
 	/***
@@ -155,9 +153,23 @@ public class Javolver {
 	
 	/***
 	 * Triggers each individual in the pool to calculate it's score.
+	 * The sequential or parallel method is used depending on config settings.
 	 * @param	pool	ArrayList of individuals to be scored.
 	 */
 	public void scoreGenes(ArrayList<Individual> pool)
+	{
+		if (allScored==true) return;
+		
+		if (config.parallelScoring) {
+			scoreGenesParallel(genePool);
+		} else {
+			scoreGenesSequential(genePool);
+		}
+		
+		allScored=true;
+	}
+	
+	public void scoreGenesSequential(ArrayList<Individual> pool)
 	{
 		for (Individual gene : pool)
 		{
@@ -169,11 +181,6 @@ public class Javolver {
 		pool.parallelStream().unordered().forEach(Individual::getScore);
 	}
 	
-	
-	
-
-	
-
 	
 	/***
 	 * Search the supplied pool of individuals and return the highest scoring one.
