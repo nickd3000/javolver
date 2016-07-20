@@ -39,7 +39,6 @@ public class CWord extends Individual {
 		{
 			total += getScoreForCharacter(dna.getChar(i), targetWord.charAt(i));
 		}
-		//processed = true;
 
 		return total;
 	}

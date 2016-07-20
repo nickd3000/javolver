@@ -40,10 +40,10 @@ public class TestEvolver {
 		 * individual is reduced for leaves that are 'under' other leaves, in an
 		 * attempt to simulate leaves requiring sunlight.
 		 */
-		//testTree();
+		testTree();
 		
 		
-		testProgram(); // Not working very well (or at all).
+		//testProgram(); // Not working very well (or at all).
 	}
 
 	/**
@@ -176,13 +176,13 @@ public class TestEvolver {
 			Javolver testEvolver = new Javolver(new GeneTree(), popTargetSize);
 		
 			// Configure the engine (Not required).
-			testEvolver.config.keepBestIndividualAlive = false;
+			testEvolver.config.keepBestIndividualAlive = true;
 			testEvolver.config.mutationCount=5;
 			testEvolver.config.mutationAmount=0.085;
 			testEvolver.config.allowSwapMutation=false;
 			testEvolver.config.selectionType = JavolverSelection.SelectionType.TOURNAMENT;
 			testEvolver.config.selectionRange = 0.05;
-			testEvolver.config.selectionUseScoreRank = true;
+			testEvolver.config.selectionUseScoreRank = false;
 			testEvolver.config.selectionUseDiversityRank = true;
 			testEvolver.config.breedMethod = JavolverBreed.BreedMethod.CROSSOVER;
 			testEvolver.config.parallelScoring = true;

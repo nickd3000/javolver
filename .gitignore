@@ -94,3 +94,10 @@ buildNumber.properties
 /bin/
 =======
 >>>>>>> 3f3fd00a30e758356d32b09f310b05d0686bf951
+.idea/compiler.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/workspace.xml
+Evolver.iml
+.idea/copyright/profiles_settings.xml
