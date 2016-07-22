@@ -117,7 +117,7 @@ public class GeneTree extends Individual {
 		double scaleLeafBonus=0.1f;
 		double leafCost=0.05f*1.0f;
 		
-		// Make sure we havent evolved something crazy.
+		// Make sure we haven't evolved something crazy.
 		clampValues();
 		
 		// Recursively generate the points of the tree,

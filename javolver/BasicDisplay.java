@@ -158,6 +158,12 @@ public class BasicDisplay extends JFrame {
 		g.dispose();
 	}
 
+	public void drawImage(BufferedImage sourceImage, int x, int y) {
+		Graphics g = img.getGraphics();
+		g.drawImage(sourceImage,x,y,null);
+	}
+	
+	
 	public Image getImage() {
 		return img;
 	}

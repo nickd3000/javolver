@@ -1,7 +1,13 @@
 package test;
 
 import java.awt.Color;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.text.DecimalFormat;
+
+import javax.imageio.ImageIO;
 
 import javolver.*;
 //import javolver.Javolver.SelectionType;
@@ -40,8 +46,9 @@ public class TestEvolver {
 		 * individual is reduced for leaves that are 'under' other leaves, in an
 		 * attempt to simulate leaves requiring sunlight.
 		 */
-		testTree();
+		//testTree();
 		
+		testPicSolver();
 		
 		//testProgram(); // Not working very well (or at all).
 	}
@@ -61,6 +68,56 @@ public class TestEvolver {
 		if (i>maxIterations) i=maxIterations;
 		double p = (double)i / (double)maxIterations;
 		return v1+((v2-v1)*p);
+	}
+	
+	public static void testPicSolver() {
+		
+		BasicDisplay disp = new BasicDisplay(400, 300);
+		
+		int populationSize = 50;
+		BufferedImage targetImage = null;
+		try {
+		    targetImage = ImageIO.read(new File("mona_lisa.jpg"));
+		} catch (IOException e) {
+			System.out.println("Image not found.");
+		}
+		
+		Javolver testEvolver = new Javolver(new CPicSolver(targetImage), populationSize);
+		
+		// Configure the engine (Not required).
+		testEvolver.config.keepBestIndividualAlive = false;
+		testEvolver.config.mutationCount=5;
+		testEvolver.config.mutationAmount=0.1;
+		testEvolver.config.allowSwapMutation=true;
+		testEvolver.config.selectionType = JavolverSelection.SelectionType.TOURNAMENT;
+		testEvolver.config.selectionRange = 0.2;
+		testEvolver.config.selectionUseScoreRank = true;
+		testEvolver.config.selectionUseDiversityRank = false;
+		testEvolver.config.breedMethod = JavolverBreed.BreedMethod.CROSSOVER;
+		testEvolver.config.parallelScoring = false;
+		
+		// Perform a few iterations of evolution.
+		for (int j = 0; j < 30000; j++) {
+			if (j<30) testEvolver.config.mutationAmount=1.0;
+			else if (j<60) testEvolver.config.mutationAmount=0.1;
+			else  testEvolver.config.mutationAmount=0.05;
+			
+			// Call the evolver class to perform one evolution step.
+			testEvolver.doOneCycle();
+		
+			
+			if (j%1==0) { 
+				CPicSolver top = (CPicSolver)testEvolver.findBestScoringIndividual(null);
+				disp.drawImage(targetImage, 0,0);
+				disp.drawImage(top.getImage(), targetImage.getWidth(),0);
+				disp.refresh();
+			}
+			
+			// Print output every so often.
+			System.out.println("Iteration " + j + "  " + testEvolver.report());
+		}
+		
+		//disp.dr
 	}
 	
 	/**

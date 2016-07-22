@@ -39,7 +39,7 @@ public class JavolverSelection {
 	{
 		int poolSize = pool.size();
 		double maxScore = -1000;
-		Individual currentWinner = null;
+		Individual currentWinner = getRandomIndividual(pool);
 		
 		double tournamentSize = config.selectionRange;
 		
