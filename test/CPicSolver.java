@@ -17,7 +17,7 @@ public class CPicSolver extends Individual {
 	int imgWidth=200;
 	int imgHeight=200;
 	int numPolys = 50;
-	int numPoints = 3;					// Number of points per polygon.
+	int numPoints = 4;					// Number of points per polygon.
 	int stride = (numPoints*2)+4+1; 	// Number of data elements per poly.
 	boolean enableTransparency = true;
 	
