@@ -1,5 +1,8 @@
 Notes
 
+Test functions:
+	rosenbrock, schwefel, rastrigin
+
 Individual
 	stores state information, like score, generation etc
 	

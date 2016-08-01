@@ -147,7 +147,7 @@ public class Javolver {
 	public String report()
 	{
 		Individual best = findBestScoringIndividual(genePool);
-		String retStr = "\nNum Genes: " + genePool.size() + " Best: " + best.toString();
+		String retStr = "Pool Size: " + genePool.size() + " Best: " + best.toString();
 		return retStr;
 	}
 	

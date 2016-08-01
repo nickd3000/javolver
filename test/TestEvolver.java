@@ -73,12 +73,11 @@ public class TestEvolver {
 	public static void testPicSolver() {
 		
 		
-		
-		int populationSize = 5;
+		int populationSize = 25;
 		BufferedImage targetImage = null;
 		try {
-		    //targetImage = ImageIO.read(new File("mona_lisa.jpg"));
-			targetImage = ImageIO.read(new File("odin.jpg"));
+		    targetImage = ImageIO.read(new File("mona_lisa.jpg"));
+			//targetImage = ImageIO.read(new File("odin.jpg"));
 		} catch (IOException e) {
 			System.out.println("Image not found.");
 		}
@@ -89,25 +88,21 @@ public class TestEvolver {
 		
 		// Configure the engine (Not required).
 		testEvolver.config.keepBestIndividualAlive = true;
-		testEvolver.config.mutationCount=10;
-		testEvolver.config.mutationAmount=0.1;
+		testEvolver.config.mutationCount=4;
+		testEvolver.config.mutationAmount=0.025;
 		testEvolver.config.allowSwapMutation=true;
 		testEvolver.config.selectionType = JavolverSelection.SelectionType.TOURNAMENT;
 		testEvolver.config.selectionRange = 0.2;
 		testEvolver.config.selectionUseScoreRank = true;
 		testEvolver.config.selectionUseDiversityRank = false;
 		testEvolver.config.breedMethod = JavolverBreed.BreedMethod.CROSSOVER;
-		testEvolver.config.parallelScoring = false;
+		testEvolver.config.parallelScoring = true;
 		
 		// Perform a few iterations of evolution.
 		for (int j = 0; j < 30000; j++) {
-			//if (j<30) testEvolver.config.mutationAmount=1.0;
-			//else if (j<60) testEvolver.config.mutationAmount=0.1;
-			//else  testEvolver.config.mutationAmount=0.05;
-			
+
 			// Call the evolver class to perform one evolution step.
 			testEvolver.doOneCycle();
-		
 			
 			if (j%1==0) { 
 				CPicSolver top = (CPicSolver)testEvolver.findBestScoringIndividual(null);

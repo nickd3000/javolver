@@ -101,12 +101,12 @@ public class JavolverBreed {
 		Individual child = parent1.clone();//proto.clone();
 		int dnaSize = parent1.dna.getData().size();
 		double d1=0,d2=0;
-		
+		double blend = Math.random();
 		for (int i=0;i<dnaSize;i++)
 		{
 			d1 = parent1.dna.getDouble(i);
 			d2 = parent2.dna.getDouble(i);
-			child.dna.getData().set(i,(d1+d2)*0.5);
+			child.dna.getData().set(i,((d1*blend)+(d2*(1.0-blend))));
 		}
 		
 		return child;

@@ -2,9 +2,9 @@ package test;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
-import javolver.BasicDisplay;
 import javolver.Individual;
 
 /**
@@ -17,8 +17,8 @@ public class CPicSolver extends Individual {
 	int imgWidth=200;
 	int imgHeight=200;
 	int numPolys = 50;
-	int numPoints = 4;					// Number of points per polygon.
-	int stride = (numPoints*2)+4+1; 	// Number of data elements per poly.
+	int numPoints = 3;					// Number of points per polygon.
+	int stride = (numPoints*2)+4+1+2; 	// Number of data elements per poly.
 	boolean enableTransparency = true;
 	
 	public CPicSolver(BufferedImage targetImage) {
@@ -96,7 +96,7 @@ public class CPicSolver extends Individual {
 
 	@Override
 	public String toString() {
-		return "Hi";
+		return String.format("%.4f", score);
 	}
 
 	@Override
@@ -104,6 +104,12 @@ public class CPicSolver extends Individual {
 		clampValues();
 		
 		Graphics2D dc = img.createGraphics();
+		
+		dc.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_OFF);
+        dc.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING,RenderingHints.VALUE_COLOR_RENDER_SPEED);
+        dc.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
+        dc.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_SPEED);
+        
 		dc.setColor(Color.GRAY);
 		dc.fillRect(0, 0, imgWidth, imgHeight);
 		for (int i=0;i<numPolys;i++) {
@@ -130,7 +136,7 @@ public class CPicSolver extends Individual {
 		}
 		
 		
-		return total/(double)count;
+		return (total/(double)count);
 	}
 	
 	public double getScoreForPosition(int x, int y) {
@@ -152,8 +158,9 @@ public class CPicSolver extends Individual {
 	    if (dist<0) dist=0;
 	    if (dist>100) dist=100;
 	    
-	    dist = (100.0 - dist) / 10.0;
+	    dist = (100.0 - dist) / 100.0;
 	    
 		return dist;
 	}
 }
+
