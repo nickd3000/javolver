@@ -53,4 +53,5 @@ There are a few tests included in the project, a simulation that [evolves trees]
 
 ![Sphere Packing](https://i.imgur.com/sidizaf.png "Sphere Packing")
 ![Basic test](https://i.imgur.com/TT5nKZB.png "Basic test")
+![Image Solver](http://i.imgur.com/455ZMAx.png "Image solving")
 
