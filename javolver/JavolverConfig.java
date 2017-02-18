@@ -14,6 +14,7 @@ public class JavolverConfig {
 	 */
 	public boolean keepBestIndividualAlive = false;
 	
+	
 	// Selection settings.
 	public SelectionType selectionType = SelectionType.TOURNAMENT;
 	
@@ -49,5 +50,77 @@ public class JavolverConfig {
 	 * is expensive to run and may benefit from parallelization.
 	 */
 	public boolean parallelScoring = false;
+	
+	public JavolverConfig SetKeepBestIndividualAlive(boolean val) {
+		keepBestIndividualAlive  = val;
+		return this;
+	}
+	
+	public JavolverConfig SetSelectionType(SelectionType val) {
+		selectionType  = val;
+		return this;
+	}
+	
+	/**
+	 * Used in tournament selection.  
+	 * The percentage of the pool to include in the tournament. (1.0 = 100%)
+	 */
+	public JavolverConfig SetSelectionRange(double val) {
+		selectionRange  = val;
+		return this;
+	}
+	
+	/**
+	 * Use the individuals rank instead of the score during selection.
+	 */
+	public JavolverConfig SetSelectionUseScoreRank(boolean val) {
+		selectionUseScoreRank   = val;
+		return this;
+	}
+	
+	/**
+	 * Use the individuals diversity rank during selection.
+	 * selectionUseScoreRank must also be true for this to have an effect.
+	 */
+	public JavolverConfig SetSelectionUseDiversityRank(boolean val) {
+		selectionUseDiversityRank   = val;
+		return this;
+	}
+	
+	/**
+	 * 
+	 */
+	public JavolverConfig SetBreedMethod(BreedMethod val) {
+		breedMethod   = val;
+		return this;
+	}
+
+
+	// Mutation settings.
+	public JavolverConfig SetMutationAmount(double val) {
+		mutationAmount = val;
+		return this;
+	}
+
+	public JavolverConfig SetMutationCount(int val) {
+		mutationCount = val;
+		return this;
+	}
+
+	public JavolverConfig SetAllowSwapMutation (boolean val) {
+		allowSwapMutation = val;
+		return this;
+	}
+
+	/**
+	 * Use multi-threading for the scoring process.
+	 * Set this to true if your {@link Individual#calculateScore()} method
+	 * is expensive to run and may benefit from parallelization.
+	 */
+	public JavolverConfig SetParallelScoring  (boolean val) {
+		parallelScoring = val;
+		return this;
+	}
+
 	
 }

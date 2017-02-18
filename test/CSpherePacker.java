@@ -7,7 +7,7 @@ import javolver.Individual;
 
 /**
  * Nick Donnelly (Twitter: @nickd3000)
- * Example individual type that evolves towards the supplied string.
+ * Example individual type that packs 2d circles tightly into a bounding box.
  */
 public class CSpherePacker extends Individual {
 

@@ -46,9 +46,9 @@ public class TestEvolver {
 		 * individual is reduced for leaves that are 'under' other leaves, in an
 		 * attempt to simulate leaves requiring sunlight.
 		 */
-		//testTree();
+		testTree();
 		
-		testPicSolver();
+		//testPicSolver();
 		
 		//testProgram(); // Not working very well (or at all).
 	}
@@ -96,7 +96,7 @@ public class TestEvolver {
 		testEvolver.config.selectionUseScoreRank = true;
 		testEvolver.config.selectionUseDiversityRank = false;
 		testEvolver.config.breedMethod = JavolverBreed.BreedMethod.CROSSOVER;
-		testEvolver.config.parallelScoring = true;
+		testEvolver.config.parallelScoring = false;
 		
 		// Perform a few iterations of evolution.
 		for (int j = 0; j < 30000; j++) {
@@ -221,31 +221,30 @@ public class TestEvolver {
 		
 		DecimalFormat doubleFormat = new DecimalFormat("#.000");
 		BasicDisplay disp = new BasicDisplay(400, 400);
-		disp.drawCircle(100, 100, 50, new Color(255,0,128));
 
-		int popTargetSize=100;
+		int popTargetSize=10;
 		
 		System.out.print("START");
 		for (int n = 0; n < 500; n++) {
 			// Create the evolver:
 			Javolver testEvolver = new Javolver(new GeneTree(), popTargetSize);
 		
-			// Configure the engine (Not required).
-			testEvolver.config.keepBestIndividualAlive = true;
-			testEvolver.config.mutationCount=5;
-			testEvolver.config.mutationAmount=0.085;
-			testEvolver.config.allowSwapMutation=false;
-			testEvolver.config.selectionType = JavolverSelection.SelectionType.TOURNAMENT;
-			testEvolver.config.selectionRange = 0.05;
-			testEvolver.config.selectionUseScoreRank = false;
-			testEvolver.config.selectionUseDiversityRank = true;
-			testEvolver.config.breedMethod = JavolverBreed.BreedMethod.CROSSOVER;
-			testEvolver.config.parallelScoring = true;
+			// Configure the engine (Not required).			
+			testEvolver.config.SetKeepBestIndividualAlive(true)
+				.SetMutationCount(5)
+				.SetMutationAmount(0.85)
+				.SetAllowSwapMutation(false)
+				.SetSelectionType(JavolverSelection.SelectionType.TOURNAMENT)
+				.SetSelectionRange(0.05)
+				.SetSelectionUseScoreRank(false)
+				.SetSelectionUseDiversityRank(true)
+				.SetBreedMethod(JavolverBreed.BreedMethod.CROSSOVER)
+				.SetParallelScoring(true);
 			
 			int iteration=0;
 			int runLength=400;
 			for (int j = 0; j < runLength; j++) {
-				GeneTree best = (GeneTree) testEvolver.findBestScoringIndividual(null);
+				
 				
 				BasicDisplay.startTimer();
 				
@@ -262,7 +261,7 @@ public class TestEvolver {
 				//}
 				
 				
-				System.out.println("Timer: " + BasicDisplay.getEllapsedTime());
+				
 				
 				testEvolver.report();
 				
@@ -270,16 +269,14 @@ public class TestEvolver {
 
 				disp.cls(new Color(149, 183, 213));
 
+				GeneTree best = (GeneTree) testEvolver.findBestScoringIndividual(null);
 				best.draw(disp, 200.0f, 350.0f);
 
 				disp.drawLine(j, 50, j, 70, Color.GREEN);
 				disp.refresh();
 				//
-
-				System.out.println(
-						"Iterations "+iteration );
-						//" MutAmount: "+doubleFormat.format(mutationAmount)+
-						//" SelectionRange: "+doubleFormat.format(selectionRange));
+				System.out.println("Iterations "+iteration+"   Timer: " + BasicDisplay.getEllapsedTime());
+				
 
 			}
 			System.out.print("END");
