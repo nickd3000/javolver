@@ -1,4 +1,4 @@
-package test;
+package testJavolver;
 
 import java.awt.Color;
 import java.awt.geom.Point2D;
@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import javolver.Individual;
 
-import javolver.BasicDisplay;
+import ToolBox.BasicDisplay;
 
 
 /**
@@ -245,14 +245,18 @@ public class GeneTree extends Individual {
 			double dy = y1-y2;
 			double d = (double) Math.sqrt((dx*dx)+(dy*dy));
 			double thickness = 1+((d*d)/500.0f);
-			disp.drawLine(x1, y1, x2, y2, col_wood, thickness);
+			disp.setDrawColor(col_wood);
+			disp.drawLine(x1, y1, x2, y2, thickness);
 		}
+		
+		disp.setDrawColor(col_leaf);
 		
 		for (int i=0;i<leafPoints.size();i++)
 		{
 			double x = offsx + leafPoints.get(i).x;
 			double y = offsy - leafPoints.get(i).y;
-			disp.drawCircle(x, y, 7, col_leaf);
+			
+			disp.drawCircle(x, y, 7);
 		}
 	}
 	

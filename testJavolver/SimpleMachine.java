@@ -1,4 +1,4 @@
-package test;
+package testJavolver;
 
 public class SimpleMachine {
 

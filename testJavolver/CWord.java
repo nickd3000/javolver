@@ -1,4 +1,4 @@
-package test;
+package testJavolver;
 
 import javolver.Individual;
 

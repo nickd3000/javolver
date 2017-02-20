@@ -1,9 +1,8 @@
-package test;
+package testJavolver;
 
 import java.awt.Color;
-
-import javolver.BasicDisplay;
 import javolver.Individual;
+import ToolBox.BasicDisplay;
 
 /**
  * Nick Donnelly (Twitter: @nickd3000)
@@ -123,12 +122,13 @@ public class CSpherePacker extends Individual {
 	{
 		Color col_leaf = new Color(60,60,140,150);
 				
+		
 		for (int i=0;i<numSpheres*3;i+=3) {
-			disp.drawCircle(
+			disp.setDrawColor(disp.getDistinctColor(i, 0.8f));
+			disp.drawFilledCircle(
 					offsx + dna.getDouble(i), 
 					offsy + dna.getDouble(i+1),
-					dna.getDouble(i+2)*2,
-					col_leaf );
+					dna.getDouble(i+2)*2);
 		}
 			
 	}

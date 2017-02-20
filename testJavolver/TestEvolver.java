@@ -1,4 +1,4 @@
-package test;
+package testJavolver;
 
 import java.awt.Color;
 import java.awt.Image;
@@ -11,7 +11,8 @@ import javax.imageio.ImageIO;
 
 import javolver.*;
 //import javolver.Javolver.SelectionType;
-
+import ToolBox.BasicDisplay;
+import ToolBox.BasicGraph;
 
 /*
  * Test / Example class.
@@ -38,7 +39,7 @@ public class TestEvolver {
 		 * CSpherePacker - Attempts to fit a number of arbitrarily sized circles
 		 * into a square as tightly as possible with graphical output.
 		 */
-		//testSpherePacker();
+		testSpherePacker();
 		
 		/*
 		 * GeneTree - Attempts to evolve a tree that fits certain structural
@@ -46,7 +47,7 @@ public class TestEvolver {
 		 * individual is reduced for leaves that are 'under' other leaves, in an
 		 * attempt to simulate leaves requiring sunlight.
 		 */
-		testTree();
+		//testTree();
 		
 		//testPicSolver();
 		
@@ -156,8 +157,8 @@ public class TestEvolver {
 	public static void testSpherePacker() {
 
 		BasicDisplay disp = new BasicDisplay(300, 300);
-		int populationSize = 2000;
-		int numberOfSpheres = 6;
+		int populationSize = 50;
+		int numberOfSpheres = 20;
 		Javolver testEvolver = new Javolver(new CSpherePacker(numberOfSpheres),populationSize);
 
 
@@ -171,31 +172,34 @@ public class TestEvolver {
 		testEvolver.config.selectionUseScoreRank = true;
 		testEvolver.config.selectionUseDiversityRank = false;
 		testEvolver.config.breedMethod = JavolverBreed.BreedMethod.UNIFORM;
-		testEvolver.config.parallelScoring = true;
+		testEvolver.config.parallelScoring = false;
 		
 		int boxSize = 200;
 		Color boxCol = Color.DARK_GRAY;
-		BasicDisplay.startTimer();
+		disp.startTimer();
 		
 		for (int j = 0; j < 5000000; j++) {
 			
 			// Change the mutation amount during the simulation.
-			testEvolver.config.mutationAmount = anneal(25,0.1,5000,j);
+			testEvolver.config.mutationAmount = anneal(5,0.1,15000,j);
 			
 			// The main evolution function.
 			testEvolver.doOneCycle();
 			
 			
 			// Draw fittest individual every n frames.
-			if ((j%25)==0) {
+			//if ((j%25)==0) {
+			if (disp.getEllapsedTime()>1000/30) {
+				disp.startTimer();
 				// Find the best individual for drawing.
 				CSpherePacker top = (CSpherePacker)testEvolver.findBestScoringIndividual(null);
 				
 				int pad = 50;
-				disp.cls(new Color(149, 183, 213));
+				disp.cls(new Color(64, 64, 64));
 				top.draw(disp, pad,pad);
 				
-				disp.drawRect(pad+0, pad+0, pad+boxSize, pad+boxSize, boxCol);
+				disp.setDrawColor(Color.white);
+				disp.drawRect(pad+0, pad+0, pad+boxSize, pad+boxSize);
 				
 				disp.refresh();
 			}
@@ -204,8 +208,8 @@ public class TestEvolver {
 				
 				double coverage = ((CSpherePacker)(testEvolver.findBestScoringIndividual(null))).getCoverage();
 				
-				System.out.println("Coverage " + coverage / (200.0*200.0) + "  Time: " + BasicDisplay.getEllapsedTime());
-				BasicDisplay.startTimer();
+				//System.out.println("Coverage " + coverage / (200.0*200.0) + "  Time: " + disp.getEllapsedTime());
+				//disp.startTimer();
 			}
 			
 		}
@@ -246,7 +250,7 @@ public class TestEvolver {
 			for (int j = 0; j < runLength; j++) {
 				
 				
-				BasicDisplay.startTimer();
+				disp.startTimer();
 				
 				//for (int i = 0; i < 1; i++) {
 					//double mutationAmount = best.dna.getDouble(GeneTree.VAL_configMutationAmount);
@@ -272,10 +276,11 @@ public class TestEvolver {
 				GeneTree best = (GeneTree) testEvolver.findBestScoringIndividual(null);
 				best.draw(disp, 200.0f, 350.0f);
 
-				disp.drawLine(j, 50, j, 70, Color.GREEN);
+				disp.setDrawColor(Color.GREEN);
+				disp.drawLine(j, 50, j, 70);
 				disp.refresh();
 				//
-				System.out.println("Iterations "+iteration+"   Timer: " + BasicDisplay.getEllapsedTime());
+				System.out.println("Iterations "+iteration+"   Timer: " + disp.getEllapsedTime());
 				
 
 			}
@@ -288,7 +293,7 @@ public class TestEvolver {
 	
 	public static void testProgram() {
 
-
+		BasicDisplay disp = new BasicDisplay(400, 400);
 		int popTargetSize = 10000;
 		Javolver testEvolver = new Javolver(new GeneProgram(), popTargetSize);
 
@@ -311,14 +316,14 @@ public class TestEvolver {
 
 		for (int j = 0; j < 50000; j++) {
 			
-			BasicDisplay.startTimer();
+			disp.startTimer();
 			
 			for (int i = 0; i < 100; i++) {
 				testEvolver.doOneCycle();
 				iteration++;
 			}
 			
-			System.out.print("iteration: " + iteration + "  Time in ms: " + BasicDisplay.getEllapsedTime() + "  ");
+			System.out.print("iteration: " + iteration + "  Time in ms: " + disp.getEllapsedTime() + "  ");
 			testEvolver.report();
 			System.out.println(testEvolver.findBestScoringIndividual(null).toString());
 			

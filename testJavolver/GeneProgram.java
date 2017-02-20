@@ -1,10 +1,10 @@
-package test;
+package testJavolver;
 
 import java.net.NetworkInterface;
 import java.util.ArrayList;
 
 import javolver.Individual;
-import test.SimpleMachine;
+import testJavolver.SimpleMachine;
 
 //import evo.IGene;
 
