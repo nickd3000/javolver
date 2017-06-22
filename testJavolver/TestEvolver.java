@@ -39,7 +39,7 @@ public class TestEvolver {
 		 * CSpherePacker - Attempts to fit a number of arbitrarily sized circles
 		 * into a square as tightly as possible with graphical output.
 		 */
-		testSpherePacker();
+		//testSpherePacker();
 		
 		/*
 		 * GeneTree - Attempts to evolve a tree that fits certain structural
@@ -49,7 +49,7 @@ public class TestEvolver {
 		 */
 		//testTree();
 		
-		//testPicSolver();
+		testPicSolver();
 		
 		//testProgram(); // Not working very well (or at all).
 	}
@@ -74,7 +74,7 @@ public class TestEvolver {
 	public static void testPicSolver() {
 		
 		
-		int populationSize = 25;
+		int populationSize = 100;
 		BufferedImage targetImage = null;
 		try {
 		    targetImage = ImageIO.read(new File("mona_lisa.jpg"));
@@ -85,19 +85,19 @@ public class TestEvolver {
 		
 		BasicDisplay disp = new BasicDisplay(targetImage.getWidth()*2, targetImage.getHeight());
 		
-		Javolver testEvolver = new Javolver(new CPicSolver(targetImage), populationSize);
+		Javolver testEvolver = new Javolver(new CPicSolver2(targetImage), populationSize);
 		
 		// Configure the engine (Not required).
-		testEvolver.config.keepBestIndividualAlive = true;
-		testEvolver.config.mutationCount=4;
-		testEvolver.config.mutationAmount=0.025;
-		testEvolver.config.allowSwapMutation=true;
+		testEvolver.config.keepBestIndividualAlive = false;
+		testEvolver.config.mutationCount=200;
+		testEvolver.config.mutationAmount=0.05;
+		testEvolver.config.allowSwapMutation=false;
 		testEvolver.config.selectionType = JavolverSelection.SelectionType.TOURNAMENT;
-		testEvolver.config.selectionRange = 0.2;
+		testEvolver.config.selectionRange = 0.3;
 		testEvolver.config.selectionUseScoreRank = true;
 		testEvolver.config.selectionUseDiversityRank = false;
-		testEvolver.config.breedMethod = JavolverBreed.BreedMethod.CROSSOVER;
-		testEvolver.config.parallelScoring = false;
+		testEvolver.config.breedMethod = JavolverBreed.BreedMethod.UNIFORM;
+		testEvolver.config.parallelScoring = true;
 		
 		// Perform a few iterations of evolution.
 		for (int j = 0; j < 30000; j++) {
@@ -105,15 +105,15 @@ public class TestEvolver {
 			// Call the evolver class to perform one evolution step.
 			testEvolver.doOneCycle();
 			
-			if (j%1==0) { 
-				CPicSolver top = (CPicSolver)testEvolver.findBestScoringIndividual(null);
+			if (j%2==0) { 
+				CPicSolver2 top = (CPicSolver2)testEvolver.findBestScoringIndividual(null);
 				disp.drawImage(targetImage, 0,0);
 				disp.drawImage(top.getImage(), targetImage.getWidth(),0);
 				disp.refresh();
 			}
 			
 			// Print output every so often.
-			System.out.println("Iteration " + j + "  " + testEvolver.report());
+			//System.out.println("Iteration " + j + "  " + testEvolver.report());
 		}
 		
 		//disp.dr
@@ -158,7 +158,7 @@ public class TestEvolver {
 
 		BasicDisplay disp = new BasicDisplay(300, 300);
 		int populationSize = 50;
-		int numberOfSpheres = 20;
+		int numberOfSpheres = 9;
 		Javolver testEvolver = new Javolver(new CSpherePacker(numberOfSpheres),populationSize);
 
 
