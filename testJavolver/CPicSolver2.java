@@ -16,10 +16,11 @@ public class CPicSolver2 extends Individual {
 	BufferedImage targetImage;
 	int imgWidth=200;
 	int imgHeight=200;
-	int numPolys = 100;
+	int numPolys = 200;
 	int numPoints = 1;					// Number of points per polygon.
 	int stride = 9; 	// Number of data elements per poly.
-	boolean enableTransparency = false;
+	boolean enableTransparency = true;
+	double radiusDivider = 3.0;
 	
 	public CPicSolver2(BufferedImage targetImage) {
 		dna.init(numPolys*stride);
@@ -83,7 +84,8 @@ public class CPicSolver2 extends Individual {
 		
 		if (dist>r1+r2) return 0;
 		
-		double norm = ((r1+r2)-dist)/(r1+r2);
+		double norm = (dist - (r1+r2))/(r1+r2);
+		 
 		
 		return norm;
     }
@@ -99,7 +101,7 @@ public class CPicSolver2 extends Individual {
     		
 			xpos = (int)(dna.getDouble(loc)*imgWidth);
 			ypos = (int)(dna.getDouble(loc+1)*imgHeight);
-			rad = (int)(dna.getDouble(loc+2)*(imgWidth/5.0));
+			rad = (int)(dna.getDouble(loc+2)*(imgWidth/radiusDivider));
 		
     		
     		for (int i=0;i<4;i++) {
@@ -178,7 +180,7 @@ public class CPicSolver2 extends Individual {
 		for (int i=0;i<numPolys;i++) {
 			double x = dna.getDouble((i*stride))*imgWidth;
 			double y = dna.getDouble((i*stride)+1)*imgHeight;
-			double r = dna.getDouble((i*stride)+2)*(imgWidth/5.0);
+			double r = dna.getDouble((i*stride)+2)*(imgWidth/radiusDivider);
 			if (x-r < 0) positionPenalty+=1;
 			if (y-r < 0) positionPenalty+=1;
 			if (x+r > imgWidth) positionPenalty+=1;
@@ -196,10 +198,10 @@ public class CPicSolver2 extends Individual {
 			}
 		}
 		overlapPenalty/=(double)numPolys;
-		overlapPenalty*=0.01;
+		overlapPenalty*=0.02;
 		
-		double averaged = (total/(double)count)*100.0;
-		double sizePenalty = totalRadius * 0.0002;
+		double averaged = (total/(double)count)*500.0;
+		double sizePenalty = totalRadius * 0.25;
 		
 				
 		return averaged-sizePenalty-positionPenalty-overlapPenalty;
@@ -220,11 +222,12 @@ public class CPicSolver2 extends Individual {
 	    g1=g1-g2;
 	    b1=b1-b2;
 	    
+	    double max=450;
 	    double dist = Math.sqrt((double)((r1*r1)+(g1*g1)+(b1*b1)));
 	    if (dist<0) dist=0;
-	    if (dist>100) dist=100;
+	    if (dist>max) dist=max;
 	    
-	    dist = (100.0 - dist) / 100.0;
+	    dist = (max - dist) / max;
 	    
 		return dist;
 	}

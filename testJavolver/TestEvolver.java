@@ -74,7 +74,7 @@ public class TestEvolver {
 	public static void testPicSolver() {
 		
 		
-		int populationSize = 100;
+		int populationSize = 50;
 		BufferedImage targetImage = null;
 		try {
 		    targetImage = ImageIO.read(new File("mona_lisa.jpg"));
@@ -89,11 +89,11 @@ public class TestEvolver {
 		
 		// Configure the engine (Not required).
 		testEvolver.config.keepBestIndividualAlive = false;
-		testEvolver.config.mutationCount=200;
-		testEvolver.config.mutationAmount=0.05;
+		testEvolver.config.mutationCount=5;
+		testEvolver.config.mutationAmount=0.25;
 		testEvolver.config.allowSwapMutation=false;
 		testEvolver.config.selectionType = JavolverSelection.SelectionType.TOURNAMENT;
-		testEvolver.config.selectionRange = 0.3;
+		testEvolver.config.selectionRange = 0.2;
 		testEvolver.config.selectionUseScoreRank = true;
 		testEvolver.config.selectionUseDiversityRank = false;
 		testEvolver.config.breedMethod = JavolverBreed.BreedMethod.UNIFORM;
