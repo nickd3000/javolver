@@ -150,11 +150,38 @@ public class CPicSolver2 extends Individual {
 		dc.setColor(Color.GRAY);
 		dc.fillRect(0, 0, imgWidth, imgHeight);
 		double totalRadius = 0;
+		double minOrder = 9999;
+		double maxOrder = -9999;
 		for (int i=0;i<numPolys;i++) {
-			drawPoly(dc, i);
+			double order = dna.getDouble((i*stride)+7);
+			if (order>maxOrder) maxOrder=order;
+			if (order<minOrder) minOrder=order;
 			totalRadius += dna.getDouble((i*stride)+2);
 		}
 		totalRadius /= (double)numPolys;
+		
+		double lastDrawnOrder = minOrder-0.1;
+		
+		for (int n=0;n<100;n++) {
+			double order=0;
+			double matchOrder=10000;
+			int matchIndex=0;
+			for (int i=0;i<numPolys;i++) {
+				order = dna.getDouble((i*stride)+7);
+				if (order>lastDrawnOrder && order<matchOrder) {
+					matchOrder = order;
+					matchIndex = i;
+				}
+			}
+			drawPoly(dc, matchIndex);
+			lastDrawnOrder = matchOrder;
+		}
+		
+		/*
+		for (int i=0;i<numPolys;i++) {
+			drawPoly(dc, i);	
+		}*/
+		
 	
 		double total = 0;
 		int count = 0;

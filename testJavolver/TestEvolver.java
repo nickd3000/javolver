@@ -74,11 +74,11 @@ public class TestEvolver {
 	public static void testPicSolver() {
 		
 		
-		int populationSize = 50;
+		int populationSize = 250;
 		BufferedImage targetImage = null;
 		try {
-		    targetImage = ImageIO.read(new File("mona_lisa.jpg"));
-			//targetImage = ImageIO.read(new File("odin.jpg"));
+		    //targetImage = ImageIO.read(new File("mona_lisa.jpg"));
+			targetImage = ImageIO.read(new File("odin.jpg"));
 		} catch (IOException e) {
 			System.out.println("Image not found.");
 		}
@@ -88,7 +88,7 @@ public class TestEvolver {
 		Javolver testEvolver = new Javolver(new CPicSolver2(targetImage), populationSize);
 		
 		// Configure the engine (Not required).
-		testEvolver.config.keepBestIndividualAlive = false;
+		testEvolver.config.keepBestIndividualAlive = true;
 		testEvolver.config.mutationCount=5;
 		testEvolver.config.mutationAmount=0.25;
 		testEvolver.config.allowSwapMutation=false;
@@ -96,7 +96,7 @@ public class TestEvolver {
 		testEvolver.config.selectionRange = 0.2;
 		testEvolver.config.selectionUseScoreRank = true;
 		testEvolver.config.selectionUseDiversityRank = false;
-		testEvolver.config.breedMethod = JavolverBreed.BreedMethod.UNIFORM;
+		testEvolver.config.breedMethod = JavolverBreed.BreedMethod.CROSSOVER;
 		testEvolver.config.parallelScoring = true;
 		
 		// Perform a few iterations of evolution.
