@@ -3,7 +3,7 @@ package testJavolver;
 import java.awt.Color;
 import java.util.ArrayList;
 
-import ToolBox.BasicDisplay;
+import com.physmo.toolbox.BasicDisplay;
 
 public class TestDescent {
 

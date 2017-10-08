@@ -5,8 +5,10 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 import javolver.Individual;
+import com.physmo.toolbox.BasicDisplay;
+//import toolbox.BasicDisplay;
 
-import ToolBox.BasicDisplay;
+//import toolbox.BasicDisplay;
 
 
 /**

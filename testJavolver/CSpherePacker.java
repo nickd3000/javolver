@@ -2,7 +2,7 @@ package testJavolver;
 
 import java.awt.Color;
 import javolver.Individual;
-import ToolBox.BasicDisplay;
+import com.physmo.toolbox.BasicDisplay;
 
 /**
  * Nick Donnelly (Twitter: @nickd3000)

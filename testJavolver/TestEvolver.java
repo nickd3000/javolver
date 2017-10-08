@@ -11,8 +11,8 @@ import javax.imageio.ImageIO;
 
 import javolver.*;
 //import javolver.Javolver.SelectionType;
-import ToolBox.BasicDisplay;
-import ToolBox.BasicGraph;
+import com.physmo.toolbox.BasicDisplay;
+import com.physmo.toolbox.BasicGraph;
 
 /*
  * Test / Example class.
@@ -127,7 +127,7 @@ public class TestEvolver {
 	public static void testWord() {
 
 		int populationSize = 100;
-		String targetWord = "HELLOWORLD";
+		String targetWord = "HELLO EVOLUTION";
 		Javolver testEvolver = new Javolver(new CWord(targetWord), populationSize);
 		
 		// Configure the engine (Not required).
@@ -157,21 +157,21 @@ public class TestEvolver {
 	public static void testSpherePacker() {
 
 		BasicDisplay disp = new BasicDisplay(300, 300);
-		int populationSize = 50;
+		int populationSize = 25;
 		int numberOfSpheres = 9;
 		Javolver testEvolver = new Javolver(new CSpherePacker(numberOfSpheres),populationSize);
 
 
 		// Configure the engine (Not required).
 		testEvolver.config.keepBestIndividualAlive = false;
-		testEvolver.config.mutationCount=2;
-		testEvolver.config.mutationAmount=0.15*20;
+		testEvolver.config.mutationCount=1;
+		testEvolver.config.mutationAmount=0.15*20*0.001;
 		testEvolver.config.allowSwapMutation=true;
 		testEvolver.config.selectionType = JavolverSelection.SelectionType.TOURNAMENT;
 		testEvolver.config.selectionRange = 0.15;
 		testEvolver.config.selectionUseScoreRank = true;
 		testEvolver.config.selectionUseDiversityRank = false;
-		testEvolver.config.breedMethod = JavolverBreed.BreedMethod.UNIFORM;
+		testEvolver.config.breedMethod = JavolverBreed.BreedMethod.CROSSOVER;
 		testEvolver.config.parallelScoring = false;
 		
 		int boxSize = 200;
