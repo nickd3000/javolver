@@ -47,9 +47,9 @@ public class TestEvolver {
 		 * individual is reduced for leaves that are 'under' other leaves, in an
 		 * attempt to simulate leaves requiring sunlight.
 		 */
-		//testTree();
+		testTree();
 		
-		testPicSolver();
+		//testPicSolver();
 		
 		//testProgram(); // Not working very well (or at all).
 	}
@@ -92,11 +92,11 @@ public class TestEvolver {
 		testEvolver.config.mutationCount=5;
 		testEvolver.config.mutationAmount=0.25;
 		testEvolver.config.allowSwapMutation=false;
-		testEvolver.config.selectionType = JavolverSelection.SelectionType.TOURNAMENT;
+//		testEvolver.config.selectionType = JavolverSelection.SelectionType.TOURNAMENT;
 		testEvolver.config.selectionRange = 0.2;
 		testEvolver.config.selectionUseScoreRank = true;
 		testEvolver.config.selectionUseDiversityRank = false;
-		testEvolver.config.breedMethod = JavolverBreed.BreedMethod.CROSSOVER;
+		//testEvolver.config.breedMethod = JavolverBreed.BreedMethod.CROSSOVER;
 		testEvolver.config.parallelScoring = true;
 		
 		// Perform a few iterations of evolution.
@@ -134,7 +134,7 @@ public class TestEvolver {
 		testEvolver.config.keepBestIndividualAlive = false;
 		testEvolver.config.mutationCount = 1;
 		testEvolver.config.mutationAmount = 1.0/20.0;
-		testEvolver.config.selectionType = JavolverSelection.SelectionType.TOURNAMENT;
+//		testEvolver.config.selectionType = JavolverSelection.SelectionType.TOURNAMENT;
 		testEvolver.config.selectionRange = 0.25;
 		//testEvolver.setDiversityAmount(1.0);
 		
@@ -167,11 +167,11 @@ public class TestEvolver {
 		testEvolver.config.mutationCount=1;
 		testEvolver.config.mutationAmount=0.15*20*0.001;
 		testEvolver.config.allowSwapMutation=true;
-		testEvolver.config.selectionType = JavolverSelection.SelectionType.TOURNAMENT;
+//		testEvolver.config.selectionType = JavolverSelection.SelectionType.TOURNAMENT;
 		testEvolver.config.selectionRange = 0.15;
 		testEvolver.config.selectionUseScoreRank = true;
 		testEvolver.config.selectionUseDiversityRank = false;
-		testEvolver.config.breedMethod = JavolverBreed.BreedMethod.CROSSOVER;
+		//testEvolver.config.breedMethod = JavolverBreed.BreedMethod.CROSSOVER;
 		testEvolver.config.parallelScoring = false;
 		
 		int boxSize = 200;
@@ -234,15 +234,15 @@ public class TestEvolver {
 			Javolver testEvolver = new Javolver(new GeneTree(), popTargetSize);
 		
 			// Configure the engine (Not required).			
-			testEvolver.config.SetKeepBestIndividualAlive(true)
+			testEvolver.config.SetKeepBestIndividualAlive(false)
 				.SetMutationCount(5)
 				.SetMutationAmount(0.85)
 				.SetAllowSwapMutation(false)
-				.SetSelectionType(JavolverSelection.SelectionType.TOURNAMENT)
+//				.SetSelectionType(JavolverSelection.SelectionType.TOURNAMENT)
 				.SetSelectionRange(0.05)
 				.SetSelectionUseScoreRank(false)
 				.SetSelectionUseDiversityRank(true)
-				.SetBreedMethod(JavolverBreed.BreedMethod.CROSSOVER)
+//				.SetBreedMethod(JavolverBreed.BreedMethod.CROSSOVER)
 				.SetParallelScoring(true);
 			
 			int iteration=0;
@@ -302,11 +302,11 @@ public class TestEvolver {
 		testEvolver.config.mutationCount = 5;
 		testEvolver.config.mutationAmount = ((1.0/250.0)*2060.0);
 		testEvolver.config.allowSwapMutation=true;	
-		testEvolver.config.selectionType = JavolverSelection.SelectionType.TOURNAMENT;
+//		testEvolver.config.selectionType = JavolverSelection.SelectionType.TOURNAMENT;
 		testEvolver.config.selectionRange = 0.15;
 		testEvolver.config.selectionUseScoreRank = true;
 		testEvolver.config.selectionUseDiversityRank = true;
-		testEvolver.config.breedMethod = JavolverBreed.BreedMethod.CROSSOVER;
+//		testEvolver.config.breedMethod = JavolverBreed.BreedMethod.CROSSOVER;
 		testEvolver.config.parallelScoring = false;
 		
 		//testEvolver.setDiversityAmount(50);

@@ -4,6 +4,7 @@ package javolver;
  * @author nick
  *	Various mutation functionalities. 
  */
+// TODO: convert to interface
 public class JavolverMutate {
 
 	

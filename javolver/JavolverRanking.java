@@ -27,7 +27,7 @@ public class JavolverRanking {
 		
 		int count = 1;
 		for (Individual i : pool) {
-			i.rankScore = count++;
+			i.setRankScore(count++);
 			//System.out.println("Ranking: " + count + " fitness:" + i.getScore());
 		}
 	}
@@ -52,7 +52,7 @@ public class JavolverRanking {
 		
 		int count = 1;
 		for (Individual i : pool) {
-			i.rankDiversity = count++;
+			i.setRankDiversity(count++);
 		}
 	}
 

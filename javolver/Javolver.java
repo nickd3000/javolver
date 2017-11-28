@@ -1,6 +1,15 @@
 package javolver;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import javolver.breedingstrategy.BreedingStrategy;
+import javolver.breedingstrategy.BreedingStrategyAverage;
+import javolver.breedingstrategy.BreedingStrategyCrossover;
+import javolver.breedingstrategy.BreedingStrategyUniform;
+import javolver.selectionstrategy.SelectionStrategy;
+import javolver.selectionstrategy.SelectionStrategyRoulette;
+import javolver.selectionstrategy.SelectionStrategyTournament;
 
 
 /**
@@ -19,6 +28,9 @@ public class Javolver {
 	private Individual proto; // Copy of type of chromosome we will use.
 	private boolean allScored = false;
 	
+	private BreedingStrategy breedingStrategy = null;
+	private SelectionStrategy selectionStrategy = null;
+	
 	/**
 	 * Default constructor.
 	 * @param proto		A subclassed object from Individual, from which to clone the other members of the generation.
@@ -26,6 +38,14 @@ public class Javolver {
 	public Javolver(Individual proto)
 	{
 		this.proto = proto;
+		
+		// TEMP: Keeping these here while developing new system.
+		breedingStrategy = new BreedingStrategyCrossover();
+		//breedingStrategy = new BreedingStrategyUniform();
+		//breedingStrategy = new BreedingStrategyAverage();
+		
+		//selectionStrategy = new SelectionStrategyTournament();
+		selectionStrategy = new SelectionStrategyRoulette();
 	}
 	
 	/**
@@ -121,15 +141,18 @@ public class Javolver {
 			g1=g2=null;
 			
 			while (g1==g2) {
-				g1 = JavolverSelection.selectIndividual(genePool, config);
-				g2 = JavolverSelection.selectIndividual(genePool, config);
+				g1 = selectionStrategy.select(config, genePool);
+				g2 = selectionStrategy.select(config, genePool);
 			}
 
-			Individual child = JavolverBreed.breed(config,g1,g2); 
+			List<Individual> children = breedingStrategy.breed(config, g1, g2);
 
-			JavolverMutate.mutate(config, child);
-
-			newGenePool.add(child);
+			for (Individual child : children) {
+				JavolverMutate.mutate(config, child);
+				newGenePool.add(child);
+			}
+			
+			
 		}
 		
 		// Copy new pool over main pool.

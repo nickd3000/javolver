@@ -1,23 +1,18 @@
 package javolver;
 
-import javolver.JavolverBreed.BreedMethod;
-import javolver.JavolverSelection.SelectionType;
 
 /**
  * @author nick
  *	Settings structure that can be passed around the helper functions.
  */
+// TODO: consider converting to a fluid interface...
 public class JavolverConfig {
 	
 	/**
 	 * Keep the best individual alive between generations.
 	 */
 	public boolean keepBestIndividualAlive = false;
-	
-	
-	// Selection settings.
-	public SelectionType selectionType = SelectionType.TOURNAMENT;
-	
+
 	/**
 	 * Used in tournament selection.  
 	 * The percentage of the pool to include in the tournament. (1.0 = 100%)
@@ -33,11 +28,7 @@ public class JavolverConfig {
 	 * selectionUseScoreRank must also be true for this to have an effect.
 	 */
 	public boolean selectionUseDiversityRank = false;
-	
-	
-	// Breed settings.
-	public BreedMethod breedMethod = BreedMethod.UNIFORM;
-	
+
 	
 	// Mutation settings.
 	public double mutationAmount = 0.10;
@@ -55,11 +46,7 @@ public class JavolverConfig {
 		keepBestIndividualAlive  = val;
 		return this;
 	}
-	
-	public JavolverConfig SetSelectionType(SelectionType val) {
-		selectionType  = val;
-		return this;
-	}
+
 	
 	/**
 	 * Used in tournament selection.  
@@ -87,14 +74,6 @@ public class JavolverConfig {
 		return this;
 	}
 	
-	/**
-	 * 
-	 */
-	public JavolverConfig SetBreedMethod(BreedMethod val) {
-		breedMethod   = val;
-		return this;
-	}
-
 
 	// Mutation settings.
 	public JavolverConfig SetMutationAmount(double val) {

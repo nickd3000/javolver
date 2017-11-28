@@ -30,8 +30,8 @@ public abstract class Individual {
 	protected double score = 0.0;
 	protected double diversity = 0.0;
 	
-	protected int rankScore = 0;
-	protected int rankDiversity = 0;
+	private int rankScore = 0;
+	private int rankDiversity = 0;
 	
 	/**
 	 * Default constructor.
@@ -97,5 +97,25 @@ public abstract class Individual {
 	 * @return		The score (pass through).
 	 */
 	public double setScore(double s) { return score=s; }
+
+
+	public int getRankScore() {
+		return rankScore;
+	}
+
+
+	public void setRankScore(int rankScore) {
+		this.rankScore = rankScore;
+	}
+
+
+	public int getRankDiversity() {
+		return rankDiversity;
+	}
+
+
+	public void setRankDiversity(int rankDiversity) {
+		this.rankDiversity = rankDiversity;
+	}
 	
 }
