@@ -14,6 +14,10 @@ public class Chromosome {
 	 */
 	ArrayList<Double> data; 
 	
+	public int getSize() {
+		if (data==null) return 0;
+		return data.size();
+	}
 	
 	/**
 	 * Default constructor.

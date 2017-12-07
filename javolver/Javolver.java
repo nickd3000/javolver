@@ -7,6 +7,9 @@ import javolver.breedingstrategy.BreedingStrategy;
 import javolver.breedingstrategy.BreedingStrategyAverage;
 import javolver.breedingstrategy.BreedingStrategyCrossover;
 import javolver.breedingstrategy.BreedingStrategyUniform;
+import javolver.mutationstrategy.MutationStrategy;
+import javolver.mutationstrategy.MutationStrategySimple;
+import javolver.mutationstrategy.MutationStrategySwap;
 import javolver.selectionstrategy.SelectionStrategy;
 import javolver.selectionstrategy.SelectionStrategyRoulette;
 import javolver.selectionstrategy.SelectionStrategyTournament;
@@ -20,16 +23,20 @@ import javolver.selectionstrategy.SelectionStrategyTournament;
  * @version	1.0
  * @since	2016-04-01
  */
+// TODO: make list types use interface type instead of ArrayList etc.
+
 public class Javolver {
 
 	public JavolverConfig config = new JavolverConfig();
 	
-	private ArrayList<Individual> genePool = new ArrayList<>();
+	private ArrayList<Individual> genePool = new ArrayList<>(); 
 	private Individual proto; // Copy of type of chromosome we will use.
 	private boolean allScored = false;
 	
 	private BreedingStrategy breedingStrategy = null;
 	private SelectionStrategy selectionStrategy = null;
+	private List<MutationStrategy> mutationStrategies = new ArrayList<MutationStrategy>();
+	
 	
 	/**
 	 * Default constructor.
@@ -46,6 +53,12 @@ public class Javolver {
 		
 		selectionStrategy = new SelectionStrategyTournament();
 		//selectionStrategy = new SelectionStrategyRoulette();
+		
+		mutationStrategies.add(new MutationStrategySimple(1, 0.1));
+		mutationStrategies.add(new MutationStrategySimple(1, 1.0));
+		mutationStrategies.add(new MutationStrategySimple(1, 0.1));
+		mutationStrategies.add(new MutationStrategySwap(0.1, 1));
+		
 	}
 	
 	/**
@@ -140,19 +153,26 @@ public class Javolver {
 		{
 			g1=g2=null;
 			
+			// Select parents
 			while (g1==g2) {
 				g1 = selectionStrategy.select(config, genePool);
 				g2 = selectionStrategy.select(config, genePool);
 			}
 
+			// Breed
 			List<Individual> children = breedingStrategy.breed(config, g1, g2);
 
+			// Mutate children.
 			for (Individual child : children) {
-				JavolverMutate.mutate(config, child);
-				newGenePool.add(child);
+				for (MutationStrategy ms : mutationStrategies) {
+					ms.mutate(child);
+				}
 			}
 			
-			
+			// Add children to new gene pool.
+			for (Individual child : children) {
+				newGenePool.add(child);
+			}
 		}
 		
 		// Copy new pool over main pool.

@@ -31,9 +31,9 @@ public class JavolverConfig {
 
 	
 	// Mutation settings.
-	public double mutationAmount = 0.10;
-	public int mutationCount = 2;
-	public boolean allowSwapMutation = false;
+	//public double mutationAmount = 0.10;
+	//public int mutationCount = 2;
+	//public boolean allowSwapMutation = false;
 
 	/**
 	 * Use multi-threading for the scoring process.
@@ -75,21 +75,21 @@ public class JavolverConfig {
 	}
 	
 
-	// Mutation settings.
-	public JavolverConfig SetMutationAmount(double val) {
-		mutationAmount = val;
-		return this;
-	}
-
-	public JavolverConfig SetMutationCount(int val) {
-		mutationCount = val;
-		return this;
-	}
-
-	public JavolverConfig SetAllowSwapMutation (boolean val) {
-		allowSwapMutation = val;
-		return this;
-	}
+//	// Mutation settings.
+//	public JavolverConfig SetMutationAmount(double val) {
+//		mutationAmount = val;
+//		return this;
+//	}
+//
+//	public JavolverConfig SetMutationCount(int val) {
+//		mutationCount = val;
+//		return this;
+//	}
+//
+//	public JavolverConfig SetAllowSwapMutation (boolean val) {
+//		allowSwapMutation = val;
+//		return this;
+//	}
 
 	/**
 	 * Use multi-threading for the scoring process.

@@ -89,9 +89,9 @@ public class TestEvolver {
 		
 		// Configure the engine (Not required).
 		testEvolver.config.keepBestIndividualAlive = false;
-		testEvolver.config.mutationCount=5;
-		testEvolver.config.mutationAmount=0.25;
-		testEvolver.config.allowSwapMutation=false;
+//		testEvolver.config.mutationCount=5;
+//		testEvolver.config.mutationAmount=0.25;
+//		testEvolver.config.allowSwapMutation=false;
 //		testEvolver.config.selectionType = JavolverSelection.SelectionType.TOURNAMENT;
 		testEvolver.config.selectionRange = 0.12;
 		testEvolver.config.selectionUseScoreRank = true;
@@ -133,8 +133,8 @@ public class TestEvolver {
 		
 		// Configure the engine (Not required).
 		testEvolver.config.keepBestIndividualAlive = false;
-		testEvolver.config.mutationCount = 1;
-		testEvolver.config.mutationAmount = 1.0/20.0;
+//		testEvolver.config.mutationCount = 1;
+//		testEvolver.config.mutationAmount = 1.0/20.0;
 //		testEvolver.config.selectionType = JavolverSelection.SelectionType.TOURNAMENT;
 		testEvolver.config.selectionRange = 0.25;
 		//testEvolver.setDiversityAmount(1.0);
@@ -159,15 +159,15 @@ public class TestEvolver {
 
 		BasicDisplay disp = new BasicDisplay(300, 300);
 		int populationSize = 25;
-		int numberOfSpheres = 20;
+		int numberOfSpheres = 7;
 		Javolver testEvolver = new Javolver(new CSpherePacker(numberOfSpheres),populationSize);
 
 
 		// Configure the engine (Not required).
-		testEvolver.config.keepBestIndividualAlive = false;
-		testEvolver.config.mutationCount=10;
-		testEvolver.config.mutationAmount=0.15*20*0.05;
-		testEvolver.config.allowSwapMutation=false;
+		testEvolver.config.keepBestIndividualAlive = true;
+//		testEvolver.config.mutationCount=10;
+//		testEvolver.config.mutationAmount=0.15*20*0.05;
+//		testEvolver.config.allowSwapMutation=false;
 //		testEvolver.config.selectionType = JavolverSelection.SelectionType.TOURNAMENT;
 		testEvolver.config.selectionRange = 0.15;
 		testEvolver.config.selectionUseScoreRank = true;
@@ -182,7 +182,7 @@ public class TestEvolver {
 		for (int j = 0; j < 5000000; j++) {
 			
 			// Change the mutation amount during the simulation.
-			testEvolver.config.mutationAmount = anneal(5,0.1,15000,j);
+			//testEvolver.config.mutationAmount = anneal(5,0.1,15000,j);
 			
 			// The main evolution function.
 			testEvolver.doOneCycle();
@@ -236,9 +236,9 @@ public class TestEvolver {
 		
 			// Configure the engine (Not required).			
 			testEvolver.config.SetKeepBestIndividualAlive(false)
-				.SetMutationCount(5)
-				.SetMutationAmount(0.1185)
-				.SetAllowSwapMutation(false)
+				//.SetMutationCount(5)
+				//.SetMutationAmount(0.1185)
+				//.SetAllowSwapMutation(false)
 //				.SetSelectionType(JavolverSelection.SelectionType.TOURNAMENT)
 				.SetSelectionRange(0.15)
 				.SetSelectionUseScoreRank(false)
@@ -258,7 +258,7 @@ public class TestEvolver {
 					//testEvolver.config.mutationAmount = mutationAmount;
 					//double selectionRange = best.dna.getDouble(GeneTree.VAL_configSelectionRange);
 					//testEvolver.config.selectionRange = selectionRange;
-					testEvolver.config.mutationAmount = anneal(0.2,0.01,runLength,j);
+					//testEvolver.config.mutationAmount = anneal(0.2,0.01,runLength,j);
 					//testEvolver.setDiversityAmount = anneal(5,0.01,runLength,j);
 					
 					testEvolver.doOneCycle();
@@ -300,9 +300,9 @@ public class TestEvolver {
 
 		// Configure the engine (Not required).
 		testEvolver.config.keepBestIndividualAlive = true;
-		testEvolver.config.mutationCount = 5;
-		testEvolver.config.mutationAmount = ((1.0/250.0)*2060.0);
-		testEvolver.config.allowSwapMutation=true;	
+//		testEvolver.config.mutationCount = 5;
+//		testEvolver.config.mutationAmount = ((1.0/250.0)*2060.0);
+//		testEvolver.config.allowSwapMutation=true;	
 //		testEvolver.config.selectionType = JavolverSelection.SelectionType.TOURNAMENT;
 		testEvolver.config.selectionRange = 0.15;
 		testEvolver.config.selectionUseScoreRank = true;
