@@ -16,7 +16,7 @@ public class CSpherePacker extends Individual {
 	int numSpheres=9; // 9
 	double coverage = 0;
 	//static String targetWord = "ABCDEFGHIJKLMNOP";
-
+	double overlapPenaltyScale = 0.25;
 	
 	public CSpherePacker(int numSpheres) {
 		this.numSpheres = numSpheres;
@@ -74,7 +74,7 @@ public class CSpherePacker extends Individual {
 				r2=dna.getDouble(j+2);
 				d = getDistance(x1, y1, x2, y2);
 				
-				if (d<(r1+r2)) penalty+=(r1+r2)-d;
+				if (d<(r1+r2)) penalty+=((r1+r2)-d)*overlapPenaltyScale;
 				
 			}
 			cover += Math.PI * (r1*r1);

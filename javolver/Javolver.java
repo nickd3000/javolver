@@ -44,8 +44,8 @@ public class Javolver {
 		//breedingStrategy = new BreedingStrategyUniform();
 		//breedingStrategy = new BreedingStrategyAverage();
 		
-		//selectionStrategy = new SelectionStrategyTournament();
-		selectionStrategy = new SelectionStrategyRoulette();
+		selectionStrategy = new SelectionStrategyTournament();
+		//selectionStrategy = new SelectionStrategyRoulette();
 	}
 	
 	/**

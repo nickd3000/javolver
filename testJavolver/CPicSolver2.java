@@ -19,8 +19,11 @@ public class CPicSolver2 extends Individual {
 	int numPolys = 200;
 	int numPoints = 1;					// Number of points per polygon.
 	int stride = 9; 	// Number of data elements per poly.
-	boolean enableTransparency = true;
-	double radiusDivider = 3.0;
+	boolean enableTransparency = false;
+	double radiusDivider = 6.0;
+	
+	double overlapPenaltyMultiplier = 0.2; // 0.02
+	double positionPenaltyMultiplier = 1.5; // 0.01
 	
 	public CPicSolver2(BufferedImage targetImage) {
 		dna.init(numPolys*stride);
@@ -203,6 +206,8 @@ public class CPicSolver2 extends Individual {
 			}
 		}
 		
+
+		
 		double positionPenalty = 0;
 		for (int i=0;i<numPolys;i++) {
 			double x = dna.getDouble((i*stride))*imgWidth;
@@ -214,7 +219,9 @@ public class CPicSolver2 extends Individual {
 			if (y+r > imgHeight) positionPenalty+=1;
 		}
 		positionPenalty/=(double)numPolys;
-		positionPenalty*=0.01;
+		positionPenalty*=positionPenaltyMultiplier;
+		
+		
 		
 		double overlapPenalty = 0;
 		for (int i=0;i<numPolys;i++) {
@@ -225,7 +232,7 @@ public class CPicSolver2 extends Individual {
 			}
 		}
 		overlapPenalty/=(double)numPolys;
-		overlapPenalty*=0.02;
+		overlapPenalty*=overlapPenaltyMultiplier;
 		
 		double averaged = (total/(double)count)*500.0;
 		double sizePenalty = totalRadius * 0.25;

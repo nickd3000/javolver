@@ -39,7 +39,7 @@ public class TestEvolver {
 		 * CSpherePacker - Attempts to fit a number of arbitrarily sized circles
 		 * into a square as tightly as possible with graphical output.
 		 */
-		//testSpherePacker();
+		testSpherePacker();
 		
 		/*
 		 * GeneTree - Attempts to evolve a tree that fits certain structural
@@ -47,7 +47,7 @@ public class TestEvolver {
 		 * individual is reduced for leaves that are 'under' other leaves, in an
 		 * attempt to simulate leaves requiring sunlight.
 		 */
-		testTree();
+		//testTree();
 		
 		//testPicSolver();
 		
@@ -74,7 +74,7 @@ public class TestEvolver {
 	public static void testPicSolver() {
 		
 		
-		int populationSize = 250;
+		int populationSize = 25*3;
 		BufferedImage targetImage = null;
 		try {
 		    //targetImage = ImageIO.read(new File("mona_lisa.jpg"));
@@ -88,12 +88,12 @@ public class TestEvolver {
 		Javolver testEvolver = new Javolver(new CPicSolver2(targetImage), populationSize);
 		
 		// Configure the engine (Not required).
-		testEvolver.config.keepBestIndividualAlive = true;
+		testEvolver.config.keepBestIndividualAlive = false;
 		testEvolver.config.mutationCount=5;
 		testEvolver.config.mutationAmount=0.25;
 		testEvolver.config.allowSwapMutation=false;
 //		testEvolver.config.selectionType = JavolverSelection.SelectionType.TOURNAMENT;
-		testEvolver.config.selectionRange = 0.2;
+		testEvolver.config.selectionRange = 0.12;
 		testEvolver.config.selectionUseScoreRank = true;
 		testEvolver.config.selectionUseDiversityRank = false;
 		//testEvolver.config.breedMethod = JavolverBreed.BreedMethod.CROSSOVER;
@@ -110,6 +110,7 @@ public class TestEvolver {
 				disp.drawImage(targetImage, 0,0);
 				disp.drawImage(top.getImage(), targetImage.getWidth(),0);
 				disp.refresh();
+				System.out.println("Score: "+top.getScore());
 			}
 			
 			// Print output every so often.
@@ -158,15 +159,15 @@ public class TestEvolver {
 
 		BasicDisplay disp = new BasicDisplay(300, 300);
 		int populationSize = 25;
-		int numberOfSpheres = 9;
+		int numberOfSpheres = 20;
 		Javolver testEvolver = new Javolver(new CSpherePacker(numberOfSpheres),populationSize);
 
 
 		// Configure the engine (Not required).
 		testEvolver.config.keepBestIndividualAlive = false;
-		testEvolver.config.mutationCount=1;
-		testEvolver.config.mutationAmount=0.15*20*0.001;
-		testEvolver.config.allowSwapMutation=true;
+		testEvolver.config.mutationCount=10;
+		testEvolver.config.mutationAmount=0.15*20*0.05;
+		testEvolver.config.allowSwapMutation=false;
 //		testEvolver.config.selectionType = JavolverSelection.SelectionType.TOURNAMENT;
 		testEvolver.config.selectionRange = 0.15;
 		testEvolver.config.selectionUseScoreRank = true;
@@ -208,7 +209,7 @@ public class TestEvolver {
 				
 				double coverage = ((CSpherePacker)(testEvolver.findBestScoringIndividual(null))).getCoverage();
 				
-				//System.out.println("Coverage " + coverage / (200.0*200.0) + "  Time: " + disp.getEllapsedTime());
+				System.out.println("Coverage " + coverage / (200.0*200.0) + "  Time: " + disp.getEllapsedTime());
 				//disp.startTimer();
 			}
 			
@@ -236,14 +237,14 @@ public class TestEvolver {
 			// Configure the engine (Not required).			
 			testEvolver.config.SetKeepBestIndividualAlive(false)
 				.SetMutationCount(5)
-				.SetMutationAmount(0.85)
+				.SetMutationAmount(0.1185)
 				.SetAllowSwapMutation(false)
 //				.SetSelectionType(JavolverSelection.SelectionType.TOURNAMENT)
-				.SetSelectionRange(0.05)
+				.SetSelectionRange(0.15)
 				.SetSelectionUseScoreRank(false)
-				.SetSelectionUseDiversityRank(true)
+				.SetSelectionUseDiversityRank(false)
 //				.SetBreedMethod(JavolverBreed.BreedMethod.CROSSOVER)
-				.SetParallelScoring(true);
+				.SetParallelScoring(false);
 			
 			int iteration=0;
 			int runLength=400;
@@ -280,7 +281,7 @@ public class TestEvolver {
 				disp.drawLine(j, 50, j, 70);
 				disp.refresh();
 				//
-				System.out.println("Iterations "+iteration+"   Timer: " + disp.getEllapsedTime());
+				System.out.println("Iterations "+iteration+"   Timer: " + disp.getEllapsedTime() + "  Score:" + best.getScore());
 				
 
 			}
@@ -294,7 +295,7 @@ public class TestEvolver {
 	public static void testProgram() {
 
 		BasicDisplay disp = new BasicDisplay(400, 400);
-		int popTargetSize = 10000;
+		int popTargetSize = 100;
 		Javolver testEvolver = new Javolver(new GeneProgram(), popTargetSize);
 
 		// Configure the engine (Not required).
