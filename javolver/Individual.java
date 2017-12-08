@@ -118,4 +118,14 @@ public abstract class Individual {
 		this.rankDiversity = rankDiversity;
 	}
 	
+	// zero = identical.
+	public double getDifference(Individual other) {
+		int size = this.dna.getSize();
+		double diff=0;
+		for (int i=0;i<size;i++) {
+			diff += Math.abs(this.dna.getDouble(i)-other.dna.getDouble(i));
+		}
+		
+		return diff / (double)size;
+	}
 }

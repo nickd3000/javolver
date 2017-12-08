@@ -19,7 +19,7 @@ public class CPicSolver2 extends Individual {
 	int numPolys = 200;
 	int numPoints = 1;					// Number of points per polygon.
 	int stride = 9; 	// Number of data elements per poly.
-	boolean enableTransparency = false;
+	boolean enableTransparency = true;
 	double radiusDivider = 6.0;
 	
 	double overlapPenaltyMultiplier = 0.2; // 0.02

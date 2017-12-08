@@ -1,7 +1,6 @@
 package testJavolver;
 
 import java.awt.Color;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -10,9 +9,7 @@ import java.text.DecimalFormat;
 import javax.imageio.ImageIO;
 
 import javolver.*;
-//import javolver.Javolver.SelectionType;
 import com.physmo.toolbox.BasicDisplay;
-import com.physmo.toolbox.BasicGraph;
 
 /*
  * Test / Example class.
@@ -74,7 +71,7 @@ public class TestEvolver {
 	public static void testPicSolver() {
 		
 		
-		int populationSize = 25*3;
+		int populationSize = 25*1;
 		BufferedImage targetImage = null;
 		try {
 		    //targetImage = ImageIO.read(new File("mona_lisa.jpg"));
@@ -86,18 +83,22 @@ public class TestEvolver {
 		BasicDisplay disp = new BasicDisplay(targetImage.getWidth()*2, targetImage.getHeight());
 		
 		Javolver testEvolver = new Javolver(new CPicSolver2(targetImage), populationSize);
+		testEvolver
+			.keepBestIndividualAlive(false)
+			.parallelScoring(true);
+		
 		
 		// Configure the engine (Not required).
-		testEvolver.config.keepBestIndividualAlive = false;
+//		testEvolver.config.keepBestIndividualAlive = false;
 //		testEvolver.config.mutationCount=5;
 //		testEvolver.config.mutationAmount=0.25;
 //		testEvolver.config.allowSwapMutation=false;
 //		testEvolver.config.selectionType = JavolverSelection.SelectionType.TOURNAMENT;
-		testEvolver.config.selectionRange = 0.12;
-		testEvolver.config.selectionUseScoreRank = true;
-		testEvolver.config.selectionUseDiversityRank = false;
-		//testEvolver.config.breedMethod = JavolverBreed.BreedMethod.CROSSOVER;
-		testEvolver.config.parallelScoring = true;
+//		testEvolver.config.selectionRange = 0.12;
+//		testEvolver.config.selectionUseScoreRank = true;
+//		testEvolver.config.selectionUseDiversityRank = false;
+//		//testEvolver.config.breedMethod = JavolverBreed.BreedMethod.CROSSOVER;
+//		testEvolver.config.parallelScoring = true;
 		
 		// Perform a few iterations of evolution.
 		for (int j = 0; j < 30000; j++) {
@@ -105,7 +106,7 @@ public class TestEvolver {
 			// Call the evolver class to perform one evolution step.
 			testEvolver.doOneCycle();
 			
-			if (j%2==0) { 
+			if (j%10==0) { 
 				CPicSolver2 top = (CPicSolver2)testEvolver.findBestScoringIndividual(null);
 				disp.drawImage(targetImage, 0,0);
 				disp.drawImage(top.getImage(), targetImage.getWidth(),0);
@@ -129,14 +130,16 @@ public class TestEvolver {
 
 		int populationSize = 100;
 		String targetWord = "HELLO EVOLUTION";
-		Javolver testEvolver = new Javolver(new CWord(targetWord), populationSize);
-		
+		Javolver testEvolver = new Javolver(new CWord(targetWord), populationSize)
+			.keepBestIndividualAlive(false)
+			.parallelScoring(false);
+			
 		// Configure the engine (Not required).
-		testEvolver.config.keepBestIndividualAlive = false;
+//		testEvolver.config.keepBestIndividualAlive = false;
 //		testEvolver.config.mutationCount = 1;
 //		testEvolver.config.mutationAmount = 1.0/20.0;
 //		testEvolver.config.selectionType = JavolverSelection.SelectionType.TOURNAMENT;
-		testEvolver.config.selectionRange = 0.25;
+//		testEvolver.config.selectionRange = 0.25;
 		//testEvolver.setDiversityAmount(1.0);
 		
 		// Perform a few iterations of evolution.
@@ -160,20 +163,23 @@ public class TestEvolver {
 		BasicDisplay disp = new BasicDisplay(300, 300);
 		int populationSize = 25;
 		int numberOfSpheres = 7;
-		Javolver testEvolver = new Javolver(new CSpherePacker(numberOfSpheres),populationSize);
+		Javolver testEvolver = new Javolver(new CSpherePacker(numberOfSpheres),populationSize)
+				.keepBestIndividualAlive(false)
+				.parallelScoring(false);
+			
 
 
 		// Configure the engine (Not required).
-		testEvolver.config.keepBestIndividualAlive = true;
+//		testEvolver.config.keepBestIndividualAlive = true;
 //		testEvolver.config.mutationCount=10;
 //		testEvolver.config.mutationAmount=0.15*20*0.05;
 //		testEvolver.config.allowSwapMutation=false;
 //		testEvolver.config.selectionType = JavolverSelection.SelectionType.TOURNAMENT;
-		testEvolver.config.selectionRange = 0.15;
-		testEvolver.config.selectionUseScoreRank = true;
-		testEvolver.config.selectionUseDiversityRank = false;
+//		testEvolver.config.selectionRange = 0.15;
+//		testEvolver.config.selectionUseScoreRank = true;
+//		testEvolver.config.selectionUseDiversityRank = false;
 		//testEvolver.config.breedMethod = JavolverBreed.BreedMethod.CROSSOVER;
-		testEvolver.config.parallelScoring = false;
+//		testEvolver.config.parallelScoring = false;
 		
 		int boxSize = 200;
 		Color boxCol = Color.DARK_GRAY;
@@ -232,19 +238,22 @@ public class TestEvolver {
 		System.out.print("START");
 		for (int n = 0; n < 500; n++) {
 			// Create the evolver:
-			Javolver testEvolver = new Javolver(new GeneTree(), popTargetSize);
-		
+			Javolver testEvolver = new Javolver(new GeneTree(), popTargetSize)
+					.keepBestIndividualAlive(false)
+					.parallelScoring(false);
+				
+			
 			// Configure the engine (Not required).			
-			testEvolver.config.SetKeepBestIndividualAlive(false)
+//			testEvolver.config.SetKeepBestIndividualAlive(false)
 				//.SetMutationCount(5)
 				//.SetMutationAmount(0.1185)
 				//.SetAllowSwapMutation(false)
 //				.SetSelectionType(JavolverSelection.SelectionType.TOURNAMENT)
-				.SetSelectionRange(0.15)
-				.SetSelectionUseScoreRank(false)
-				.SetSelectionUseDiversityRank(false)
+//				.SetSelectionRange(0.15)
+//				.SetSelectionUseScoreRank(false)
+				//.SetSelectionUseDiversityRank(false)
 //				.SetBreedMethod(JavolverBreed.BreedMethod.CROSSOVER)
-				.SetParallelScoring(false);
+//				.SetParallelScoring(false);
 			
 			int iteration=0;
 			int runLength=400;
@@ -296,19 +305,22 @@ public class TestEvolver {
 
 		BasicDisplay disp = new BasicDisplay(400, 400);
 		int popTargetSize = 100;
-		Javolver testEvolver = new Javolver(new GeneProgram(), popTargetSize);
+		Javolver testEvolver = new Javolver(new GeneProgram(), popTargetSize)
+				.keepBestIndividualAlive(true)
+				.parallelScoring(false);
+			
 
 		// Configure the engine (Not required).
-		testEvolver.config.keepBestIndividualAlive = true;
+//		testEvolver.config.keepBestIndividualAlive = true;
 //		testEvolver.config.mutationCount = 5;
 //		testEvolver.config.mutationAmount = ((1.0/250.0)*2060.0);
 //		testEvolver.config.allowSwapMutation=true;	
 //		testEvolver.config.selectionType = JavolverSelection.SelectionType.TOURNAMENT;
-		testEvolver.config.selectionRange = 0.15;
-		testEvolver.config.selectionUseScoreRank = true;
-		testEvolver.config.selectionUseDiversityRank = true;
+//		testEvolver.config.selectionRange = 0.15;
+//		testEvolver.config.selectionUseScoreRank = true;
+//		testEvolver.config.selectionUseDiversityRank = true;
 //		testEvolver.config.breedMethod = JavolverBreed.BreedMethod.CROSSOVER;
-		testEvolver.config.parallelScoring = false;
+//		testEvolver.config.parallelScoring = false;
 		
 		//testEvolver.setDiversityAmount(50);
 	

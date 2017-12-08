@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javolver.Individual;
-import javolver.JavolverConfig;
+
 
 /**
  * A breed function that returns the average of the parents - experimental.
@@ -13,7 +13,7 @@ import javolver.JavolverConfig;
 public class BreedingStrategyAverage implements BreedingStrategy {
 
 	@Override
-	public List<Individual> breed(JavolverConfig config, Individual parent1, Individual parent2) {
+	public List<Individual> breed(Individual parent1, Individual parent2) {
 		ArrayList<Individual> childList = new ArrayList<>(); 
 		Individual child = parent1.clone();//proto.clone();
 		int dnaSize = parent1.dna.getData().size();

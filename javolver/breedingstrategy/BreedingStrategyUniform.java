@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javolver.Individual;
-import javolver.JavolverConfig;
 
 /***
  * Select a pair of genes, mate them and return the new child.
@@ -13,7 +12,7 @@ import javolver.JavolverConfig;
 public class BreedingStrategyUniform implements BreedingStrategy {
 
 	@Override
-	public List<Individual> breed(JavolverConfig config, Individual parent1, Individual parent2) {
+	public List<Individual> breed(Individual parent1, Individual parent2) {
 		ArrayList<Individual> childList = new ArrayList<>(); 
 		Individual child = parent1.clone();
 		int dnaSize = parent1.dna.getData().size();

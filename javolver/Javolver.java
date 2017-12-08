@@ -27,7 +27,24 @@ import javolver.selectionstrategy.SelectionStrategyTournament;
 
 public class Javolver {
 
-	public JavolverConfig config = new JavolverConfig();
+	// Keep the best individual alive between generations.
+	public boolean keepBestIndividualAlive = false;
+	
+ // Use multi-threading for the scoring process.
+ // Set this to true if your {@link Individual#calculateScore()} method
+ // is expensive to run and may benefit from parallelization.
+	public boolean parallelScoring = false;
+	
+	
+	public Javolver keepBestIndividualAlive(boolean val) {
+		this.keepBestIndividualAlive = val;
+		return this;
+	}
+	public Javolver parallelScoring(boolean val) {
+		this.parallelScoring = val;
+		return this;
+	}
+	
 	
 	private ArrayList<Individual> genePool = new ArrayList<>(); 
 	private Individual proto; // Copy of type of chromosome we will use.
@@ -51,13 +68,11 @@ public class Javolver {
 		//breedingStrategy = new BreedingStrategyUniform();
 		//breedingStrategy = new BreedingStrategyAverage();
 		
-		selectionStrategy = new SelectionStrategyTournament();
+		selectionStrategy = new SelectionStrategyTournament(0.25);
 		//selectionStrategy = new SelectionStrategyRoulette();
 		
-		mutationStrategies.add(new MutationStrategySimple(1, 0.1));
-		mutationStrategies.add(new MutationStrategySimple(1, 1.0));
-		mutationStrategies.add(new MutationStrategySimple(1, 0.1));
-		mutationStrategies.add(new MutationStrategySwap(0.1, 1));
+		mutationStrategies.add(new MutationStrategySimple(1, 0.2));
+		mutationStrategies.add(new MutationStrategySwap(0.5, 5));
 		
 	}
 	
@@ -143,7 +158,7 @@ public class Javolver {
 		int targetPop = genePool.size();
 		
 		// Elitism - keep the best individual in the new pool.
-		if (config.keepBestIndividualAlive) {
+		if (keepBestIndividualAlive) {
 			newGenePool.add(findBestScoringIndividual(genePool));
 		}
 		
@@ -154,13 +169,17 @@ public class Javolver {
 			g1=g2=null;
 			
 			// Select parents
-			while (g1==g2) {
-				g1 = selectionStrategy.select(config, genePool);
-				g2 = selectionStrategy.select(config, genePool);
+			for (int ii=0;ii<100;ii++) {
+				while (g1==g2) {
+					g1 = selectionStrategy.select(genePool);
+					g2 = selectionStrategy.select(genePool);
+				}
+				double diff = g1.getDifference(g1);
+				if (diff!=0 && diff>0.01 && diff<0.3) break;
 			}
 
 			// Breed
-			List<Individual> children = breedingStrategy.breed(config, g1, g2);
+			List<Individual> children = breedingStrategy.breed( g1, g2);
 
 			// Mutate children.
 			for (Individual child : children) {
@@ -203,7 +222,7 @@ public class Javolver {
 	{
 		if (allScored==true) return;
 		
-		if (config.parallelScoring) {
+		if (parallelScoring) {
 			scoreGenesParallel(genePool);
 		} else {
 			scoreGenesSequential(genePool);

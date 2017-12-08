@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javolver.Individual;
-import javolver.JavolverConfig;
+
 
 
 /* Select a pair of genes, mate them and return the new child.
@@ -14,7 +14,7 @@ import javolver.JavolverConfig;
 public class BreedingStrategyCrossover implements BreedingStrategy {
 
 	@Override
-	public List<Individual> breed(JavolverConfig config, Individual parent1, Individual parent2) {
+	public List<Individual> breed(Individual parent1, Individual parent2) {
 		List<Individual> returnList = new ArrayList<>();
 		
 		Individual child1 = parent1.clone(); //proto.clone();

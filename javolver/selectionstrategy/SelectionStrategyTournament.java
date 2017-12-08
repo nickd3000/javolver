@@ -1,20 +1,23 @@
 package javolver.selectionstrategy;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javolver.Individual;
-import javolver.JavolverConfig;
 
 public class SelectionStrategyTournament implements SelectionStrategy {
 
-	@Override
-	public Individual select(JavolverConfig config, List<Individual> pool) {
+	double selectionRange;
+	
+	public SelectionStrategyTournament(double selectionRange) {
+		this.selectionRange = selectionRange;
+	}
+		@Override
+	public Individual select(List<Individual> pool) {
 		int poolSize = pool.size();
 		double maxScore = -1000;
 		Individual currentWinner = getRandomIndividual(pool);
 		
-		double tournamentSize = config.selectionRange;
+		double tournamentSize = selectionRange;
 		
 		int tSize = (int)(tournamentSize*(double)poolSize);
 		if (tSize<2) tSize=2;
@@ -23,9 +26,9 @@ public class SelectionStrategyTournament implements SelectionStrategy {
 		{
 			Individual contender = getRandomIndividual(pool);
 			
-			if (getSelectionScore(config, contender)>maxScore || maxScore==-1000)
+			if (getSelectionScore(contender)>maxScore || maxScore==-1000)
 			{
-				maxScore = getSelectionScore(config, contender);
+				maxScore = getSelectionScore(contender);
 				currentWinner = contender;
 			}
 		}
@@ -40,18 +43,18 @@ public class SelectionStrategyTournament implements SelectionStrategy {
 	 * @param	ind		The Individual
 	 * @return	Score or rank value.
 	 */
-	public double getSelectionScore(JavolverConfig config, Individual ind) {
+	public double getSelectionScore(Individual ind) {
 
-		// Special handling if we are using the rank method.
-		if (config.selectionUseScoreRank==true) {
-			double score = (double)ind.getRankScore();
-			
-			if (config.selectionUseDiversityRank==true) {
-				score+=(double)ind.getRankDiversity()*0.5;
-			}
-			
-			return score;
-		}
+//		// Special handling if we are using the rank method.
+//		if (config.selectionUseScoreRank==true) {
+//			double score = (double)ind.getRankScore();
+//			
+//			if (config.selectionUseDiversityRank==true) {
+//				score+=(double)ind.getRankDiversity()*0.5;
+//			}
+//			
+//			return score;
+//		}
 		
 		// Otherwise just return the individuals score.
 		return ind.getScore();

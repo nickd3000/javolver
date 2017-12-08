@@ -10,6 +10,7 @@ import com.physmo.toolbox.BasicDisplay;
  */
 public class CSpherePacker extends Individual {
 
+	
 	/**
 	 * The word that we are trying to get our genetic algorithm to find.
 	 */
