@@ -32,12 +32,7 @@ public class TestEvolver {
 		 */
 		//testWord();
 		
-		/*
-		 * CSpherePacker - Attempts to fit a number of arbitrarily sized circles
-		 * into a square as tightly as possible with graphical output.
-		 */
-		testSpherePacker();
-		
+
 		/*
 		 * GeneTree - Attempts to evolve a tree that fits certain structural
 		 * criteria: height, not escaping the bounding box. The score of each
@@ -158,74 +153,6 @@ public class TestEvolver {
 
 	
 	
-	public static void testSpherePacker() {
-
-		BasicDisplay disp = new BasicDisplay(300, 300);
-		int populationSize = 25;
-		int numberOfSpheres = 7;
-		Javolver testEvolver = new Javolver(new CSpherePacker(numberOfSpheres),populationSize)
-				.keepBestIndividualAlive(false)
-				.parallelScoring(false);
-			
-
-
-		// Configure the engine (Not required).
-//		testEvolver.config.keepBestIndividualAlive = true;
-//		testEvolver.config.mutationCount=10;
-//		testEvolver.config.mutationAmount=0.15*20*0.05;
-//		testEvolver.config.allowSwapMutation=false;
-//		testEvolver.config.selectionType = JavolverSelection.SelectionType.TOURNAMENT;
-//		testEvolver.config.selectionRange = 0.15;
-//		testEvolver.config.selectionUseScoreRank = true;
-//		testEvolver.config.selectionUseDiversityRank = false;
-		//testEvolver.config.breedMethod = JavolverBreed.BreedMethod.CROSSOVER;
-//		testEvolver.config.parallelScoring = false;
-		
-		int boxSize = 200;
-		Color boxCol = Color.DARK_GRAY;
-		disp.startTimer();
-		
-		for (int j = 0; j < 5000000; j++) {
-			
-			// Change the mutation amount during the simulation.
-			//testEvolver.config.mutationAmount = anneal(5,0.1,15000,j);
-			
-			// The main evolution function.
-			testEvolver.doOneCycle();
-			
-			
-			// Draw fittest individual every n frames.
-			//if ((j%25)==0) {
-			if (disp.getEllapsedTime()>1000/30) {
-				disp.startTimer();
-				// Find the best individual for drawing.
-				CSpherePacker top = (CSpherePacker)testEvolver.findBestScoringIndividual(null);
-				
-				int pad = 50;
-				disp.cls(new Color(64, 64, 64));
-				top.draw(disp, pad,pad);
-				
-				disp.setDrawColor(Color.white);
-				disp.drawRect(pad+0, pad+0, pad+boxSize, pad+boxSize);
-				
-				disp.refresh();
-			}
-			
-			if ((j%50)==0) { // Print report every few iterations.
-				
-				double coverage = ((CSpherePacker)(testEvolver.findBestScoringIndividual(null))).getCoverage();
-				
-				System.out.println("Coverage " + coverage / (200.0*200.0) + "  Time: " + disp.getEllapsedTime());
-				//disp.startTimer();
-			}
-			
-		}
-		
-		//testEvolver.runUntilMaximum();
-
-		System.out.print("END ");
-	}
-	
 	
 
 	public static void testTree() {
@@ -240,7 +167,8 @@ public class TestEvolver {
 			// Create the evolver:
 			Javolver testEvolver = new Javolver(new GeneTree(), popTargetSize)
 					.keepBestIndividualAlive(false)
-					.parallelScoring(false);
+					.parallelScoring(false)
+					.setDefaultStrategies();
 				
 			
 			// Configure the engine (Not required).			
@@ -344,31 +272,6 @@ public class TestEvolver {
 
 		System.out.print("END ");
 	}
-	
-	
-	/*
-	public static void testTextPic() {
-		
-		
-		BasicDisplay disp = new BasicDisplay(800, 400);
-		GeneTextPic testGene = new GeneTextPic();
-
-		int count = 0;
-		for (int i = 0; i < 10000000; i++) {
-			testGene.init();
-			disp.cls(new Color(149, 183, 213));
-			testGene.draw(disp, 0, i / 10);
-			disp.refresh();
-			count++;
-			if (count > 300) {
-				disp.refresh();
-				count = 0;
-			}
-		}
-		disp.close();
-
-	}
-*/
 	
 	
 

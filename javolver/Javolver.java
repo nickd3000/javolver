@@ -63,7 +63,10 @@ public class Javolver {
 	{
 		this.proto = proto;
 		
-		// TEMP: Keeping these here while developing new system.
+	}
+	
+	public Javolver setDefaultStrategies() {
+		
 		breedingStrategy = new BreedingStrategyCrossover();
 		//breedingStrategy = new BreedingStrategyUniform();
 		//breedingStrategy = new BreedingStrategyAverage();
@@ -71,10 +74,25 @@ public class Javolver {
 		selectionStrategy = new SelectionStrategyTournament(0.25);
 		//selectionStrategy = new SelectionStrategyRoulette();
 		
-		mutationStrategies.add(new MutationStrategySimple(1, 0.2));
+		mutationStrategies.add(new MutationStrategySimple(1, 0.22));
 		mutationStrategies.add(new MutationStrategySwap(0.5, 5));
 		
+		return this;
 	}
+	
+	public Javolver setBreedingStrategy(BreedingStrategy strategy) {
+		this.breedingStrategy = strategy;
+		return this;
+	}
+	public Javolver setSelectionStrategy(SelectionStrategy strategy) {
+		this.selectionStrategy = strategy;
+		return this;
+	}
+	public Javolver addMutationStrategy(MutationStrategy strategy) {
+		mutationStrategies.add(strategy);
+		return this;
+	}
+	
 	
 	/**
 	 * Create Javolver object with prototype individual and set the population size.
@@ -175,7 +193,8 @@ public class Javolver {
 					g2 = selectionStrategy.select(genePool);
 				}
 				double diff = g1.getDifference(g1);
-				if (diff!=0 && diff>0.01 && diff<0.3) break;
+				//if (diff!=0 && diff>0.001 && diff<0.3) break;
+				//g1=g2;
 			}
 
 			// Breed
