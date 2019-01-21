@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
@@ -41,7 +42,7 @@ public class TestEvolver {
 		 */
 		//testTree();
 		
-		//testPicSolver();
+		testPicSolver();
 		
 		//testProgram(); // Not working very well (or at all).
 	}
@@ -66,7 +67,7 @@ public class TestEvolver {
 	public static void testPicSolver() {
 		
 		
-		int populationSize = 25*1;
+		int populationSize = 100;
 		BufferedImage targetImage = null;
 		try {
 		    //targetImage = ImageIO.read(new File("mona_lisa.jpg"));
@@ -79,21 +80,11 @@ public class TestEvolver {
 		
 		Javolver testEvolver = new Javolver(new CPicSolver2(targetImage), populationSize);
 		testEvolver
-			.keepBestIndividualAlive(false)
-			.parallelScoring(true);
+			.keepBestIndividualAlive(true)
+			.parallelScoring(true).setDefaultStrategies();
 		
-		
-		// Configure the engine (Not required).
-//		testEvolver.config.keepBestIndividualAlive = false;
-//		testEvolver.config.mutationCount=5;
-//		testEvolver.config.mutationAmount=0.25;
-//		testEvolver.config.allowSwapMutation=false;
-//		testEvolver.config.selectionType = JavolverSelection.SelectionType.TOURNAMENT;
-//		testEvolver.config.selectionRange = 0.12;
-//		testEvolver.config.selectionUseScoreRank = true;
-//		testEvolver.config.selectionUseDiversityRank = false;
-//		//testEvolver.config.breedMethod = JavolverBreed.BreedMethod.CROSSOVER;
-//		testEvolver.config.parallelScoring = true;
+
+		double previousScore = 0;
 		
 		// Perform a few iterations of evolution.
 		for (int j = 0; j < 30000; j++) {
@@ -101,19 +92,36 @@ public class TestEvolver {
 			// Call the evolver class to perform one evolution step.
 			testEvolver.doOneCycle();
 			
-			if (j%10==0) { 
+			if (j%2==0) { 
 				CPicSolver2 top = (CPicSolver2)testEvolver.findBestScoringIndividual(null);
 				disp.drawImage(targetImage, 0,0);
 				disp.drawImage(top.getImage(), targetImage.getWidth(),0);
 				disp.refresh();
 				System.out.println("Score: "+top.getScore());
-			}
 			
-			// Print output every so often.
-			//System.out.println("Iteration " + j + "  " + testEvolver.report());
+				if (previousScore == top.getScore()) {
+					System.out.println("Earthquake!");
+					earthquake(testEvolver.getPool(),0.001);
+				}
+				
+				previousScore = top.getScore();
+			}
+
 		}
 		
 		//disp.dr
+	}
+	
+	// add random jitter to every single thing
+	public static void earthquake(List<Individual> pool, double jitter) {
+		
+		for (Individual i : pool) {
+			for (int d = 0;d<i.dna.getSize();d++) {
+				double val = i.dna.getDouble(d);
+				double j = (Math.random()-0.5)*jitter*2;
+				i.dna.set(d, val+j);
+			}
+		}
 	}
 	
 	/**

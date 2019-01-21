@@ -12,18 +12,25 @@ import javolver.Individual;
  */
 public class CPicSolver2 extends Individual {
 
+	static final int OFFSET_X = 0;
+	static final int OFFSET_Y = 1;
+	static final int OFFSET_R = 2;
+	static final int OFFSET_ORDER = 3;
+	static final int OFFSET_COLS = 4;
+	
+	
 	BufferedImage img;
 	BufferedImage targetImage;
 	int imgWidth=200;
 	int imgHeight=200;
-	int numPolys = 200;
+	int numPolys = 20;
 	int numPoints = 1;					// Number of points per polygon.
-	int stride = 9; 	// Number of data elements per poly.
-	boolean enableTransparency = true;
+	int stride = 20; 	// Number of data elements per poly.
+	boolean enableTransparency = false;
 	double radiusDivider = 6.0;
 	
-	double overlapPenaltyMultiplier = 0.2; // 0.02
-	double positionPenaltyMultiplier = 1.5; // 0.01
+	double overlapPenaltyMultiplier = 0.002; // 0.02
+	double positionPenaltyMultiplier = 0.005; // 0.01
 	
 	public CPicSolver2(BufferedImage targetImage) {
 		dna.init(numPolys*stride);
@@ -71,13 +78,13 @@ public class CPicSolver2 extends Individual {
 		int xpos = 0, ypos = 0, rad = 0;
 		float [] cols = new float[4];
 		
-		double x1 = (dna.getDouble(loc1)*imgWidth);
-		double y1 = (dna.getDouble(loc1+1)*imgHeight);
-		double r1 = (dna.getDouble(loc1+2)*(imgWidth/5.0));
+		double x1 = (dna.getDouble(loc1+OFFSET_X)*imgWidth);
+		double y1 = (dna.getDouble(loc1+OFFSET_Y)*imgHeight);
+		double r1 = (dna.getDouble(loc1+OFFSET_R)*(imgWidth/5.0));
 
-		double x2 = (dna.getDouble(loc1)*imgWidth);
-		double y2 = (dna.getDouble(loc1+1)*imgHeight);
-		double r2 = (dna.getDouble(loc1+2)*(imgWidth/5.0));
+		double x2 = (dna.getDouble(loc2+OFFSET_X)*imgWidth);
+		double y2 = (dna.getDouble(loc2+OFFSET_Y)*imgHeight);
+		double r2 = (dna.getDouble(loc2+OFFSET_R)*(imgWidth/5.0));
 		
 		double dist = ((x1-x2)*(x1-x2))+((y1-y2)*(y1-y2));
 		
@@ -87,7 +94,7 @@ public class CPicSolver2 extends Individual {
 		
 		if (dist>r1+r2) return 0;
 		
-		double norm = (dist - (r1+r2))/(r1+r2);
+		double norm = (dist - (r1+r2)) / (r1+r2);
 		 
 		
 		return norm;
@@ -102,13 +109,16 @@ public class CPicSolver2 extends Individual {
     		int xpos = 0, ypos = 0, rad = 0;
     		float [] cols = new float[4];
     		
-			xpos = (int)(dna.getDouble(loc)*imgWidth);
-			ypos = (int)(dna.getDouble(loc+1)*imgHeight);
-			rad = (int)(dna.getDouble(loc+2)*(imgWidth/radiusDivider));
+			xpos = (int)(dna.getDouble(loc+OFFSET_X)*imgWidth);
+			ypos = (int)(dna.getDouble(loc+OFFSET_Y)*imgHeight);
+			rad = (int)(dna.getDouble(loc+OFFSET_R)*(imgWidth/radiusDivider)*1.75); // 0.75
 		
+			if (rad<20) rad=20;
+			//if (rad>70) rad=70;
     		
     		for (int i=0;i<4;i++) {
-    			cols[i] = (float) dna.getDouble(loc+3+i);
+    			cols[i] = (float) dna.getDouble(loc+OFFSET_COLS+i);
+    			
     			if (cols[i]<0.0) cols[i] = 0.0f;
     			if (cols[i]>1.0) cols[i] = 1.0f;
     		}
@@ -156,10 +166,10 @@ public class CPicSolver2 extends Individual {
 		double minOrder = 9999;
 		double maxOrder = -9999;
 		for (int i=0;i<numPolys;i++) {
-			double order = dna.getDouble((i*stride)+7);
+			double order = dna.getDouble((i*stride)+OFFSET_ORDER);
 			if (order>maxOrder) maxOrder=order;
 			if (order<minOrder) minOrder=order;
-			totalRadius += dna.getDouble((i*stride)+2);
+			totalRadius += dna.getDouble((i*stride)+OFFSET_R);
 		}
 		totalRadius /= (double)numPolys;
 		
@@ -170,7 +180,7 @@ public class CPicSolver2 extends Individual {
 			double matchOrder=10000;
 			int matchIndex=0;
 			for (int i=0;i<numPolys;i++) {
-				order = dna.getDouble((i*stride)+7);
+				order = dna.getDouble((i*stride)+OFFSET_ORDER);
 				if (order>lastDrawnOrder && order<matchOrder) {
 					matchOrder = order;
 					matchIndex = i;
@@ -186,33 +196,19 @@ public class CPicSolver2 extends Individual {
 		}*/
 		
 	
-		double total = 0;
-		int count = 0;
-		
-		// Test random points.
-		/*
-		for (int i=0;i<100;i++) {
-			total+=getScoreForPosition(
-					(int)(Math.random()*imgWidth),
-					(int)(Math.random()*imgHeight));
-			count++;
-		}*/
-		
-		int step=3;
-		for (int y=0;y<imgHeight;y+=step) {
-			for (int x=0;x<imgWidth;x+=step) {
-				total+=getScoreForPosition(x,y);
-				count++;
-			}
-		}
-		
 
+		double score = 0;
+		score = testGridOfPoints(1)+1;
+		//score += testRandomPoints(50);
+		score = score * score;
+		//score += Math.random()*100;
+		
 		
 		double positionPenalty = 0;
 		for (int i=0;i<numPolys;i++) {
-			double x = dna.getDouble((i*stride))*imgWidth;
-			double y = dna.getDouble((i*stride)+1)*imgHeight;
-			double r = dna.getDouble((i*stride)+2)*(imgWidth/radiusDivider);
+			double x = dna.getDouble((i*stride)+OFFSET_X)*imgWidth;
+			double y = dna.getDouble((i*stride)+OFFSET_Y)*imgHeight;
+			double r = dna.getDouble((i*stride)+OFFSET_R)*(imgWidth/radiusDivider)*2;
 			if (x-r < 0) positionPenalty+=1;
 			if (y-r < 0) positionPenalty+=1;
 			if (x+r > imgWidth) positionPenalty+=1;
@@ -224,21 +220,51 @@ public class CPicSolver2 extends Individual {
 		
 		
 		double overlapPenalty = 0;
-		for (int i=0;i<numPolys;i++) {
-			for (int j=0;j<numPolys;j++) {
-				if (i==j) continue;
-				double overlap = checkOverlap(i,j);
-				overlapPenalty+=overlap;
+		boolean enableOverlapCheck = false;
+		if (enableOverlapCheck) {
+			for (int i=0;i<numPolys;i++) {
+				for (int j=0;j<numPolys;j++) {
+					if (i==j) continue;
+					double overlap = checkOverlap(i,j);
+					overlapPenalty+=overlap;
+				}
 			}
+			overlapPenalty/=(double)numPolys;
+			overlapPenalty*=overlapPenaltyMultiplier;
 		}
-		overlapPenalty/=(double)numPolys;
-		overlapPenalty*=overlapPenaltyMultiplier;
 		
-		double averaged = (total/(double)count)*500.0;
+		double averaged = score*500.0;
 		double sizePenalty = totalRadius * 0.25;
 		
 				
 		return averaged-sizePenalty-positionPenalty-overlapPenalty;
+	}
+	
+	
+	public double testRandomPoints(int numPoints) {
+		double total = 0;
+		int count = 0;
+		for (int i=0;i<numPoints;i++) {
+			total+=getScoreForPosition(
+					(int)(Math.random()*imgWidth),
+					(int)(Math.random()*imgHeight));
+			count++;
+		}
+		return (total/(double)count);
+	}
+	
+	public double testGridOfPoints(int step) {
+		double total = 0;
+		int count = 0;
+		int ystart = (int)(Math.random()*step);
+		int xstart = (int)(Math.random()*step);
+		for (int y=ystart;y<imgHeight;y+=step) {
+			for (int x=xstart;x<imgWidth;x+=step) {
+				total+=Math.abs(getScoreForPosition(x,y));
+				count++;
+			}
+		}
+		return (total/(double)count);
 	}
 	
 	public double getScoreForPosition(int x, int y) {
@@ -257,6 +283,7 @@ public class CPicSolver2 extends Individual {
 	    b1=b1-b2;
 	    
 	    double max=450;
+	   // double max = 4072; //sqrt(255*255*255)=4072;
 	    double dist = Math.sqrt((double)((r1*r1)+(g1*g1)+(b1*b1)));
 	    if (dist<0) dist=0;
 	    if (dist>max) dist=max;

@@ -20,6 +20,7 @@ public class CPicSolver extends Individual {
 	int numPoints = 30;					// Number of points per polygon.
 	int stride = (numPoints*2)+4+1+2; 	// Number of data elements per poly.
 	boolean enableTransparency = true;
+	Graphics2D dc = null; //img.createGraphics();
 	
 	public CPicSolver(BufferedImage targetImage) {
 		dna.init(numPolys*stride);
@@ -34,6 +35,8 @@ public class CPicSolver extends Individual {
 			double y = Math.random() * 1.0;
 			setPolyStart(i,x,y);
 		}
+		
+		dc = img.createGraphics();
 	}
 	
 	public void setPolyStart(int i, double x, double y) {
@@ -103,7 +106,7 @@ public class CPicSolver extends Individual {
 	public double calculateScore() {
 		clampValues();
 		
-		Graphics2D dc = img.createGraphics();
+		//Graphics2D dc = img.createGraphics();
 		
 		dc.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_OFF);
         dc.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING,RenderingHints.VALUE_COLOR_RENDER_SPEED);
@@ -127,15 +130,45 @@ public class CPicSolver extends Individual {
 					(int)(Math.random()*imgHeight));
 		}*/
 		
-		int step=1;
+//		int step=1;
+//		for (int y=0;y<imgHeight;y+=step) {
+//			for (int x=0;x<imgWidth;x+=step) {
+//				total+=getScoreForPosition(x,y);
+//				count++;
+//			}
+//		}
+		
+		
+		//return (total/(double)count);
+		
+		double score = 0;
+		score = testRandomPoints(10);
+		//score = testGridOfPoints(3);
+		
+		return score;
+	}
+	
+	public double testRandomPoints(int numPoints) {
+		double total = 0;
+		int count = 0;
+		for (int i=0;i<numPoints;i++) {
+			total+=getScoreForPosition(
+					(int)(Math.random()*imgWidth),
+					(int)(Math.random()*imgHeight));
+			count++;
+		}
+		return (total/(double)count);
+	}
+	
+	public double testGridOfPoints(int step) {
+		double total = 0;
+		int count = 0;;
 		for (int y=0;y<imgHeight;y+=step) {
 			for (int x=0;x<imgWidth;x+=step) {
 				total+=getScoreForPosition(x,y);
 				count++;
 			}
 		}
-		
-		
 		return (total/(double)count);
 	}
 	

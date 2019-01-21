@@ -10,7 +10,7 @@ public class MutationStrategySwap implements MutationStrategy {
 	
 	public MutationStrategySwap(double chance, int count) {
 		this.chance = chance;
-		this.count = count;
+		this.count = (int)(count*Math.random());
 	}
 	
 	@Override

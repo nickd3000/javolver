@@ -16,7 +16,8 @@ public class MutationStrategySimple implements MutationStrategy {
 	public void mutate(Individual individual) {
 		double jiggle = 0, value = 0;
 		int index = 0;
-		int randomisedCount = (int)(Math.random()*(double)frequency)+1;
+		int dnaSize = individual.dna.getSize();
+		int randomisedCount = (int)(Math.random()*(double)frequency*(double)dnaSize);//+1;
 		
 		
 		for (int i=0;i<randomisedCount;i++) {

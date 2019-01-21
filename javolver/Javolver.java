@@ -9,6 +9,7 @@ import javolver.breedingstrategy.BreedingStrategyCrossover;
 import javolver.breedingstrategy.BreedingStrategyUniform;
 import javolver.mutationstrategy.MutationStrategy;
 import javolver.mutationstrategy.MutationStrategySimple;
+import javolver.mutationstrategy.MutationStrategySingle;
 import javolver.mutationstrategy.MutationStrategySwap;
 import javolver.selectionstrategy.SelectionStrategy;
 import javolver.selectionstrategy.SelectionStrategyRoulette;
@@ -54,6 +55,9 @@ public class Javolver {
 	private SelectionStrategy selectionStrategy = null;
 	private List<MutationStrategy> mutationStrategies = new ArrayList<MutationStrategy>();
 	
+	public ArrayList<Individual> getPool() {
+		return genePool;
+	}
 	
 	/**
 	 * Default constructor.
@@ -67,15 +71,18 @@ public class Javolver {
 	
 	public Javolver setDefaultStrategies() {
 		
-		breedingStrategy = new BreedingStrategyCrossover();
-		//breedingStrategy = new BreedingStrategyUniform();
+		//breedingStrategy = new BreedingStrategyCrossover();
+		breedingStrategy = new BreedingStrategyUniform();
 		//breedingStrategy = new BreedingStrategyAverage();
 		
-		selectionStrategy = new SelectionStrategyTournament(0.25);
-		//selectionStrategy = new SelectionStrategyRoulette();
+		//selectionStrategy = new SelectionStrategyTournament(0.25);
+		selectionStrategy = new SelectionStrategyRoulette();
 		
-		mutationStrategies.add(new MutationStrategySimple(1, 0.22));
-		mutationStrategies.add(new MutationStrategySwap(0.5, 5));
+		//mutationStrategies.add(new MutationStrategySimple(0.01, 0.022));
+		
+		//mutationStrategies.add(new MutationStrategySimple(0.01, 0.012));
+		mutationStrategies.add(new MutationStrategySingle(0.001));
+		//mutationStrategies.add(new MutationStrategySwap(0.1, 5));
 		
 		return this;
 	}

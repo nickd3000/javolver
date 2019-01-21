@@ -48,6 +48,7 @@ public class GeneTree extends Individual {
 	
 	
 	Color col_leaf = new Color(172,138,40,150);
+	Color col_leaf_descender = new Color(0xff,0xff,0xff,50);
 	Color col_sky = new Color(100,150,194);
 	Color col_wood = new Color(101,93,74);
 	
@@ -118,6 +119,8 @@ public class GeneTree extends Individual {
 		double scaleAverageDist=0.1f*0.1f;
 		double scaleLeafBonus=0.1f;
 		double leafCost=0.05f*1.0f;
+		double obscuredLeafCost=0.05f*0.015*5;
+		double leafObscureSize = 5.0;
 		
 		// Make sure we haven't evolved something crazy.
 		clampValues();
@@ -171,7 +174,8 @@ public class GeneTree extends Individual {
 				if (Math.abs(dx)<minXDist) minXDist = Math.abs(dx);
 				
 				// Penalty for leaves being above one another.
-				if (Math.abs(dx)<3.0) score-=(leafCost*0.015);
+				
+				if (Math.abs(dx)<leafObscureSize) score-=obscuredLeafCost;
 			}	 
 			totalDist+=minDist;
 			totalMaxDist+=maxDist;
@@ -250,15 +254,17 @@ public class GeneTree extends Individual {
 			disp.setDrawColor(col_wood);
 			disp.drawLine(x1, y1, x2, y2, thickness);
 		}
-		
-		disp.setDrawColor(col_leaf);
-		
+
 		for (int i=0;i<leafPoints.size();i++)
 		{
 			double x = offsx + leafPoints.get(i).x;
 			double y = offsy - leafPoints.get(i).y;
 			
+			disp.setDrawColor(col_leaf);
 			disp.drawCircle(x, y, 7);
+			
+			disp.setDrawColor(col_leaf_descender);
+			disp.drawLine((int)x,(int)y,(int)x,(int)y+200);
 		}
 	}
 	
