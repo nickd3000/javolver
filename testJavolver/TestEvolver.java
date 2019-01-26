@@ -10,6 +10,11 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 import javolver.*;
+import javolver.breedingstrategy.BreedingStrategyCrossover;
+import javolver.mutationstrategy.MutationStrategySimple;
+import javolver.mutationstrategy.MutationStrategySwap;
+import javolver.selectionstrategy.SelectionStrategyTournament;
+
 import com.physmo.toolbox.BasicDisplay;
 
 /*
@@ -67,7 +72,7 @@ public class TestEvolver {
 	public static void testPicSolver() {
 		
 		
-		int populationSize = 100;
+		int populationSize = 30;//100;
 		BufferedImage targetImage = null;
 		try {
 		    //targetImage = ImageIO.read(new File("mona_lisa.jpg"));
@@ -79,30 +84,33 @@ public class TestEvolver {
 		BasicDisplay disp = new BasicDisplay(targetImage.getWidth()*2, targetImage.getHeight());
 		
 		Javolver testEvolver = new Javolver(new CPicSolver2(targetImage), populationSize);
-		testEvolver
-			.keepBestIndividualAlive(true)
-			.parallelScoring(true).setDefaultStrategies();
+		testEvolver.keepBestIndividualAlive(true).parallelScoring(false)
+		.addMutationStrategy(new MutationStrategySimple(0.1, 0.0512))
+		.addMutationStrategy(new MutationStrategySwap(0.01, 2))
+		.setSelectionStrategy(new SelectionStrategyTournament(0.15))
+		.setBreedingStrategy(new BreedingStrategyCrossover());
 		
 
 		double previousScore = 0;
 		
 		// Perform a few iterations of evolution.
-		for (int j = 0; j < 30000; j++) {
+		for (int j = 0; j < 3000000; j++) {
 
 			// Call the evolver class to perform one evolution step.
 			testEvolver.doOneCycle();
+			//testEvolver.doOneCycleOfDescent();
 			
-			if (j%2==0) { 
+			if (j%10==0) { 
 				CPicSolver2 top = (CPicSolver2)testEvolver.findBestScoringIndividual(null);
 				disp.drawImage(targetImage, 0,0);
 				disp.drawImage(top.getImage(), targetImage.getWidth(),0);
 				disp.refresh();
 				System.out.println("Score: "+top.getScore());
 			
-				if (previousScore == top.getScore()) {
-					System.out.println("Earthquake!");
-					earthquake(testEvolver.getPool(),0.001);
-				}
+//				if (previousScore == top.getScore()) {
+//					System.out.println("Earthquake!");
+//					earthquake(testEvolver.getPool(),0.001);
+//				}
 				
 				previousScore = top.getScore();
 			}

@@ -23,10 +23,10 @@ public class CPicSolver2 extends Individual {
 	BufferedImage targetImage;
 	int imgWidth=200;
 	int imgHeight=200;
-	int numPolys = 20;
+	int numPolys = 400;
 	int numPoints = 1;					// Number of points per polygon.
 	int stride = 20; 	// Number of data elements per poly.
-	boolean enableTransparency = false;
+	boolean enableTransparency = true;
 	double radiusDivider = 6.0;
 	
 	double overlapPenaltyMultiplier = 0.002; // 0.02
@@ -111,10 +111,11 @@ public class CPicSolver2 extends Individual {
     		
 			xpos = (int)(dna.getDouble(loc+OFFSET_X)*imgWidth);
 			ypos = (int)(dna.getDouble(loc+OFFSET_Y)*imgHeight);
-			rad = (int)(dna.getDouble(loc+OFFSET_R)*(imgWidth/radiusDivider)*1.75); // 0.75
+			rad = (int)(dna.getDouble(loc+OFFSET_R)*(imgWidth/radiusDivider)*3.75); // 0.75
 		
 			if (rad<20) rad=20;
 			//if (rad>70) rad=70;
+			rad = 40;
     		
     		for (int i=0;i<4;i++) {
     			cols[i] = (float) dna.getDouble(loc+OFFSET_COLS+i);
@@ -125,7 +126,7 @@ public class CPicSolver2 extends Individual {
     		
     		Color c = null;
     		if (enableTransparency) {
-    			c = new Color(cols[0],cols[1],cols[2],cols[3]); ///2.0f); 
+    			c = new Color(cols[0],cols[1],cols[2],cols[3]/2); ///2.0f); 
     		}
     		else {
     			c = new Color(cols[0],cols[1],cols[2]);
@@ -198,9 +199,9 @@ public class CPicSolver2 extends Individual {
 	
 
 		double score = 0;
-		score = testGridOfPoints(1)+1;
+		score = testGridOfPoints(5);
 		//score += testRandomPoints(50);
-		score = score * score;
+		//score = score * score;
 		//score += Math.random()*100;
 		
 		

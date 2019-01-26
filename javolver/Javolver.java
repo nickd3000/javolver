@@ -75,13 +75,13 @@ public class Javolver {
 		breedingStrategy = new BreedingStrategyUniform();
 		//breedingStrategy = new BreedingStrategyAverage();
 		
-		//selectionStrategy = new SelectionStrategyTournament(0.25);
-		selectionStrategy = new SelectionStrategyRoulette();
+		selectionStrategy = new SelectionStrategyTournament(0.15);
+		//selectionStrategy = new SelectionStrategyRoulette();
 		
 		//mutationStrategies.add(new MutationStrategySimple(0.01, 0.022));
 		
-		//mutationStrategies.add(new MutationStrategySimple(0.01, 0.012));
-		mutationStrategies.add(new MutationStrategySingle(0.001));
+		mutationStrategies.add(new MutationStrategySimple(0.01, 0.012));
+		//mutationStrategies.add(new MutationStrategySingle(0.1));
 		//mutationStrategies.add(new MutationStrategySwap(0.1, 5));
 		
 		return this;
@@ -157,6 +157,43 @@ public class Javolver {
 			n = proto.clone();
 			
 			genePool.add(n);
+		}
+	}
+	
+	// testing out a simple descent based approach.
+	public void doOneCycleOfDescent() {
+		// Request that all individuals perform scoring. 
+		scoreGenes(genePool);
+		
+		JavolverRanking.calculateFitnessRank(genePool);
+		JavolverRanking.calculateDiversityRank(genePool);
+		
+		Individual bestGuy = findBestScoringIndividual(genePool);
+		Individual child = bestGuy.clone();
+		
+		for (int i=0;i<child.dna.getSize();i++) {
+			child.dna.set(i,bestGuy.dna.getDouble(i));
+		}
+		
+		double score1 = bestGuy.calculateScore();
+		
+		MutationStrategy ms = new MutationStrategySimple(0.1,0.01);
+		MutationStrategy ms2 = new MutationStrategySimple(0.1,0.1);
+		MutationStrategy ms3 = new MutationStrategySimple(1.0,1.0);
+		
+		
+		ms.mutate(child);
+		ms2.mutate(child);
+		if (Math.random()>0.99) ms3.mutate(child);
+		
+		double score2 = child.calculateScore();
+		
+		//System.out.println("s1:"+score1+"   s2:"+score2 + "  poolSize:"+genePool.size());
+		
+		double delta = score2-score1; 
+		if (delta>0.0001) {
+			//genePool.add(child);
+			genePool.set(0, child);
 		}
 	}
 	
