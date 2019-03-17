@@ -9,13 +9,13 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import com.physmo.toolbox.BasicDisplay;
+import com.physmo.toolbox.BasicDisplayAwt;
 import javolver.*;
 import javolver.breedingstrategy.BreedingStrategyCrossover;
 import javolver.mutationstrategy.MutationStrategySimple;
 import javolver.mutationstrategy.MutationStrategySwap;
 import javolver.selectionstrategy.SelectionStrategyTournament;
-
-import com.physmo.toolbox.BasicDisplay;
 
 /*
  * Test / Example class.
@@ -81,7 +81,7 @@ public class TestEvolver {
 			System.out.println("Image not found.");
 		}
 		
-		BasicDisplay disp = new BasicDisplay(targetImage.getWidth()*2, targetImage.getHeight());
+		BasicDisplay disp = new BasicDisplayAwt(targetImage.getWidth()*2, targetImage.getHeight());
 		
 		Javolver testEvolver = new Javolver(new CPicSolver2(targetImage), populationSize);
 		testEvolver.keepBestIndividualAlive(true).parallelScoring(false)
@@ -174,7 +174,7 @@ public class TestEvolver {
 	public static void testTree() {
 		
 		DecimalFormat doubleFormat = new DecimalFormat("#.000");
-		BasicDisplay disp = new BasicDisplay(400, 400);
+		BasicDisplay disp = new BasicDisplayAwt(400, 400);
 
 		int popTargetSize=10;
 		
@@ -247,7 +247,7 @@ public class TestEvolver {
 	
 	public static void testProgram() {
 
-		BasicDisplay disp = new BasicDisplay(400, 400);
+		BasicDisplay disp = new BasicDisplayAwt(400, 400);
 		int popTargetSize = 100;
 		Javolver testEvolver = new Javolver(new GeneProgram(), popTargetSize)
 				.keepBestIndividualAlive(true)

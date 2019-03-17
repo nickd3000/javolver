@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 
 import com.physmo.toolbox.BasicDisplay;
 
+import com.physmo.toolbox.BasicDisplayAwt;
 import javolver.Javolver;
 import javolver.breedingstrategy.BreedingStrategyCrossover;
 import javolver.mutationstrategy.MutationStrategySimple;
@@ -34,7 +35,7 @@ public class TestLinePic {
 			System.out.println("Image not found.");
 		}
 
-		BasicDisplay disp = new BasicDisplay(targetImage.getWidth() * 2, targetImage.getHeight());
+		BasicDisplay disp = new BasicDisplayAwt(targetImage.getWidth() * 2, targetImage.getHeight());
 
 		Javolver testEvolver = new Javolver(new CLinePic(targetImage), populationSize);
 		testEvolver.keepBestIndividualAlive(true).parallelScoring(false)

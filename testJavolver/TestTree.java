@@ -3,6 +3,7 @@ package testJavolver;
 import java.awt.Color;
 import com.physmo.toolbox.BasicDisplay;
 
+import com.physmo.toolbox.BasicDisplayAwt;
 import javolver.Javolver;
 
 public class TestTree {
@@ -15,7 +16,7 @@ public class TestTree {
 
 	public static void testTree() {
 
-		BasicDisplay disp = new BasicDisplay(400, 400);
+		BasicDisplay disp = new BasicDisplayAwt(400, 400);
 
 		int populationTargetSize = 10;
 

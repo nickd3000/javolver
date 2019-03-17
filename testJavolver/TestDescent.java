@@ -4,12 +4,13 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 import com.physmo.toolbox.BasicDisplay;
+import com.physmo.toolbox.BasicDisplayAwt;
 
 public class TestDescent {
 
 	public static void main(String[] args) {
 	
-		BasicDisplay disp = new BasicDisplay(400, 400);
+		BasicDisplay disp = new BasicDisplayAwt(400, 400);
 		
 		GeneTree tree = new GeneTree();
 		tree.init();

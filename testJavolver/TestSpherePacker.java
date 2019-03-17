@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import com.physmo.toolbox.BasicDisplay;
 
+import com.physmo.toolbox.BasicDisplayAwt;
 import javolver.Individual;
 import javolver.Javolver;
 
@@ -12,7 +13,7 @@ public class TestSpherePacker {
 	public static void main(String[] args) {
 
 
-		BasicDisplay disp = new BasicDisplay(300, 300);
+		BasicDisplay disp = new BasicDisplayAwt(300, 300);
 		int populationSize = 250;
 		int numberOfSpheres = 7;
 		Javolver testEvolver = new Javolver(new CSpherePacker(numberOfSpheres),populationSize)
