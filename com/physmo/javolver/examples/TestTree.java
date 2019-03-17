@@ -1,4 +1,4 @@
-package testJavolver;
+package com.physmo.javolver.examples;
 
 import java.awt.Color;
 import com.physmo.toolbox.BasicDisplay;

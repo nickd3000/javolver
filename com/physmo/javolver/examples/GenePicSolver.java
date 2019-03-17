@@ -1,4 +1,4 @@
-package testJavolver;
+package com.physmo.javolver.examples;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -10,7 +10,7 @@ import com.physmo.javolver.Individual;
 /**
  * Created by nick on 20/07/2016.
  */
-public class CPicSolver2 extends Individual {
+public class GenePicSolver extends Individual {
 
 	static final int OFFSET_X = 0;
 	static final int OFFSET_Y = 1;
@@ -32,7 +32,7 @@ public class CPicSolver2 extends Individual {
 	double overlapPenaltyMultiplier = 0.002; // 0.02
 	double positionPenaltyMultiplier = 0.005; // 0.01
 	
-	public CPicSolver2(BufferedImage targetImage) {
+	public GenePicSolver(BufferedImage targetImage) {
 		dna.init(numPolys*stride);
 		
 		this.targetImage = targetImage;
@@ -142,7 +142,7 @@ public class CPicSolver2 extends Individual {
 
 	@Override
 	public Individual clone() {
-		return new CPicSolver2(targetImage);
+		return new GenePicSolver(targetImage);
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package testJavolver;
+package com.physmo.javolver.examples;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -11,7 +11,7 @@ import com.physmo.javolver.Individual;
 /**
  * Created by nick on 20/07/2016.
  */
-public class CLinePic extends Individual {
+public class GeneLinePic extends Individual {
 
 	static BufferedImage img = null;
 	BufferedImage targetImage;
@@ -30,7 +30,7 @@ public class CLinePic extends Individual {
 	Color col2 = new Color(0x00,0x00,0x00,0x50);
 	Color colBlank = new Color(0x00,0x00,0x00,0x00);
 	
-	public CLinePic(BufferedImage targetImage) {
+	public GeneLinePic(BufferedImage targetImage) {
 		dna.init(numPolys*stride);
 		
 		this.targetImage = targetImage;
@@ -108,7 +108,7 @@ public class CLinePic extends Individual {
 
 	@Override
 	public Individual clone() {
-		return new CLinePic(targetImage);
+		return new GeneLinePic(targetImage);
 	}
 
 	@Override

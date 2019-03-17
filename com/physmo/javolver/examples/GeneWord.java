@@ -1,4 +1,4 @@
-package testJavolver;
+package com.physmo.javolver.examples;
 
 import com.physmo.javolver.Individual;
 
@@ -6,18 +6,18 @@ import com.physmo.javolver.Individual;
  * @author nick
  * Example individual type that evolves towards the supplied string.
  */
-public class CWord extends Individual {
+public class GeneWord extends Individual {
 
 	public String targetWord = "EVOLUTION";
 
-	public CWord(String target) {
+	public GeneWord(String target) {
 		targetWord = target;
 		dna.init(targetWord.length());
 	}
 	
 	public Individual clone()
 	{
-		return (Individual)(new CWord(targetWord));
+		return (Individual)(new GeneWord(targetWord));
 	}
 
 	public String toString()
@@ -27,11 +27,13 @@ public class CWord extends Individual {
 		{
 			str = str + dna.getChar(i);
 		}
+		str += " score:"+score;
 		return str;
 	}
 	
 	// Compare each character in the string to the target string and return a score.
 	// Each character gets a higher score the closer it is to the target character.
+	@Override
 	public double calculateScore() {
 		double total = 0.0;
 		
