@@ -1,6 +1,6 @@
-package javolver.mutationstrategy;
+package com.physmo.javolver.mutationstrategy;
 
-import javolver.Individual;
+import com.physmo.javolver.Individual;
 
 public class MutationStrategySimple implements MutationStrategy {
 

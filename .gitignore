@@ -6,6 +6,7 @@
 .mtj.tmp/
 target/
 .idea/
+.idea
 .eclipse
 
 # Package Files #

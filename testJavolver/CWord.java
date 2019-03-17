@@ -1,6 +1,6 @@
 package testJavolver;
 
-import javolver.Individual;
+import com.physmo.javolver.Individual;
 
 /**
  * @author nick

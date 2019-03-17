@@ -5,8 +5,10 @@ import java.awt.Color;
 import com.physmo.toolbox.BasicDisplay;
 
 import com.physmo.toolbox.BasicDisplayAwt;
-import javolver.Individual;
-import javolver.Javolver;
+import com.physmo.javolver.Individual;
+import com.physmo.javolver.Javolver;
+import com.physmo.javolver.mutationstrategy.MutationStrategySingle;
+import com.physmo.javolver.mutationstrategy.MutationStrategySwap;
 
 public class TestSpherePacker {
 
@@ -14,12 +16,14 @@ public class TestSpherePacker {
 
 
 		BasicDisplay disp = new BasicDisplayAwt(300, 300);
-		int populationSize = 250;
-		int numberOfSpheres = 7;
+		int populationSize = 25;
+		int numberOfSpheres = 25;
 		Javolver testEvolver = new Javolver(new CSpherePacker(numberOfSpheres),populationSize)
 				.keepBestIndividualAlive(false)
 				.parallelScoring(false)
-				.setDefaultStrategies();
+				.setDefaultStrategies()
+				.addMutationStrategy(new MutationStrategySingle(1.1))
+				.addMutationStrategy(new MutationStrategySwap(0.1, 5));
 
 		
 		int boxSize = 200;
@@ -196,7 +200,7 @@ class CSpherePacker extends Individual {
 			disp.drawFilledCircle(
 					offsx + dna.getDouble(i), 
 					offsy + dna.getDouble(i+1),
-					dna.getDouble(i+2)*2);
+					dna.getDouble(i+2));
 		}
 			
 	}

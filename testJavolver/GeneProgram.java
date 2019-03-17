@@ -1,10 +1,6 @@
 package testJavolver;
 
-import java.net.NetworkInterface;
-import java.util.ArrayList;
-
-import javolver.Individual;
-import testJavolver.SimpleMachine;
+import com.physmo.javolver.Individual;
 
 //import evo.IGene;
 

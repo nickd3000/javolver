@@ -1,9 +1,9 @@
-package javolver.breedingstrategy;
+package com.physmo.javolver.breedingstrategy;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javolver.Individual;
+import com.physmo.javolver.Individual;
 
 
 // Create two children, each get half of each parents DNA with one crossover point.

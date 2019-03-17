@@ -4,11 +4,9 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.Shape;
-import java.awt.Stroke;
 import java.awt.image.BufferedImage;
 
-import javolver.Individual;
+import com.physmo.javolver.Individual;
 
 /**
  * Created by nick on 20/07/2016.

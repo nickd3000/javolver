@@ -4,7 +4,7 @@ import java.awt.Color;
 import com.physmo.toolbox.BasicDisplay;
 
 import com.physmo.toolbox.BasicDisplayAwt;
-import javolver.Javolver;
+import com.physmo.javolver.Javolver;
 
 public class TestTree {
 

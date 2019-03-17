@@ -1,6 +1,5 @@
 package testJavolver;
 
-import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -10,11 +9,11 @@ import javax.imageio.ImageIO;
 import com.physmo.toolbox.BasicDisplay;
 
 import com.physmo.toolbox.BasicDisplayAwt;
-import javolver.Javolver;
-import javolver.breedingstrategy.BreedingStrategyCrossover;
-import javolver.mutationstrategy.MutationStrategySimple;
-import javolver.mutationstrategy.MutationStrategySwap;
-import javolver.selectionstrategy.SelectionStrategyTournament;
+import com.physmo.javolver.Javolver;
+import com.physmo.javolver.breedingstrategy.BreedingStrategyCrossover;
+import com.physmo.javolver.mutationstrategy.MutationStrategySimple;
+import com.physmo.javolver.mutationstrategy.MutationStrategySwap;
+import com.physmo.javolver.selectionstrategy.SelectionStrategyTournament;
 
 public class TestLinePic {
 

@@ -1,4 +1,4 @@
-package javolver;
+package com.physmo.javolver;
 
 
 /**

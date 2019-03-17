@@ -1,9 +1,9 @@
-package javolver.breedingstrategy;
+package com.physmo.javolver.breedingstrategy;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javolver.Individual;
+import com.physmo.javolver.Individual;
 
 /***
  * Select a pair of genes, mate them and return the new child.
