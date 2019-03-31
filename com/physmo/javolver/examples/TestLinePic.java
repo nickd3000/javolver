@@ -6,14 +6,13 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import com.physmo.toolbox.BasicDisplay;
-
-import com.physmo.toolbox.BasicDisplayAwt;
 import com.physmo.javolver.Javolver;
 import com.physmo.javolver.breedingstrategy.BreedingStrategyCrossover;
 import com.physmo.javolver.mutationstrategy.MutationStrategySimple;
 import com.physmo.javolver.mutationstrategy.MutationStrategySwap;
 import com.physmo.javolver.selectionstrategy.SelectionStrategyTournament;
+import com.physmo.minvio.BasicDisplay;
+import com.physmo.minvio.BasicDisplayAwt;
 
 public class TestLinePic {
 

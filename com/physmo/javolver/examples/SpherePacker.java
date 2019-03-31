@@ -3,12 +3,11 @@ package com.physmo.javolver.examples;
 import java.awt.Color;
 
 import com.physmo.javolver.mutationstrategy.MutationStrategySimple;
-import com.physmo.toolbox.BasicDisplay;
-
-import com.physmo.toolbox.BasicDisplayAwt;
 import com.physmo.javolver.Javolver;
 import com.physmo.javolver.mutationstrategy.MutationStrategySingle;
 import com.physmo.javolver.mutationstrategy.MutationStrategySwap;
+import com.physmo.minvio.BasicDisplay;
+import com.physmo.minvio.BasicDisplayAwt;
 
 public class SpherePacker {
 

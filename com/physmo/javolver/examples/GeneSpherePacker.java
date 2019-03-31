@@ -1,7 +1,7 @@
 package com.physmo.javolver.examples;
 
 import com.physmo.javolver.Individual;
-import com.physmo.toolbox.BasicDisplay;
+import com.physmo.minvio.BasicDisplay;
 
 import java.awt.*;
 

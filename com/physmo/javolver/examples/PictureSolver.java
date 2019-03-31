@@ -5,8 +5,8 @@ import com.physmo.javolver.breedingstrategy.BreedingStrategyCrossover;
 import com.physmo.javolver.mutationstrategy.MutationStrategySimple;
 import com.physmo.javolver.mutationstrategy.MutationStrategySwap;
 import com.physmo.javolver.selectionstrategy.SelectionStrategyTournament;
-import com.physmo.toolbox.BasicDisplay;
-import com.physmo.toolbox.BasicDisplayAwt;
+import com.physmo.minvio.BasicDisplay;
+import com.physmo.minvio.BasicDisplayAwt;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
