@@ -1,5 +1,6 @@
 package com.physmo.javolver;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -13,15 +14,18 @@ public class JavolverRanking {
 
     public static void calculateFitnessRank(ArrayList<Individual> pool) {
 
+        if (pool==null || pool.size()==0) {
+            throw new InvalidParameterException("Pool is empty.");
+        }
+
         // Sort the pool according to fitness.
-        pool.sort(new Comparator<Individual>() {
-            @Override
-            public int compare(Individual ind1, Individual ind2) {
-                double diff = ind1.getScore() - ind2.getScore();
-                if (diff == 0.0) return 0;
-                if (diff < 0.0) return -1;
-                else return 1;
-            }
+        pool.sort((ind1, ind2) -> {
+            double score1 = ind1.getScore();
+            double score2 = ind2.getScore();
+            double diff = score1 - score2;
+            if (diff == 0.0) return 0;
+            if (diff < 0.0) return -1;
+            else return 1;
         });
 
         int count = 1;
@@ -32,6 +36,10 @@ public class JavolverRanking {
     }
 
     public static void calculateDiversityRank(ArrayList<Individual> pool) {
+        if (pool==null || pool.size()==0) {
+            throw new InvalidParameterException("Pool is empty.");
+        }
+
         // Calculate the average chromosome from the pool.
         Chromosome averageChromosome = CalculateAverageChromosome(pool);
         // Calculate the diversity of each individual in the pool.

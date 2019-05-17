@@ -1,6 +1,6 @@
 package com.physmo.javolver.animals;
 
-public class AnimalEntity implements Entity {
+public class SimpleAnimalEntity implements Entity {
     Vec2 position = new Vec2();
     double health = 1.0;
     double hungar = 1.0;

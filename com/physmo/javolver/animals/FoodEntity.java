@@ -1,4 +1,4 @@
-package com.physmo.javolver.com.physmo.javolver.animals;
+package com.physmo.javolver.animals;
 
 public class FoodEntity implements Entity {
     Vec2 position = new Vec2();

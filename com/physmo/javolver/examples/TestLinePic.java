@@ -24,7 +24,7 @@ public class TestLinePic {
 
 	public static void testLinePic() {
 
-		int populationSize = 3 * 1;
+		int populationSize = 3 * 5;
 		BufferedImage targetImage = null;
 		try {
 			// targetImage = ImageIO.read(new File("mona_lisa.jpg"));
@@ -47,10 +47,10 @@ public class TestLinePic {
 		for (int j = 0; j < 30000; j++) {
 
 			// Call the evolver class to perform one evolution step.
-			//testEvolver.doOneCycle();
-			testEvolver.doOneCycleOfDescent();
+			testEvolver.doOneCycle();
+			//testEvolver.doOneCycleOfDescent();
 
-			if (j % 100 == 0) {
+			if (j % 10 == 0) {
 				GeneLinePic top = (GeneLinePic) testEvolver.findBestScoringIndividual(null);
 				disp.drawImage(targetImage, 0, 0);
 				disp.drawImage(top.getImage(), targetImage.getWidth(), 0);

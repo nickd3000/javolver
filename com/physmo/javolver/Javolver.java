@@ -31,6 +31,10 @@ public class Javolver {
     // is expensive to run and may benefit from parallelization.
     public boolean parallelScoring = false;
 
+    boolean enableCompatability = false;
+    double compatabilityLowerLimit;
+    double compatabilityUpperLimit;
+
 
     public Javolver keepBestIndividualAlive(boolean val) {
         this.keepBestIndividualAlive = val;
@@ -42,6 +46,13 @@ public class Javolver {
         return this;
     }
 
+    // When enabled, pairs can't breed if their similarity is below the lower or above the upper limit.
+    public Javolver enableCompatability(double lowerLimit, double upperLimit) {
+        enableCompatability=true;
+        compatabilityLowerLimit=lowerLimit;
+        compatabilityUpperLimit=upperLimit;
+        return this;
+    }
 
     private ArrayList<Individual> genePool = new ArrayList<>();
     private Individual proto; // Copy of type of chromosome we will use.
@@ -97,6 +108,9 @@ public class Javolver {
         mutationStrategies.add(strategy);
         return this;
     }
+
+
+
 
 
     /**
@@ -207,8 +221,8 @@ public class Javolver {
         // Request that all individuals perform scoring.
         scoreGenes(genePool);
 
-        JavolverRanking.calculateFitnessRank(genePool);
-        JavolverRanking.calculateDiversityRank(genePool);
+        //JavolverRanking.calculateFitnessRank(genePool);
+        //JavolverRanking.calculateDiversityRank(genePool);
 
         ArrayList<Individual> newGenePool = null;
 
@@ -228,13 +242,19 @@ public class Javolver {
 
             // Select parents
             for (int ii = 0; ii < 100; ii++) {
-                while (g1 == g2) {
-                    g1 = selectionStrategy.select(genePool);
-                    g2 = selectionStrategy.select(genePool);
+                boolean incompatable = false;
+                double diff=0;
+
+                g1 = selectionStrategy.select(genePool);
+                g2 = selectionStrategy.select(genePool);
+
+                if (enableCompatability && g1!=null && g2!=null) {
+                    diff = g1.getDifference(g2);
+                    if (diff>compatabilityUpperLimit) incompatable=true; // too different.
+                    if (diff<compatabilityLowerLimit) incompatable=true; // too similar
                 }
-                double diff = g1.getDifference(g1);
-                //if (diff!=0 && diff>0.001 && diff<0.3) break;
-                //g1=g2;
+
+                if (g1!=null && g2!=null && g1!=g2 && incompatable==false) break;
             }
 
             // Breed

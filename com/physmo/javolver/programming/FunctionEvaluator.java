@@ -1,77 +1,73 @@
 package com.physmo.javolver.programming;
 
 import com.physmo.javolver.Chromosome;
+import com.physmo.minvio.BasicDisplay;
 
-public class WordEvaluator implements ProgramEvaluator {
+import java.awt.*;
 
-    String targetWord = "EVOLVE";
+public class FunctionEvaluator implements ProgramEvaluator {
+
+    double inputValue(double step) {
+        return step/10.0;
+    }
+
+    double func(double x) {
+        double a=x*4;
+        return Math.pow(2*a,2)-Math.pow(1*a,3);
+
+        //return 1+x+(x*x)+Math.sin(x*10)*1;
+        //return (Math.sin(x*3)+0.6)*3;
+    }
+
+    double scoreForExpected(double actual, double expected) {
+        double maxDiff = 10;
+        double diff = Math.abs(expected-actual);
+        if (diff>maxDiff) diff = maxDiff;
+        double score = maxDiff - diff;
+        return score/maxDiff;
+    }
+
 
     @Override
-    public double evaluate(SimpleMachine sm, Chromosome dna, int step) {
+    public void preEvaluateStep(SimpleMachine sm, Chromosome dna, double step) {
+        sm.regA = inputValue(step);
+    }
 
+    @Override
+    public double evaluate(SimpleMachine sm, Chromosome dna, double step) {
         double score = 0;
-        String machineOutput = sm.console;
 
-        int minWordSize = Math.min(targetWord.length(), machineOutput.length());
-        float theScore = 0.0f;
-        for (int i = 0; i < minWordSize; i++) {
-            theScore += getScoreForCharacter(targetWord.charAt(i), machineOutput.charAt(i));
-        }
-        score = theScore;
+        double targetVal = func(inputValue(step));
 
-
-        // Add points for having some output:
-        if (machineOutput.length() > 0) score += 1f;
-
-        // Penalty for too much output.
-        if (machineOutput.length() > 10) score = score * 0.8f;
-        if (machineOutput.length() > 20) score = score * 0.5f;
-        if (machineOutput.length() > 50) score = score * 0.2f;
-
-        //score-= cyclePenalty*2.0;
-
-        // Add points for noop commands...
-        for (int i = 0; i < dna.getData().size(); i++) {
-            if (dna.getDouble(i) < 0.01) score += 0.0001f;
-        }
-
-        //score += Math.random()*0.1f;
-
-//        if (cyclePenalty<0.01) score*=0.1f;
-//        if (cyclePenalty>0.8) score*=0.8f;
-//
-//        score-=scorePenalty;
+        score = scoreForExpected(sm.regB, targetVal);
 
         return score;
     }
 
 
-    float getScoreForCharacter(char a, char b) {
-        int maxDiff = 20;
-        int diff = Math.abs(a - b);
-        if (diff > maxDiff) return 0.0f;
-        float s = ((maxDiff - diff) / (float) maxDiff);
-
-        if (diff < 5) s *= 2.0f;
-        if (diff < 3) s *= 3.0f;
-        if (diff == 0) s *= 5.0f;
-
-
-        return s;
-    }
-
-    @Override
-    public void preEvaluateStep(SimpleMachine sm, Chromosome dna, int step) {
-
-    }
-
-//    @Override
-//    public double evaluate(SimpleMachine sm, Chromosome dna, int step) {
-//        return 0;
-//    }
-
     @Override
     public int getNumberOfSteps() {
-        return 1;
+        return 10;
+    }
+
+    @Override
+    public void render(SimpleMachine sm, Chromosome dna, BasicDisplay bd, double step) {
+        int width = bd.getWidth();
+        int height = bd.getHeight();
+        double y=0;
+        double radius=3;
+        bd.setDrawColor(Color.BLUE);
+        int x = (int)(step * 30);
+
+            double inputValue = inputValue(step); //((double)x/(double)width)*2;
+            bd.setDrawColor(Color.BLUE);
+            y=func(inputValue);
+            bd.drawFilledCircle(x,(int)((y+0.6)*height*0.1),radius);
+
+            bd.setDrawColor(Color.WHITE);
+            y=sm.regB;
+            bd.drawFilledCircle(x,(int)((y+0.6)*height*0.1),radius);
+
+
     }
 }

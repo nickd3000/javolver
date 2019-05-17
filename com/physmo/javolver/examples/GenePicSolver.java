@@ -17,8 +17,12 @@ public class GenePicSolver extends Individual {
 	static final int OFFSET_R = 2;
 	static final int OFFSET_ORDER = 3;
 	static final int OFFSET_COLS = 4;
+	static final int OFFSET_ACTIVE = 8;
 	
-	
+	int scoreStep = 5;
+
+	double activeThreshhold = 0.9;
+
 	BufferedImage img;
 	BufferedImage targetImage;
 	int imgWidth=200;
@@ -28,12 +32,17 @@ public class GenePicSolver extends Individual {
 	int stride = 20; 	// Number of data elements per poly.
 	boolean enableTransparency = true;
 	double radiusDivider = 6.0;
-	
-	double overlapPenaltyMultiplier = 0.002; // 0.02
-	double positionPenaltyMultiplier = 0.005; // 0.01
+
+	boolean enablePositionPenalty = false;
+	boolean enableOverlapPenalty = false;
+	double overlapPenaltyMultiplier = 0.0002; // 0.02
+	double positionPenaltyMultiplier = 0.0005; // 0.01
+
+	public int geneIdMutationAmount = (numPolys*stride)+1;
+	public int geneIdMutationFrequency = (numPolys*stride)+2;
 	
 	public GenePicSolver(BufferedImage targetImage) {
-		dna.init(numPolys*stride);
+		dna.init((numPolys*stride)+3 );
 		
 		this.targetImage = targetImage;
 		imgWidth = targetImage.getWidth();
@@ -116,7 +125,14 @@ public class GenePicSolver extends Individual {
 			if (rad<20) rad=20;
 			//if (rad>70) rad=70;
 			rad = 40;
-    		
+
+			// experimental - keep inside display
+//			if (xpos<0) xpos=0;
+//			if (ypos<0) ypos=0;
+//			if (xpos>imgWidth-rad) xpos=imgWidth-rad;
+//			if (ypos>imgHeight-rad) ypos=imgHeight-rad;
+
+
     		for (int i=0;i<4;i++) {
     			cols[i] = (float) dna.getDouble(loc+OFFSET_COLS+i);
     			
@@ -166,6 +182,8 @@ public class GenePicSolver extends Individual {
 		double totalRadius = 0;
 		double minOrder = 9999;
 		double maxOrder = -9999;
+
+		/*
 		for (int i=0;i<numPolys;i++) {
 			double order = dna.getDouble((i*stride)+OFFSET_ORDER);
 			if (order>maxOrder) maxOrder=order;
@@ -189,56 +207,75 @@ public class GenePicSolver extends Individual {
 			}
 			drawPoly(dc, matchIndex);
 			lastDrawnOrder = matchOrder;
-		}
-		
-		/*
-		for (int i=0;i<numPolys;i++) {
-			drawPoly(dc, i);	
 		}*/
+		
+
+		for (int i=0;i<numPolys;i++) {
+			if (dna.getDouble((i*stride)+OFFSET_ACTIVE) >= activeThreshhold) {
+				drawPoly(dc, i);
+			}
+		}
 		
 	
 
 		double score = 0;
-		score = testGridOfPoints(5);
+		score = testGridOfPoints(scoreStep);
 		//score += testRandomPoints(50);
 		//score = score * score;
 		//score += Math.random()*100;
 		
-		
+
+
 		double positionPenalty = 0;
-		for (int i=0;i<numPolys;i++) {
-			double x = dna.getDouble((i*stride)+OFFSET_X)*imgWidth;
-			double y = dna.getDouble((i*stride)+OFFSET_Y)*imgHeight;
-			double r = dna.getDouble((i*stride)+OFFSET_R)*(imgWidth/radiusDivider)*2;
-			if (x-r < 0) positionPenalty+=1;
-			if (y-r < 0) positionPenalty+=1;
-			if (x+r > imgWidth) positionPenalty+=1;
-			if (y+r > imgHeight) positionPenalty+=1;
+		if (enablePositionPenalty) {
+
+			for (int i = 0; i < numPolys; i++) {
+				double x = dna.getDouble((i * stride) + OFFSET_X) * imgWidth;
+				double y = dna.getDouble((i * stride) + OFFSET_Y) * imgHeight;
+				double r = dna.getDouble((i * stride) + OFFSET_R) * (imgWidth / radiusDivider) * 2;
+				if (x - r < 0) positionPenalty += 1;
+				if (y - r < 0) positionPenalty += 1;
+				if (x + r > imgWidth) positionPenalty += 1;
+				if (y + r > imgHeight) positionPenalty += 1;
+			}
+			positionPenalty /= (double) numPolys;
+			positionPenalty *= positionPenaltyMultiplier;
 		}
-		positionPenalty/=(double)numPolys;
-		positionPenalty*=positionPenaltyMultiplier;
-		
-		
-		
+
+
 		double overlapPenalty = 0;
-		boolean enableOverlapCheck = false;
-		if (enableOverlapCheck) {
+		if (enableOverlapPenalty) {
+
+			boolean enableOverlapCheck = false;
+			if (enableOverlapCheck) {
+				for (int i = 0; i < numPolys; i++) {
+					for (int j = 0; j < numPolys; j++) {
+						if (i == j) continue;
+						double overlap = checkOverlap(i, j);
+						overlapPenalty += overlap;
+					}
+				}
+				overlapPenalty /= (double) numPolys;
+				overlapPenalty *= overlapPenaltyMultiplier;
+			}
+		}
+
+		boolean enableActiveBenefit = true;
+		double activeBenefit = 0;
+		if (enableActiveBenefit) {
 			for (int i=0;i<numPolys;i++) {
-				for (int j=0;j<numPolys;j++) {
-					if (i==j) continue;
-					double overlap = checkOverlap(i,j);
-					overlapPenalty+=overlap;
+				if (dna.getDouble((i * stride) + OFFSET_ACTIVE) >= activeThreshhold) {
+					activeBenefit+=0.1;
 				}
 			}
-			overlapPenalty/=(double)numPolys;
-			overlapPenalty*=overlapPenaltyMultiplier;
 		}
-		
+
+
 		double averaged = score*500.0;
 		double sizePenalty = totalRadius * 0.25;
 		
 				
-		return averaged-sizePenalty-positionPenalty-overlapPenalty;
+		return averaged-sizePenalty-positionPenalty-overlapPenalty+activeBenefit;
 	}
 	
 	
@@ -290,7 +327,7 @@ public class GenePicSolver extends Individual {
 	    if (dist>max) dist=max;
 	    
 	    dist = (max - dist) / max;
-	    
+	    //dist = dist * dist;
 		return dist;
 	}
 }

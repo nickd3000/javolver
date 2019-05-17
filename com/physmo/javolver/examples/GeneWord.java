@@ -27,7 +27,7 @@ public class GeneWord extends Individual {
 		{
 			str = str + dna.getChar(i);
 		}
-		str += " score:"+score;
+		//str += " score:"+score;
 		return str;
 	}
 	

@@ -2,6 +2,7 @@ package com.physmo.javolver.examples;
 
 import com.physmo.javolver.Javolver;
 import com.physmo.javolver.breedingstrategy.BreedingStrategyCrossover;
+import com.physmo.javolver.mutationstrategy.MutationStrategyGeneBased;
 import com.physmo.javolver.mutationstrategy.MutationStrategySimple;
 import com.physmo.javolver.mutationstrategy.MutationStrategySwap;
 import com.physmo.javolver.selectionstrategy.SelectionStrategyTournament;
@@ -17,7 +18,7 @@ public class PictureSolver {
     public static void main(String[] args) {
 
 
-        int populationSize = 30;//100;
+        int populationSize = 15;//100;
         BufferedImage targetImage = null;
         try {
             //targetImage = ImageIO.read(new File("mona_lisa.jpg"));
@@ -28,11 +29,14 @@ public class PictureSolver {
 
         BasicDisplay disp = new BasicDisplayAwt(targetImage.getWidth() * 2, targetImage.getHeight());
 
-        Javolver testEvolver = new Javolver(new GenePicSolver(targetImage), populationSize);
+        GenePicSolver gps = new GenePicSolver(targetImage);
+
+        Javolver testEvolver = new Javolver(gps, populationSize);
         testEvolver.keepBestIndividualAlive(true).parallelScoring(false)
-                .addMutationStrategy(new MutationStrategySimple(0.1, 0.0512))
+                .addMutationStrategy(new MutationStrategySimple(0.1, 0.1))
                 .addMutationStrategy(new MutationStrategySwap(0.01, 2))
-                .setSelectionStrategy(new SelectionStrategyTournament(0.15))
+                .addMutationStrategy(new MutationStrategyGeneBased(gps.geneIdMutationFrequency,gps.geneIdMutationAmount))
+                .setSelectionStrategy(new SelectionStrategyTournament(0.25))
                 .setBreedingStrategy(new BreedingStrategyCrossover());
 
 

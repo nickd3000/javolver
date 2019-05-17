@@ -3,6 +3,10 @@ package com.physmo.javolver.examples;
 import java.awt.Color;
 
 import com.physmo.javolver.Javolver;
+import com.physmo.javolver.breedingstrategy.BreedingStrategyCrossover;
+import com.physmo.javolver.breedingstrategy.BreedingStrategyUniform;
+import com.physmo.javolver.mutationstrategy.MutationStrategySimple;
+import com.physmo.javolver.selectionstrategy.SelectionStrategyTournament;
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
 
@@ -18,16 +22,18 @@ public class TestTree {
 
 		BasicDisplay disp = new BasicDisplayAwt(400, 400);
 
-		int populationTargetSize = 10;
+		int populationTargetSize = 250;
 
 		System.out.print("START");
 		for (int n = 0; n < 500; n++) {
 
 			// Create the evolver:
 			Javolver testEvolver = new Javolver(new GeneTree(),populationTargetSize)
-					.keepBestIndividualAlive(true)
+					.keepBestIndividualAlive(false)
 					.parallelScoring(false)
-					.setDefaultStrategies();
+					.addMutationStrategy(new MutationStrategySimple(0.1, 0.01))
+					.setSelectionStrategy(new SelectionStrategyTournament(0.15))
+					.setBreedingStrategy(new BreedingStrategyCrossover());
 
 			int iteration = 0;
 			int runLength = 400;

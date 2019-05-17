@@ -14,6 +14,7 @@ import com.physmo.minvio.BasicDisplay;
  */
 public class GeneTree extends Individual {
 
+	static double minimumBranchLength = 23.0+1;
 
 	// Id's used to identify purpose of each DNA element.
 	public int dnaLength = 20;
@@ -44,10 +45,10 @@ public class GeneTree extends Individual {
 	int branchCount = 0;
 	
 	
-	Color col_leaf = new Color(172,138,40,150);
+	Color col_leaf = new Color(172, 93, 52, 255);
 	Color col_leaf_descender = new Color(0xff,0xff,0xff,50);
-	Color col_sky = new Color(100,150,194);
-	Color col_wood = new Color(101,93,74);
+	Color col_sky = new Color(65, 156, 233);
+	Color col_wood = new Color(101, 84, 50);
 	
 	int generation = 0;
 	
@@ -116,7 +117,7 @@ public class GeneTree extends Individual {
 		double scaleAverageDist=0.1f*0.1f;
 		double scaleLeafBonus=0.1f;
 		double leafCost=0.05f*1.0f;
-		double obscuredLeafCost=0.05f*0.015*5;
+		double obscuredLeafCost=0.05f*0.015*6;
 		double leafObscureSize = 5.0;
 		
 		// Make sure we haven't evolved something crazy.
@@ -237,6 +238,7 @@ public class GeneTree extends Individual {
 		int numPoints = branchPoints.size();
 		//float offsx = 200.0f;
 		//float offsy = 350.0f;
+		disp.setDrawColor(col_wood);
 		for (int i=0;i<numPoints;i+=2)
 		{
 			double x1 = branchPoints.get(i).x + offsx;
@@ -248,20 +250,21 @@ public class GeneTree extends Individual {
 			double dy = y1-y2;
 			double d = (double) Math.sqrt((dx*dx)+(dy*dy));
 			double thickness = 1+((d*d)/500.0f);
-			disp.setDrawColor(col_wood);
+
 			disp.drawLine(x1, y1, x2, y2, thickness);
 		}
 
+		disp.setDrawColor(col_leaf);
 		for (int i=0;i<leafPoints.size();i++)
 		{
 			double x = offsx + leafPoints.get(i).x;
 			double y = offsy - leafPoints.get(i).y;
 			
-			disp.setDrawColor(col_leaf);
-			disp.drawCircle(x, y, 7);
+
+			disp.drawFilledCircle(x, y, 4);
 			
-			disp.setDrawColor(col_leaf_descender);
-			disp.drawLine((int)x,(int)y,(int)x,(int)y+200);
+			//disp.setDrawColor(col_leaf_descender);
+			//disp.drawLine((int)x,(int)y,(int)x,(int)y+200);
 		}
 	}
 	
@@ -269,24 +272,30 @@ public class GeneTree extends Individual {
 	{
 		branchCount ++;
 		//if (branchCount>4000) return;
-		
-		if (len<23.0) //23.0 25
+
+
+		if (len<minimumBranchLength) //23.0 25
 		{
 			// Record leaf point and exit iteration.
 			Point2D.Double leafPos = new Point2D.Double(x,y);
 			leafPoints.add(leafPos);
 			return;
 		}
-			
-		double x2 = (float) (x + Math.sin((double)angle) * len);
-		double y2 = (float) (y + Math.cos((double)angle) * len);
 
-		double br1x = (float) (x + Math.sin((double)angle) * (len*getBlended(VAL_branch1Pos, iteration)));
-		double br1y = (float) (y + Math.cos((double)angle) * (len*getBlended(VAL_branch1Pos, iteration)));
+		double sinAngle = Math.sin((double)angle);
+		double cosAngle = Math.cos((double)angle);
+
+		double x2 = (float) (x + sinAngle * len);
+		double y2 = (float) (y + cosAngle * len);
+
+		double br1x = (float) (x + sinAngle * (len*getBlended(VAL_branch1Pos, iteration)));
+		double br1y = (float) (y + cosAngle * (len*getBlended(VAL_branch1Pos, iteration)));
 		
-		double br2x = (float) (x + Math.sin((double)angle) * (len*getBlended(VAL_branch2Pos, iteration)));
-		double br2y = (float) (y + Math.cos((double)angle) * (len*getBlended(VAL_branch2Pos, iteration)));
+		double br2x = (float) (x + sinAngle * (len*getBlended(VAL_branch2Pos, iteration)));
+		double br2y = (float) (y + cosAngle * (len*getBlended(VAL_branch2Pos, iteration)));
 
+		// Experimental add gravity.
+		//y2+=10;
 		
 		// Record position for later scoring.
 		Point2D.Double branchPos = new Point2D.Double(x,y);

@@ -1,13 +1,9 @@
-package com.physmo.javolver.examples;
+package com.physmo.javolver.programming;
 
 import com.physmo.javolver.Individual;
-//import java.net.NetworkInterface;
-//import java.util.ArrayList;
-//
-//import javolver.Individual;
-//import test.SimpleMachine;
-//
-////import evo.IGene;
+import com.physmo.minvio.BasicDisplay;
+
+import java.awt.*;
 
 
 public class GeneProgram extends Individual  {
@@ -16,34 +12,44 @@ public class GeneProgram extends Individual  {
     int programSize = 250;
 
 
-    public String targetWord = "GENETICS";
     double cyclePenalty = 0.0; // number of cycles involved in running program.
     double scorePenalty = 0;
     String consoleOutput = "";
 
     public double location = 0;
+    Class evaluatorClass = null;
 
+    ProgramEvaluator programEvaluator=null;
 
-    public GeneProgram() {
+    public GeneProgram(Class evaluator) {
+        this.evaluatorClass = evaluator;
         dna.init(programSize); // 200
+
+        try {
+            programEvaluator = (ProgramEvaluator)evaluatorClass.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public Individual clone() {
-        return (Individual)(new GeneProgram());
+        return (Individual)(new GeneProgram(evaluatorClass));
     }
 
 
     // Setup and also run simple machine, return console result.
-    public String setupSimpleMachineFromDNA(SimpleMachine sm)
-    {
+    public void setupSimpleMachineFromDNA(SimpleMachine sm) {
 
-        for (int i=0;i<dna.getData().size();i++)
-        {
-            int val = (int)(dna.getDouble(i) * 30.0); //250
+        for (int i = 0; i < dna.getData().size(); i++) {
+            int val = (int) (dna.getDouble(i) * 30.0); //250
             sm.memory[i] = val;
         }
+    }
 
+    public void runSimpleMachine(SimpleMachine sm) {
         scorePenalty = 0;
         int maxCycles = 200*2;
         int cycleCount = 0;
@@ -59,79 +65,76 @@ public class GeneProgram extends Individual  {
             if (result==1) break;
         }
 
+        consoleOutput = sm.console;
+
         cyclePenalty = (double)cycleCount / (double)maxCycles;
 
-        return sm.console;
+        //return sm.console;
     }
 
     @Override
     public double calculateScore() {
 
-        SimpleMachine sm = new SimpleMachine();
-        String machineOutput = setupSimpleMachineFromDNA(sm);
-        consoleOutput = machineOutput; // record this for reporting.
+        SimpleMachine sm=null;
+        int numberOfSteps = programEvaluator.getNumberOfSteps();
+        double score=0, stepScore=0;
 
-        int minWordSize = Math.min(targetWord.length(), machineOutput.length());
-        float theScore = 0.0f;
-        for (int i=0;i<minWordSize;i++)
-        {
-            theScore += getScoreForCharacter(targetWord.charAt(i), machineOutput.charAt(i));
+        for (int step=0;step<numberOfSteps*10;step++) {
+            sm = new SimpleMachine();
+
+            setupSimpleMachineFromDNA(sm);
+            programEvaluator.preEvaluateStep(sm,dna,step/10);
+            runSimpleMachine(sm);
+            stepScore = programEvaluator.evaluate(sm, dna, step/10);
+            score+=stepScore;
+
+            //consoleOutput+=" "+stepScore;
         }
-        score = theScore;
-
-
-        // Add points for having some output:
-        if (machineOutput.length()>0) score+=1f;
-
-        // Penalty for too much output.
-        if (machineOutput.length()>10) score=score*0.8f;
-        if (machineOutput.length()>20) score=score*0.5f;
-        if (machineOutput.length()>50) score=score*0.2f;
-
-        //score-= cyclePenalty*2.0;
-
-        // Add points for noop commands...
-        for (int i=0;i<dna.getData().size();i++)
-        {
-            if (dna.getDouble(i)<0.01) score+=0.0001f;
-        }
-
-        //score += Math.random()*0.1f;
-
-        if (cyclePenalty<0.01) score*=0.1f;
-        if (cyclePenalty>0.8) score*=0.8f;
-
-        score-=scorePenalty;
 
         return score;
-
     }
 
-
-
-
-
-    float getScoreForCharacter(char a, char b)
-    {
-        int maxDiff = 20;
-        int diff = Math.abs(a-b);
-        if (diff>maxDiff) return 0.0f;
-        float s = ((maxDiff-diff)/(float)maxDiff);
-
-        if (diff<5) s*=2.0f;
-        if (diff<3) s*=3.0f;
-        if (diff==0) s*=5.0f;
-
-
-        return s;
-    }
 
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder(200);
+
         sb.append(String.format("Score:%f  Word:%s\n", score, consoleOutput));
+
         return sb.toString();
+
+    }
+
+    public void render(BasicDisplay bd) {
+//        SimpleMachine sm = new SimpleMachine();
+//
+//        setupSimpleMachineFromDNA(sm);
+//        programEvaluator.render(sm, dna,bd,);
+
+
+        SimpleMachine sm=null;
+        int numberOfSteps = programEvaluator.getNumberOfSteps();
+        double score=0, stepScore=0;
+
+        bd.cls(Color.lightGray);
+
+        for (int step=0;step<numberOfSteps*10;step++) {
+            sm = new SimpleMachine();
+
+            setupSimpleMachineFromDNA(sm);
+            programEvaluator.preEvaluateStep(sm,dna,step/10.0);
+            runSimpleMachine(sm);
+
+            programEvaluator.render(sm,dna,bd,step/10.0);
+
+            //stepScore = programEvaluator.evaluate(sm, dna, step);
+            //score+=stepScore;
+
+            //consoleOutput+=" "+stepScore;
+        }
+
+        bd.refresh();
 
     }
 

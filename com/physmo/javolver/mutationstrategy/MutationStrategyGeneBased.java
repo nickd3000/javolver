@@ -2,18 +2,34 @@ package com.physmo.javolver.mutationstrategy;
 
 import com.physmo.javolver.Individual;
 
-public class MutationStrategySimple implements MutationStrategy {
+// Gene based mutation uses values from the genome to control
+// the frequency and amount of mutation.
+public class MutationStrategyGeneBased implements MutationStrategy {
 
 	double amount;
 	double frequency;
-	
-	public MutationStrategySimple(double frequency, double amount) {
-		this.frequency = frequency;
-		this.amount = amount;
+
+	int geneAmount = 0;
+	int geneFrequency = 0;
+
+
+	public MutationStrategyGeneBased(int geneFrequency, int geneAmount) {
+		this.geneAmount = geneFrequency;
+		this.geneFrequency = geneFrequency;
 	}
 	
 	@Override
 	public void mutate(Individual individual) {
+
+		amount = individual.dna.getDouble(geneAmount);
+		frequency = individual.dna.getDouble(geneFrequency);
+
+		if (amount<0.001) amount=0.001;
+		if (frequency<0.001) frequency=0.001;
+
+		amount=0.001;
+		frequency=0.001;
+
 		double jiggle = 0, value = 0;
 		int index = 0;
 		int dnaSize = individual.dna.getSize();

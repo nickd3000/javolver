@@ -1,4 +1,4 @@
-package com.physmo.javolver.examples;
+package com.physmo.javolver.programming;
 
 public class SimpleMachine {
 
@@ -9,8 +9,8 @@ public class SimpleMachine {
     public String console = "";
     int pc = 0; // program counter.
     int cmp = 0; // comparison flag. (0:equal 1:greater 2:less)
-    int regA = 0;
-    int regB = 0;
+    double regA = 0;
+    double regB = 0;
 
     final int NO_OP = 0;		// Do nothing
     final int COPY_A_B = 1;		// Copy reg a to reg b
@@ -41,7 +41,7 @@ public class SimpleMachine {
 
 
         int operator = memory[pc];
-        int tmp = 0;
+        double tmp = 0;
 
 
         memoryHits[pc]++;
@@ -53,9 +53,9 @@ public class SimpleMachine {
             case COPY_A_B: regB = regA; pc++; break;
             case COPY_B_A: regA = regB; pc++; break;
             case COPY_M_A: regA = memory[pc+1]; pc+=2; break;
-            case COPY_A_M: memory[pc+1] = regA; pc+=2; break;
+            case COPY_A_M: memory[pc+1] = (int)regA; pc+=2; break;
             case COPY_M_B: regB = memory[pc+1]; pc+=2; break;
-            case COPY_B_M: memory[pc+1] = regB; pc+=2; break;
+            case COPY_B_M: memory[pc+1] = (int)regB; pc+=2; break;
             case CMP_A_B:
                 if (regA==regB) cmp=0;
                 else if (regA>regB) cmp=1;
@@ -66,13 +66,13 @@ public class SimpleMachine {
             case JMPNZ: if (cmp!=0) pc=memory[pc+1]; else pc+=2; break;
             case JMPGT: if (cmp==1) pc=memory[pc+1]; else pc+=2; break;
             case JMPLT: if (cmp==2) pc=memory[pc+1]; else pc+=2; break;
-            case PRINT_A: safePrint(regA); pc++; break;
+            case PRINT_A: safePrint((int)regA); pc++; break;
             case ADD_A_B: regA = regA+regB; pc++; break;
             case SUB_A_B: regA = regA-regB; pc++; break;
             case DIV_A_B: regA = (regB!=0)?regA/regB:0; pc++; break;
             case MUL_A_B: regA = regA*regB; pc++; break;
             case SWITCH_REGS: tmp = regA; regA=regB; regB=tmp; pc++; break;
-            case JMP_A: pc=regA; break;
+            case JMP_A: pc=(int)regA; break;
             //case QUIT: return 1;
             default: pc++;
         }
