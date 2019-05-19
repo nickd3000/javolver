@@ -13,12 +13,12 @@ import com.physmo.javolver.selectionstrategy.SelectionStrategyTournament;
  */
 public class WordFindMulti {
 
-    static int populationSize = 100;
+    static int populationSize = 10;
     static String targetWord = "ABCDEFGHIJK";
 
     public static void main(String[] args) {
 
-        int numCycles = 1000;
+        int numCycles = 100;
         int sumOfEvolutionCycles=0;
 
         Javolver javolver = null;
@@ -26,7 +26,7 @@ public class WordFindMulti {
         for (int i=0;i<numCycles;i++) {
             javolver = new Javolver(new GeneWord(targetWord), populationSize)
                     .keepBestIndividualAlive(false)
-                    //.enableCompatability(0.05,0.9)
+                    .enableCompatability(0.05,0.9)
                     .parallelScoring(false)
                     .addMutationStrategy(new MutationStrategySimple(0.1, 0.055))
                     .setSelectionStrategy(new SelectionStrategyTournament(0.05))
