@@ -13,7 +13,7 @@ import com.physmo.javolver.selectionstrategy.SelectionStrategyTournament;
  */
 public class WordFindMetaSolver {
 
-    static int populationSize = 10;
+    static int populationSize = 25;
     static String targetWord = "ABCDEFGHIJK";
 
     public static void main(String[] args) {
@@ -22,18 +22,18 @@ public class WordFindMetaSolver {
         Javolver javolver = new Javolver(new GeneWordMetaSolver(), populationSize)
                 .keepBestIndividualAlive(true)
                 .parallelScoring(false)
-                .addMutationStrategy(new MutationStrategySimple(0.1, 0.5))
-                .setSelectionStrategy(new SelectionStrategyTournament(0.35))
+                .addMutationStrategy(new MutationStrategySimple(0.4, 1.5))
+                .setSelectionStrategy(new SelectionStrategyTournament(0.65))
                 .setBreedingStrategy(new BreedingStrategyUniform());
 
         // Perform a few iterations of evolution.
-        for (int j = 0; j < 50; j++) {
+        for (int j = 0; j < 500; j++) {
 
             // Call the evolver class to perform one evolution step.
             javolver.doOneCycle();
 
             //GeneWord gene = (GeneWord)javolver.findBestScoringIndividual(javolver.getPool());
-            GeneWordMetaSolver gene = (GeneWordMetaSolver)javolver.findBestScoringIndividual(javolver.getPool());
+            GeneWordMetaSolver gene = (GeneWordMetaSolver)javolver.findBestScoringIndividual(null);
 
             // Print output every so often.
             System.out.println("Iteration " + j + "  " + javolver.report() + "  score:" + javolver.getBestScore());

@@ -14,7 +14,7 @@ import com.physmo.javolver.selectionstrategy.SelectionStrategyTournament;
 public class GeneWordMetaSolver extends Individual {
 
 	public String targetWord = "EVOLUTION";
-	int numGenes = 20; // is gene the correct word for a dna element?
+	int numGenes = 6; // is gene the correct word for a dna element?
 
 	int DNA_COMP_LOWER=1;
 	int DNA_COMP_UPPER=2;
@@ -66,9 +66,9 @@ public class GeneWordMetaSolver extends Individual {
 
 	public double buildJavolverFromDnaAndRun() {
 
-		int numRunsForAverage = 5;
+		int numRunsForAverage = 50;
 		int sumOfEvolutionCycles=0;
-		int populationSize = 20;
+		int populationSize = 50;
 
 		Javolver javolver = null;
 
@@ -77,7 +77,7 @@ public class GeneWordMetaSolver extends Individual {
         for (int i=0;i<numRunsForAverage;i++) {
 			javolver = new Javolver(new GeneWord(targetWord), populationSize)
 					.keepBestIndividualAlive(false)
-					.enableCompatability(dna.getDouble(DNA_COMP_LOWER),dna.getDouble(DNA_COMP_UPPER))
+					//.enableCompatability(dna.getDouble(DNA_COMP_LOWER),dna.getDouble(DNA_COMP_UPPER))
 					.parallelScoring(false)
 					.addMutationStrategy(new MutationStrategySimple(dna.getDouble(DNA_MUT_FREQ), dna.getDouble(DNA_MUT_AMOUNT)))
 					.setSelectionStrategy(new SelectionStrategyTournament(dna.getDouble(DNA_SEL_RANGE)))
@@ -90,7 +90,9 @@ public class GeneWordMetaSolver extends Individual {
 		//double averageCycled = (double)sumOfEvolutionCycles/(double)numRunsForAverage;
 
 		sumOfEvolutionCycles = sumOfEvolutionCycles / numRunsForAverage;
-		System.out.println("Average cycles to find solution "+sumOfEvolutionCycles);
+
+		//System.out.println("Average cycles to find solution "+sumOfEvolutionCycles);
+		System.out.print(", "+sumOfEvolutionCycles);
 
         //System.out.print("Average = "+averageCycled);
 		int maxCycles=100;
@@ -98,11 +100,11 @@ public class GeneWordMetaSolver extends Individual {
 		if (sumOfEvolutionCycles>maxCycles) sumOfEvolutionCycles=maxCycles;
 		double score = (double)(maxCycles-sumOfEvolutionCycles)/(double)maxCycles;
 
-        return score*score;
+        return score*score*100;
 	}
 
 	public int evolveToSolution(Javolver javolver) {
-		int maxIterations = 50;
+		int maxIterations = 40;
 		for (int j = 0; j < maxIterations; j++) {
 			javolver.doOneCycle();
 			GeneWord gene = (GeneWord)javolver.findBestScoringIndividual(javolver.getPool());

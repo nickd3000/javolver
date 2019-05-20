@@ -21,6 +21,7 @@ public class SpherePacker {
 				.keepBestIndividualAlive(false)
 				.parallelScoring(true)
 				.setDefaultStrategies()
+				.enableCompatability(0.1,0.6)
 				.addMutationStrategy(new MutationStrategySingle(1.1))
 				.addMutationStrategy(new MutationStrategySimple(1.1,0.1))
 				.addMutationStrategy(new MutationStrategySwap(0.1, 1));
