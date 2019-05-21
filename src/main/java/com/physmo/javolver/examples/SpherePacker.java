@@ -52,7 +52,7 @@ public class SpherePacker {
 				top.draw(disp, pad,pad);
 				
 				disp.setDrawColor(Color.white);
-				disp.drawRect(pad+0, pad+0, pad+boxSize, pad+boxSize);
+				disp.drawRect(pad, pad, pad+boxSize, pad+boxSize);
 				
 				disp.refresh();
 			}

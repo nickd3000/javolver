@@ -1,7 +1,6 @@
 package com.physmo.javolver.examples;
 
 import com.physmo.javolver.Javolver;
-import com.physmo.javolver.breedingstrategy.BreedingStrategyCrossover;
 import com.physmo.javolver.breedingstrategy.BreedingStrategyUniform;
 import com.physmo.javolver.mutationstrategy.MutationStrategySimple;
 import com.physmo.javolver.selectionstrategy.SelectionStrategyTournament;
@@ -26,7 +25,7 @@ public class WordFindMulti {
         for (int i=0;i<numCycles;i++) {
             javolver = new Javolver(new GeneWord(targetWord), populationSize)
                     .keepBestIndividualAlive(false)
-                    .enableCompatability(0.05,0.9)
+                    .enableCompatability(0.1,0.9)
                     .parallelScoring(false)
                     .addMutationStrategy(new MutationStrategySimple(0.1, 0.055))
                     .setSelectionStrategy(new SelectionStrategyTournament(0.05))

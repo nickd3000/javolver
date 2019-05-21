@@ -72,13 +72,13 @@ public abstract class Individual {
 		}
 		
 		return score;
-	};
-	
-	public double getDiversity() {
+	}
+
+    public double getDiversity() {
 		return diversity;
-	};
-	
-	/**
+	}
+
+    /**
 	 * Return score*score.
 	 * @return	Score value squared.
 	 */

@@ -4,7 +4,6 @@ import java.awt.Color;
 
 import com.physmo.javolver.Javolver;
 import com.physmo.javolver.breedingstrategy.BreedingStrategyCrossover;
-import com.physmo.javolver.breedingstrategy.BreedingStrategyUniform;
 import com.physmo.javolver.mutationstrategy.MutationStrategySimple;
 import com.physmo.javolver.selectionstrategy.SelectionStrategyTournament;
 import com.physmo.minvio.BasicDisplay;

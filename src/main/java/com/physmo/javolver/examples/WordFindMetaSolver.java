@@ -13,7 +13,7 @@ import com.physmo.javolver.selectionstrategy.SelectionStrategyTournament;
  */
 public class WordFindMetaSolver {
 
-    static int populationSize = 25;
+    static int populationSize = 5;
     static String targetWord = "ABCDEFGHIJK";
 
     public static void main(String[] args) {

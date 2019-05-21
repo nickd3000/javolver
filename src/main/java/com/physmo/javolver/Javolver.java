@@ -232,7 +232,9 @@ public class Javolver {
 
         // Elitism - keep the best individual in the new pool.
         if (keepBestIndividualAlive) {
-            newGenePool.add(findBestScoringIndividual(genePool));
+            Individual bestScorer = findBestScoringIndividual(genePool);
+            bestScorer.processed=false;
+            newGenePool.add(bestScorer);
         }
 
         Individual g1 = null, g2 = null;
@@ -268,9 +270,7 @@ public class Javolver {
             }
 
             // Add children to new gene pool.
-            for (Individual child : children) {
-                newGenePool.add(child);
-            }
+            newGenePool.addAll(children);
         }
 
         // Copy new pool over main pool.

@@ -66,7 +66,7 @@ public class GeneWordMetaSolver extends Individual {
 
 	public double buildJavolverFromDnaAndRun() {
 
-		int numRunsForAverage = 50;
+		int numRunsForAverage = 150;
 		int sumOfEvolutionCycles=0;
 		int populationSize = 50;
 

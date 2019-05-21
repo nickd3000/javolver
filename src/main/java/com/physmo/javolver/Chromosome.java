@@ -50,8 +50,6 @@ public class Chromosome {
         return data;
     }
 
-    ;
-
     /**
      * Get raw double value.
      *
