@@ -11,7 +11,8 @@ public class SelectionStrategyTournament implements SelectionStrategy {
 	public SelectionStrategyTournament(double selectionRange) {
 		this.selectionRange = selectionRange;
 	}
-		@Override
+
+	@Override
 	public Individual select(List<Individual> pool) {
 		int poolSize = pool.size();
 		double maxScore = -1000;
@@ -20,8 +21,8 @@ public class SelectionStrategyTournament implements SelectionStrategy {
 		double tournamentSize = selectionRange;
 		
 		int tSize = (int)(tournamentSize*(double)poolSize);
-		if (tSize<2) tSize=2;
-		
+		if (tSize<1) tSize=1;
+
 		for (int i=0;i<tSize;i++)
 		{
 			Individual contender = getRandomIndividual(pool);

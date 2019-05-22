@@ -21,21 +21,22 @@ public class TestTree {
 
 		BasicDisplay disp = new BasicDisplayAwt(400, 400);
 
-		int populationTargetSize = 250;
+		int populationTargetSize = 50;
 
 		System.out.print("START");
-		for (int n = 0; n < 500; n++) {
+		for (int n = 0; n < 200; n++) {
 
 			// Create the evolver:
 			Javolver testEvolver = new Javolver(new GeneTree(),populationTargetSize)
 					.keepBestIndividualAlive(false)
 					.parallelScoring(false)
-					.addMutationStrategy(new MutationStrategySimple(0.1, 0.01))
-					.setSelectionStrategy(new SelectionStrategyTournament(0.15))
+					.enableCompatability(0.3,0.4)
+					.addMutationStrategy(new MutationStrategySimple(0.1, 0.1))
+					.setSelectionStrategy(new SelectionStrategyTournament(0.1))
 					.setBreedingStrategy(new BreedingStrategyCrossover());
 
 			int iteration = 0;
-			int runLength = 400;
+			int runLength = 40;
 			for (int j = 0; j < runLength; j++) {
 
 				disp.startTimer();

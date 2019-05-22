@@ -20,18 +20,17 @@ public class WordFind {
         Javolver javolver = new Javolver(new GeneWord(targetWord), populationSize)
                 .keepBestIndividualAlive(true)
                 .parallelScoring(false)
-                .addMutationStrategy(new MutationStrategySimple(0.1, 0.3))
+                .addMutationStrategy(new MutationStrategySimple(0.1, 0.6))
                 .setSelectionStrategy(new SelectionStrategyTournament(0.15))
                 .setBreedingStrategy(new BreedingStrategyUniform());
 
-        // Perform a few iterations of evolution.
+        // Run evolution until we get exact solution.
         for (int j = 0; j < 250; j++) {
 
             // Call the evolver class to perform one evolution step.
             javolver.doOneCycle();
 
-            //GeneWord gene = (GeneWord)javolver.findBestScoringIndividual(javolver.getPool());
-            GeneWord gene = (GeneWord)javolver.findBestScoringIndividual(javolver.getPool());
+            GeneWord gene = (GeneWord)javolver.findBestScoringIndividual(null);
 
             // Print output every so often.
             System.out.println("Iteration " + j + "  " + javolver.report() + "  score:" + javolver.getBestScore());
