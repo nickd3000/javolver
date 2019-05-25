@@ -3,6 +3,7 @@ package com.physmo.javolver.examples;
 import com.physmo.javolver.Javolver;
 import com.physmo.javolver.breedingstrategy.BreedingStrategyUniform;
 import com.physmo.javolver.mutationstrategy.MutationStrategySimple;
+import com.physmo.javolver.selectionstrategy.SelectionStrategyRandom;
 import com.physmo.javolver.selectionstrategy.SelectionStrategyTournament;
 
 /*
@@ -20,7 +21,7 @@ public class WordFind {
         Javolver javolver = new Javolver(new GeneWord(targetWord), populationSize)
                 .keepBestIndividualAlive(true)
                 .parallelScoring(false)
-                .addMutationStrategy(new MutationStrategySimple(0.1, 0.6))
+                .addMutationStrategy(new MutationStrategySimple(0.1, 0.2))
                 .setSelectionStrategy(new SelectionStrategyTournament(0.15))
                 .setBreedingStrategy(new BreedingStrategyUniform());
 

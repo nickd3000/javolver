@@ -211,9 +211,9 @@ public class GenePicSolver extends Individual {
 		
 
 		for (int i=0;i<numPolys;i++) {
-			if (dna.getDouble((i*stride)+OFFSET_ACTIVE) >= activeThreshhold) {
+			//if (dna.getDouble((i*stride)+OFFSET_ACTIVE) >= activeThreshhold) {
 				drawPoly(dc, i);
-			}
+			//}
 		}
 		
 	
