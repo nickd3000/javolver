@@ -18,7 +18,8 @@ public class MutationStrategySimple implements MutationStrategy {
 		int index = 0;
 		int dnaSize = individual.dna.getSize();
 		int randomisedCount = (int)(Math.random()*(double)frequency*(double)dnaSize);//+1;
-		
+
+		if (randomisedCount<1) randomisedCount=1;
 		
 		for (int i=0;i<randomisedCount;i++) {
 			index = MutationUtils.getRandomDnaIndexForIindividual(individual);

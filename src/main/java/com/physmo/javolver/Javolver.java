@@ -177,8 +177,8 @@ public class Javolver {
         // Request that all individuals perform scoring.
         scoreGenes(genePool);
 
-        JavolverRanking.calculateFitnessRank(genePool);
-        JavolverRanking.calculateDiversityRank(genePool);
+        //JavolverRanking.calculateFitnessRank(genePool);
+        //JavolverRanking.calculateDiversityRank(genePool);
 
         Individual bestGuy = findBestScoringIndividual(genePool);
         Individual child = bestGuy.clone();
@@ -189,8 +189,8 @@ public class Javolver {
 
         double score1 = bestGuy.calculateScore();
 
-        MutationStrategy ms = new MutationStrategySimple(0.1, 0.01);
-        MutationStrategy ms2 = new MutationStrategySimple(0.1, 0.1);
+        MutationStrategy ms = new MutationStrategySimple(0.5, 0.01);
+        MutationStrategy ms2 = new MutationStrategySimple(0.2, 0.1);
         MutationStrategy ms3 = new MutationStrategySimple(1.0, 1.0);
 
 
