@@ -4,8 +4,8 @@ import com.physmo.javolver.Individual;
 
 public class MutationStrategySimple implements MutationStrategy {
 
-	double amount;
-	double frequency;
+	public double amount;
+	public double frequency;
 	
 	public MutationStrategySimple(double frequency, double amount) {
 		this.frequency = frequency;
@@ -19,7 +19,8 @@ public class MutationStrategySimple implements MutationStrategy {
 		int dnaSize = individual.dna.getSize();
 		int randomisedCount = (int)(Math.random()*(double)frequency*(double)dnaSize);//+1;
 
-		if (randomisedCount<1) randomisedCount=1;
+		if ((int)(frequency*(double)dnaSize)<1) randomisedCount=1;
+
 		
 		for (int i=0;i<randomisedCount;i++) {
 			index = MutationUtils.getRandomDnaIndexForIindividual(individual);

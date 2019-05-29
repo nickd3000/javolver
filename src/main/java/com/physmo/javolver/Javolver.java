@@ -189,14 +189,14 @@ public class Javolver {
 
         double score1 = bestGuy.calculateScore();
 
-        MutationStrategy ms = new MutationStrategySimple(0.5, 0.01);
-        MutationStrategy ms2 = new MutationStrategySimple(0.2, 0.1);
+        MutationStrategy ms = new MutationStrategySimple(0.005, 0.001);
+        MutationStrategy ms2 = new MutationStrategySimple(0.002, 0.001);
         MutationStrategy ms3 = new MutationStrategySimple(1.0, 1.0);
 
 
         ms.mutate(child);
-        ms2.mutate(child);
-        if (Math.random() > 0.99) ms3.mutate(child);
+        //ms2.mutate(child);
+        if (Math.random() > 0.9) ms3.mutate(child);
 
         double score2 = child.calculateScore();
 
@@ -297,6 +297,8 @@ public class Javolver {
      * @param    pool    ArrayList of individuals to be scored.
      */
     public void scoreGenes(ArrayList<Individual> pool) {
+        if (pool==null) pool=getPool();
+
         if (allScored == true) return;
 
         if (parallelScoring) {
