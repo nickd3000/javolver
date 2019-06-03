@@ -130,28 +130,12 @@ public class Javolver {
      *
      * @return The best score of any individual in the current generation.
      */
+    public double getBestScore(ArrayList<Individual> pool) {
+        if (pool==null) pool = genePool;
+        return findBestScoringIndividual(pool).getScore();
+    }
     public double getBestScore() {
         return findBestScoringIndividual(genePool).getScore();
-    }
-
-    /**
-     * experimental function to run the system until improvement slows.
-     */
-    public void runUntilMaximum() {
-
-        double previousBestScore = 0;
-        int runOfNoImprovements = 0;
-        int i = 0;
-        for (i = 0; i < 100; i++) {
-            doOneCycle();
-            double s = getBestScore();
-            double imp = Math.abs(previousBestScore - s);
-            previousBestScore = s;
-            if (imp < 0.001) runOfNoImprovements++;
-            else runOfNoImprovements = 0;
-            if (runOfNoImprovements > 50) break;
-        }
-        System.out.println("Iterations: " + i + " result:" + findBestScoringIndividual(genePool).toString());
     }
 
 
@@ -172,42 +156,6 @@ public class Javolver {
         }
     }
 
-    // testing out a simple descent based approach.
-    public void doOneCycleOfDescent() {
-        // Request that all individuals perform scoring.
-        scoreGenes(genePool);
-
-        //JavolverRanking.calculateFitnessRank(genePool);
-        //JavolverRanking.calculateDiversityRank(genePool);
-
-        Individual bestGuy = findBestScoringIndividual(genePool);
-        Individual child = bestGuy.clone();
-
-        for (int i = 0; i < child.dna.getSize(); i++) {
-            child.dna.set(i, bestGuy.dna.getDouble(i));
-        }
-
-        double score1 = bestGuy.calculateScore();
-
-        MutationStrategy ms = new MutationStrategySimple(0.005, 0.001);
-        MutationStrategy ms2 = new MutationStrategySimple(0.002, 0.001);
-        MutationStrategy ms3 = new MutationStrategySimple(1.0, 1.0);
-
-
-        ms.mutate(child);
-        //ms2.mutate(child);
-        if (Math.random() > 0.9) ms3.mutate(child);
-
-        double score2 = child.calculateScore();
-
-        //System.out.println("s1:"+score1+"   s2:"+score2 + "  poolSize:"+genePool.size());
-
-        double delta = score2 - score1;
-        if (delta > 0.0001) {
-            //genePool.add(child);
-            genePool.set(0, child);
-        }
-    }
 
     /**
      * The main function that does most of the work to evolve the system.<br>
@@ -221,8 +169,8 @@ public class Javolver {
         // Request that all individuals perform scoring.
         scoreGenes(genePool);
 
-        //JavolverRanking.calculateFitnessRank(genePool);
-        //JavolverRanking.calculateDiversityRank(genePool);
+        JavolverRanking.calculateFitnessRank(genePool);
+        JavolverRanking.calculateDiversityRank(genePool);
 
         ArrayList<Individual> newGenePool = null;
 
@@ -310,13 +258,23 @@ public class Javolver {
         allScored = true;
     }
 
+    /**
+     * Score each individual in turn.
+     * @param pool
+     */
     public void scoreGenesSequential(ArrayList<Individual> pool) {
+        if (pool==null) pool = genePool;
         for (Individual gene : pool) {
             gene.getScore();
         }
     }
 
+    /**
+     * Score each individual in parallel.
+     * @param pool
+     */
     public void scoreGenesParallel(ArrayList<Individual> pool) {
+        if (pool==null) pool = genePool;
         pool.parallelStream().unordered().forEach(Individual::getScore);
     }
 

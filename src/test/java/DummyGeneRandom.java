@@ -1,17 +1,17 @@
 import com.physmo.javolver.Individual;
 
 // Simple gene used for testing.
-public class TestGene extends Individual {
+// This gene will contain a random (ish) (but constant) score.
+public class DummyGeneRandom extends Individual {
 
     int index;
-
-    TestGene(int index) {
+    DummyGeneRandom(int index) {
         this.index = index;
     }
 
     @Override
     public Individual clone() {
-        return new TestGene(index);
+        return new DummyGeneRandom(index);
     }
 
     @Override
@@ -21,6 +21,8 @@ public class TestGene extends Individual {
 
     @Override
     public double calculateScore() {
-        return (double)index;
+        int i = (((index+12381)*13523)/31);
+        double s = (double)(i%255)/255.0;
+        return s;
     }
 }

@@ -1,7 +1,5 @@
 import com.physmo.javolver.Individual;
 import com.physmo.javolver.selectionstrategy.SelectionStrategy;
-import com.physmo.javolver.selectionstrategy.SelectionStrategyRandom;
-import com.physmo.javolver.selectionstrategy.SelectionStrategyRoulette;
 import com.physmo.javolver.selectionstrategy.SelectionStrategyTournament;
 import org.junit.Test;
 
@@ -42,7 +40,7 @@ public class TestSelectionStrategyTournament {
     public List<Individual> generateTestPool() {
         List<Individual> pool = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
-            pool.add(new TestGene(i));
+            pool.add(new DummyGene(i,1));
         }
         return pool;
     }

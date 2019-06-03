@@ -14,7 +14,8 @@ public class JavolverRanking {
 
     public static void calculateFitnessRank(ArrayList<Individual> pool) {
 
-        if (pool==null || pool.size()==0) {
+        int poolSize = pool.size();
+        if (pool==null || poolSize==0) {
             throw new InvalidParameterException("Pool is empty.");
         }
 

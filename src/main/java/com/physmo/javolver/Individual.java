@@ -70,7 +70,8 @@ public abstract class Individual {
 			score = calculateScore();
 			processed = true;
 		}
-		
+
+		if (score<0) return 0;
 		return score;
 	}
 
@@ -119,12 +120,19 @@ public abstract class Individual {
 	}
 	
 	// zero = identical.
+
+	/**
+	 * Calculate the average difference between the DNA of two individuals.
+	 * @param other
+	 * @return
+	 */
 	public double getDifference(Individual other) {
 		int size = this.dna.getSize();
 		double diff=0;
 		for (int i=0;i<size;i++) {
-			diff += Math.abs(this.dna.getDouble(i)-other.dna.getDouble(i));
+			diff += Math.pow(Math.abs(this.dna.getDouble(i)-other.dna.getDouble(i)),2);
 		}
+		if (diff>0) diff = Math.sqrt(diff);
 		
 		return diff / (double)size;
 	}

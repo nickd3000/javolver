@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Chromosome is a simple list of double values (0..1), that supports some general functionality.
  * Values will be mapped to the required data ranges.
- *
+ * TODO: Why is this a list and not an array?????
  * @author nick
  */
 public class Chromosome {
