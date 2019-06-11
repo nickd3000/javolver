@@ -22,6 +22,8 @@ public class Descent {
         double bestScore = 0;
         Individual bestScoringIndividual=null;
 
+        bestScore = bestGuy.getScore();
+
         // Create clone list and mutate specific bits..
         for (int i = 0; i < poolSize; i++) {
             int childId = (int)(dnaSize*Math.random());
@@ -66,9 +68,11 @@ public class Descent {
         int dnaSize = pool.get(0).dna.getSize();
 
         ArrayList<Individual> newPool = new ArrayList<>();
-
+        double mutationChance = 0.2;
         double bestScore = 0;
         Individual bestScoringIndividual=null;
+
+        bestScore = bestGuy.getScore();
 
         // Create clone list and mutate specific bits..
         for (int i = 0; i < poolSize; i++) {
@@ -80,7 +84,7 @@ public class Descent {
                 double dnaBit = bestGuy.dna.getDouble(j);
 
                 // Mutate every element of dna but not for the first clone.
-                if (i>0) {
+                if (i>0 && Math.random()<mutationChance) {
                     dnaBit += (Math.random() - 0.5) * mutationAmount;
                 }
 
