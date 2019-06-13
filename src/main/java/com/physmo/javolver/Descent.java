@@ -6,7 +6,7 @@ public class Descent {
 
     // Method: create a number of clones, one for each DNA element,
     // mutate one dna element per clone and keep the best result into the next round.
-    // Only one mutation per clone.
+    // 1 mutation per clone.
     public static void descent2(Javolver javolver,int poolSize, double mutationAmount) {
         ArrayList<Individual> pool = javolver.getPool();
 

@@ -12,7 +12,7 @@ public class TestJavolverRanking {
 
     @Test
     public void testStrategy() {
-        int poolSize = 500;
+        int poolSize = 5;
 
         ArrayList<Individual>pool = (ArrayList<Individual>) generateTestPool(poolSize);
 
