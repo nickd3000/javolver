@@ -13,18 +13,21 @@ public class Chromosome {
     /**
      * Genetic data store, stored as a list of real numbers.
      */
-    ArrayList<Double> data;
+    //ArrayList<Double> data;
+    double [] data;
 
     public int getSize() {
         if (data == null) return 0;
-        return data.size();
+        return data.length;
     }
 
     /**
      * Default constructor.
      */
     public Chromosome() {
-        data = new ArrayList<Double>();
+
+        //data = new ArrayList<Double>();
+        data = null;
     }
 
 
@@ -34,9 +37,11 @@ public class Chromosome {
      * @param size Length of DNA structure.
      */
     public void init(int size) {
-        data.clear();
+        //data.clear();
+        data = new double[size];
         for (int i = 0; i < size; i++) {
-            data.add(Math.random());
+            //data.add(Math.random());
+            data[i]=Math.random();
         }
     }
 
@@ -46,9 +51,11 @@ public class Chromosome {
      *
      * @return Chromosome data.
      */
-    public ArrayList<Double> getData() {
-        return data;
-    }
+    //public ArrayList<Double> getData() {
+     //   return data;
+    //}
+
+    public double[] getData() { return data; }
 
     /**
      * Get raw double value.
@@ -57,7 +64,7 @@ public class Chromosome {
      * @return Double value
      */
     public double getDouble(int i) {
-        return data.get(i);
+        return data[i];
     }
 
 
@@ -68,9 +75,9 @@ public class Chromosome {
      * @return Upper case Char representation of the chromosome value.
      */
     public char getChar(int i) {
-        if (i >= data.size()) return 'x';
+        if (i >= data.length) return 'x';
         double span = (double) ((char) 'Z' - (char) 'A');
-        return (char) ((char) 'A' + (char) (span * data.get(i)));
+        return (char) ((char) 'A' + (char) (span * data[i]));
     }
 
 
@@ -81,7 +88,8 @@ public class Chromosome {
      * @param v Value
      */
     public void set(int i, double v) {
-        data.set(i, v);
+        //data.set(i, v);
+        data[i]=v;
     }
 
 
@@ -93,16 +101,16 @@ public class Chromosome {
      * @param max Max value of range
      */
     public void clamp(int i, double min, double max) {
-        double val = data.get(i);
-        if (val < min) data.set(i, min);
-        if (val > max) data.set(i, max);
+        double val = data[i];
+        if (val < min) data[i] = min;
+        if (val > max) data[i] = max;
     }
 
 
     public void swap(int index1, int index2) {
-        double v1 = data.get(index1);
-        double v2 = data.get(index2);
-        data.set(index1, v2);
-        data.set(index2, v1);
+        double v1 = data[index1];
+        double v2 = data[index2];
+        data[index1] = v2;
+        data[index2] = v1;
     }
 }

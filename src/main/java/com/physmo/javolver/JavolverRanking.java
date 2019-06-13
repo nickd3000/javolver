@@ -81,20 +81,20 @@ public class JavolverRanking {
      * @return Chromosome containing average of whole pool.
      */
     public static Chromosome CalculateAverageChromosome(ArrayList<Individual> pool) {
-        int numElements = pool.get(0).dna.getData().size();
+        int numElements = pool.get(0).dna.getData().length;
         Chromosome average = new Chromosome();
         average.init(numElements);
 
         // Clear average structure.
-        for (int i = 0; i < average.data.size(); i++) {
+        for (int i = 0; i < average.data.length; i++) {
             average.set(i, 0.0);
         }
 
         for (Individual i : pool) {
             for (int j = 0; j < numElements; j++) {
-                double val = i.dna.getData().get(j) / (double) numElements;
-                val = val + average.data.get(j);
-                average.data.set(j, val);
+                double val = i.dna.getData()[j] / (double) numElements;
+                val = val + average.data[j];
+                average.data[j] = val;
             }
         }
 
@@ -102,8 +102,8 @@ public class JavolverRanking {
     }
 
     public static double getDeviation(Chromosome average, Individual ind) {
-        int numElements = average.getData().size();
-        int numIndElements = ind.dna.getData().size();
+        int numElements = average.getData().length;
+        int numIndElements = ind.dna.getData().length;
         int count = 0;
         double totalDiff = 0;
         for (int i = 0; i < numElements; i++) {
