@@ -4,7 +4,7 @@ import com.physmo.javolver.Individual;
 
 public class MutationStrategySingle implements MutationStrategy {
 
-	double amount;
+	private final double amount;
 	
 	public MutationStrategySingle(double amount) {
 		this.amount = amount;

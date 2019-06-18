@@ -47,8 +47,8 @@ public class TestJavolver {
 }
 
 class TestGene extends Individual {
-    int dnaSize = 5;
-    public static double scoreTarget =100;
+    final int dnaSize = 5;
+    public static final double scoreTarget =100;
 
     public TestGene() {
         dna.init(10);

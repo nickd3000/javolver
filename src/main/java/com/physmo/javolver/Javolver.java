@@ -24,16 +24,12 @@ import java.util.List;
 public class Javolver {
 
     // Keep the best individual alive between generations.
-    public boolean keepBestIndividualAlive = false;
+    private boolean keepBestIndividualAlive = false;
 
     // Use multi-threading for the scoring process.
     // Set this to true if your {@link Individual#calculateScore()} method
     // is expensive to run and may benefit from parallelization.
-    public boolean parallelScoring = false;
-
-    //boolean enableCompatability = false;
-//    double compatabilityLowerLimit;
-//    double compatabilityUpperLimit;
+    private boolean parallelScoring = false;
 
 
     public Javolver keepBestIndividualAlive(boolean val) {
@@ -46,14 +42,13 @@ public class Javolver {
         return this;
     }
 
-
     private ArrayList<Individual> genePool = new ArrayList<>();
-    private Individual proto; // Copy of type of chromosome we will use.
+    private final Individual proto; // Copy of type of chromosome we will use.
     private boolean allScored = false;
 
     private BreedingStrategy breedingStrategy = null;
     private SelectionStrategy selectionStrategy = null;
-    private List<MutationStrategy> mutationStrategies = new ArrayList<MutationStrategy>();
+    private final List<MutationStrategy> mutationStrategies = new ArrayList<MutationStrategy>();
 
     public ArrayList<Individual> getPool() {
         return genePool;
@@ -64,7 +59,7 @@ public class Javolver {
      *
      * @param proto A subclassed object from Individual, from which to clone the other members of the generation.
      */
-    public Javolver(Individual proto) {
+    private Javolver(Individual proto) {
         this.proto = proto;
 
     }
@@ -99,10 +94,6 @@ public class Javolver {
         return this;
     }
 
-
-
-
-
     /**
      * Create Javolver object with prototype individual and set the population size.
      *
@@ -134,7 +125,7 @@ public class Javolver {
      *
      * @param targetCount The target number of individuals that the population will reach.
      */
-    public void increasePopulation(int targetCount) {
+    private void increasePopulation(int targetCount) {
         Individual n = null;
         int target = targetCount - genePool.size();
         if (target < 1) return;
@@ -182,13 +173,11 @@ public class Javolver {
 
             // Select parents
             for (int ii = 0; ii < 100; ii++) {
-                boolean incompatable = false;
-                double diff=0;
 
                 g1 = selectionStrategy.select(genePool);
                 g2 = selectionStrategy.select(genePool);
 
-                if (g1!=null && g2!=null && g1!=g2 && incompatable==false) break;
+                if (g1!=null && g2!=null && g1!=g2) break;
             }
 
             // Breed
@@ -219,8 +208,7 @@ public class Javolver {
      */
     public String report() {
         Individual best = findBestScoringIndividual(genePool);
-        String retStr = "Pool Size: " + genePool.size() + " Best: " + best.toString();
-        return retStr;
+        return "Pool Size: " + genePool.size() + " Best: " + best.toString();
     }
 
     /***
@@ -231,7 +219,7 @@ public class Javolver {
     public void scoreGenes(ArrayList<Individual> pool) {
         if (pool==null) pool=getPool();
 
-        if (allScored == true) return;
+        if (allScored) return;
 
         if (parallelScoring) {
             scoreGenesParallel(genePool);
@@ -246,8 +234,7 @@ public class Javolver {
      * Score each individual in turn.
      * @param pool
      */
-    public void scoreGenesSequential(ArrayList<Individual> pool) {
-        if (pool==null) pool = genePool;
+    private void scoreGenesSequential(ArrayList<Individual> pool) {
         for (Individual gene : pool) {
             gene.getScore();
         }
@@ -257,20 +244,19 @@ public class Javolver {
      * Score each individual in parallel.
      * @param pool
      */
-    public void scoreGenesParallel(ArrayList<Individual> pool) {
-        if (pool==null) pool = genePool;
+    private void scoreGenesParallel(ArrayList<Individual> pool) {
         pool.parallelStream().unordered().forEach(Individual::getScore);
     }
 
 
     /***
      * Search the supplied pool of individuals and return the highest scoring one.
-     * @param    pool    The pool of individuals to select from.
      * @return Highest scoring member of the supplied list.
      */
+    public Individual findBestScoringIndividual() {
+        return findBestScoringIndividual(genePool);
+    }
     public Individual findBestScoringIndividual(ArrayList<Individual> pool) {
-        if (pool == null) pool = genePool;
-
         double highestScore = 0.0f;
         Individual highestGene = pool.get(0);
         for (Individual gene : pool) {

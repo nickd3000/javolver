@@ -63,7 +63,7 @@ public class JavolverRanking {
         }
     }
 
-    public static void calculateDiversityForAllIndividuals(ArrayList<Individual> pool, Chromosome averageChromosome) {
+    private static void calculateDiversityForAllIndividuals(ArrayList<Individual> pool, Chromosome averageChromosome) {
 
         double deviation = 0.0;
 
@@ -80,7 +80,7 @@ public class JavolverRanking {
      * @param pool The pool of individuals we want to calculate from.
      * @return Chromosome containing average of whole pool.
      */
-    public static Chromosome CalculateAverageChromosome(ArrayList<Individual> pool) {
+    private static Chromosome CalculateAverageChromosome(ArrayList<Individual> pool) {
         int numElements = pool.get(0).dna.getData().length;
         Chromosome average = new Chromosome();
         average.init(numElements);
@@ -101,7 +101,7 @@ public class JavolverRanking {
         return average;
     }
 
-    public static double getDeviation(Chromosome average, Individual ind) {
+    private static double getDeviation(Chromosome average, Individual ind) {
         int numElements = average.getData().length;
         int numIndElements = ind.dna.getData().length;
         int count = 0;

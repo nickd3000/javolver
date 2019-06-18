@@ -5,8 +5,8 @@ import com.physmo.javolver.Individual;
 public class MutationStrategySwap implements MutationStrategy {
 
 	// Number of swaps to perform.
-	double chance;
-	int count;
+    private final double chance;
+	private final int count;
 	
 	public MutationStrategySwap(double chance, int count) {
 		this.chance = chance;

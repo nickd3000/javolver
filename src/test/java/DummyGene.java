@@ -4,9 +4,9 @@ import com.physmo.javolver.Individual;
 // Score multiplier is used to convert the index of the individual to the score.
 public class DummyGene extends Individual {
 
-    double scoreMultiplier=0;
+    private double scoreMultiplier=0;
 
-    int index;
+    private final int index;
     DummyGene(int index, double scoreMultiplier) {
 
         this.index = index;

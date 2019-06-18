@@ -2,7 +2,7 @@ package com.physmo.javolver.mutationstrategy;
 
 import com.physmo.javolver.Individual;
 
-public class MutationUtils {
+class MutationUtils {
 	/**
 	 * Return an random integer index into the individuals
 	 * dna structure.

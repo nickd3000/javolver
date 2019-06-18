@@ -8,7 +8,7 @@ import java.util.List;
 
 
 public class TestSelectionStrategyTournament {
-    int numIterations = 10000;
+    final int numIterations = 10000;
 
     @Test
     public void testStrategy() {

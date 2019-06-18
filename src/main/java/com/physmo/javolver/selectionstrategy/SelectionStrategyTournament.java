@@ -6,7 +6,7 @@ import com.physmo.javolver.Individual;
 
 public class SelectionStrategyTournament implements SelectionStrategy {
 
-	double selectionRange;
+	private final double selectionRange;
 	
 	public SelectionStrategyTournament(double selectionRange) {
 		this.selectionRange = selectionRange;
@@ -44,7 +44,7 @@ public class SelectionStrategyTournament implements SelectionStrategy {
 	 * @param	ind		The Individual
 	 * @return	Score or rank value.
 	 */
-	public double getSelectionScore(Individual ind) {
+    private double getSelectionScore(Individual ind) {
 
 //		// Special handling if we are using the rank method.
 //		if (config.selectionUseScoreRank==true) {
@@ -67,7 +67,7 @@ public class SelectionStrategyTournament implements SelectionStrategy {
 	 * @param	pool	The pool of individuals to select from.
 	 * @return			Random member of the supplied list.
 	 */
-	public Individual getRandomIndividual(List<Individual> pool)
+    private Individual getRandomIndividual(List<Individual> pool)
 	{
 		int id = (int)((float)(pool.size()-1) * Math.random());
 		return pool.get(id);

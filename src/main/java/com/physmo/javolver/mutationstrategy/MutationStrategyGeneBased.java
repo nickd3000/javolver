@@ -6,11 +6,11 @@ import com.physmo.javolver.Individual;
 // the frequency and amount of mutation.
 public class MutationStrategyGeneBased implements MutationStrategy {
 
-	double amount;
-	double frequency;
+	private double amount;
+	private double frequency;
 
-	int geneAmount = 0;
-	int geneFrequency = 0;
+	private int geneAmount = 0;
+	private int geneFrequency = 0;
 
 
 	public MutationStrategyGeneBased(int geneFrequency, int geneAmount) {

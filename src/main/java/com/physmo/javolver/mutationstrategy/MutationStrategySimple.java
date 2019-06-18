@@ -4,8 +4,8 @@ import com.physmo.javolver.Individual;
 
 public class MutationStrategySimple implements MutationStrategy {
 
-	public double amount;
-	public double frequency;
+	private final double amount;
+	private final double frequency;
 	
 	public MutationStrategySimple(double frequency, double amount) {
 		this.frequency = frequency;

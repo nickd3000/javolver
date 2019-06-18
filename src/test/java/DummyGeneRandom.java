@@ -4,7 +4,7 @@ import com.physmo.javolver.Individual;
 // This gene will contain a random (ish) (but constant) score.
 public class DummyGeneRandom extends Individual {
 
-    int index;
+    private final int index;
     DummyGeneRandom(int index) {
         this.index = index;
     }
@@ -22,7 +22,6 @@ public class DummyGeneRandom extends Individual {
     @Override
     public double calculateScore() {
         int i = (((index+12381)*13523)/31);
-        double s = (double)(i%255)/255.0;
-        return s;
+        return (double)(i%255)/255.0;
     }
 }

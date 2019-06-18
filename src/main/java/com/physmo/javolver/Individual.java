@@ -22,13 +22,13 @@ public abstract class Individual {
 	 * A latch variable that represents whether the individual has being scored or not.
 	 * Scoring can be computationally intensive so this helps prevent multiple scoring events.
 	 */
-	protected boolean processed = false;
+	boolean processed = false;
 	
 	/**
 	 * The score of this individual, higher is better.
 	 */
 	protected double score = 0.0;
-	protected double diversity = 0.0;
+	double diversity = 0.0;
 	
 	private int rankScore = 0;
 	private int rankDiversity = 0;
@@ -66,7 +66,7 @@ public abstract class Individual {
 	 * @return		Double value representing the score of the individual. Higher is better.
 	 */
 	public double getScore() {
-		if (processed==false) {
+		if (!processed) {
 			score = calculateScore();
 			processed = true;
 		}
@@ -84,7 +84,7 @@ public abstract class Individual {
 	 * @return	Score value squared.
 	 */
 	public double getScoreSquared() {
-		if (processed==false) {
+		if (!processed) {
 			score = calculateScore();
 			processed = true;
 		}
@@ -123,8 +123,8 @@ public abstract class Individual {
 
 	/**
 	 * Calculate the average difference between the DNA of two individuals.
-	 * @param other
-	 * @return
+	 * @param other Individual to compare to.
+	 * @return difference between individuals.
 	 */
 	public double getDifference(Individual other) {
 		int size = this.dna.getSize();
