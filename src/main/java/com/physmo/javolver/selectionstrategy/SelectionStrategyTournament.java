@@ -40,26 +40,11 @@ public class SelectionStrategyTournament implements SelectionStrategy {
 	/**
 	 * Used to get score for an individual while performing selection.
 	 * This takes into account any extra affects like preferring diversity.
-	 * @param	config	Program settings
 	 * @param	ind		The Individual
 	 * @return	Score or rank value.
 	 */
     private double getSelectionScore(Individual ind) {
-
-//		// Special handling if we are using the rank method.
-//		if (config.selectionUseScoreRank==true) {
-//			double score = (double)ind.getRankScore();
-//			
-//			if (config.selectionUseDiversityRank==true) {
-//				score+=(double)ind.getRankDiversity()*0.5;
-//			}
-//			
-//			return score;
-//		}
-		
-		// Otherwise just return the individuals score.
 		return ind.getScore();
-	
 	}
 	
 	/***

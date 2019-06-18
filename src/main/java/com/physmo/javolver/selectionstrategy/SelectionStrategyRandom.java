@@ -4,6 +4,9 @@ import com.physmo.javolver.Individual;
 
 import java.util.List;
 
+/*
+	Note, this selection strategy has no real use except in testing.
+ */
 public class SelectionStrategyRandom implements SelectionStrategy {
 
 	@Override

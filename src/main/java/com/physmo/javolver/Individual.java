@@ -70,8 +70,6 @@ public abstract class Individual {
 			score = calculateScore();
 			processed = true;
 		}
-
-		//if (score<0) return 0;
 		return score;
 	}
 
@@ -118,8 +116,6 @@ public abstract class Individual {
 	public void setRankDiversity(int rankDiversity) {
 		this.rankDiversity = rankDiversity;
 	}
-	
-	// zero = identical.
 
 	/**
 	 * Calculate the average difference between the DNA of two individuals.

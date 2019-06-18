@@ -6,6 +6,7 @@ import com.physmo.javolver.breedingstrategy.BreedingStrategyUniform;
 import com.physmo.javolver.mutationstrategy.MutationStrategySimple;
 import com.physmo.javolver.selectionstrategy.SelectionStrategyRouletteRanked;
 
+// A very simple minimal example.
 public class WordFinder {
 
     private static final int populationSize = 1000;
@@ -34,7 +35,6 @@ public class WordFinder {
 
             // Print output every so often.
             System.out.println("Iteration " + j + "  " + javolver.report() + "  score:" + javolver.getBestScore(null));
-            //System.out.println("Current best solution: ["+best.toString()+"]");
 
             // Check if we have arrived at the target string.
             if (best.toString().trim().equals(targetWord)) break;

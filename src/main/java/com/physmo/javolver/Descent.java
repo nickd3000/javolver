@@ -57,6 +57,9 @@ public class Descent {
     }
 
     // Same as 2 but every dna element is mutated.
+    // Note: in practice this does not work very well, the more bits
+    // that are changed at the same time, the less likely the
+    // individual is to be an improvement over the predecessors.
     public static void descent3(Javolver javolver,int poolSize, double mutationAmount) {
         ArrayList<Individual> pool = javolver.getPool();
 
