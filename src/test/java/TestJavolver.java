@@ -25,7 +25,7 @@ public class TestJavolver {
         for (int i=0;i<1000;i++) {
             javolver.doOneCycle();
 
-            TestGene topScorer = (TestGene)javolver.findBestScoringIndividual(null);
+            TestGene topScorer = (TestGene)javolver.findBestScoringIndividual();
 
             if ((i%250)==0) {
                 System.out.println("Score: " + topScorer.getScore()+ " Target: "+TestGene.scoreTarget);
@@ -36,7 +36,7 @@ public class TestJavolver {
         boolean solutionFound = false;
 
         // Check we evolved a solition.
-        TestGene topScorer = (TestGene)javolver.findBestScoringIndividual(null);
+        TestGene topScorer = (TestGene)javolver.findBestScoringIndividual();
         double solutionDelta = TestGene.scoreTarget - topScorer.getScore();
         if (Math.abs(solutionDelta)<solutionTolerance) solutionFound=true;
         if (solutionFound) System.out.println("Solution found.");
