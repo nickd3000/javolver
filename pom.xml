@@ -15,7 +15,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>minvio</groupId>
+            <groupId>com.physmo.minvio</groupId>
             <artifactId>minvio</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
