@@ -132,4 +132,8 @@ public abstract class Individual {
 		
 		return diff / (double)size;
 	}
+
+	public void setUnprocessed() {
+	 processed=false;
+	}
 }

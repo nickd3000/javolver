@@ -20,13 +20,27 @@ public class JavolverRanking {
         }
 
         // Sort the pool according to fitness.
+//        pool.sort((ind1, ind2) -> {
+//            double score1 = ind1.getScore();
+//            double score2 = ind2.getScore();
+//            if (score1==score2) return 0;
+//            if (ind1==ind2) return 0;
+//            double diff = score1 - score2;
+//            if (diff > 0) return 1;
+//            if (diff < 0) return -1;
+//            return 0;
+//        });
+
+
         pool.sort((ind1, ind2) -> {
             double score1 = ind1.getScore();
             double score2 = ind2.getScore();
+
             double diff = score1 - score2;
-            if (diff == 0.0) return 0;
-            if (diff < 0.0) return -1;
-            else return 1;
+            return ((Double)score1).compareTo(score2);
+            //if (diff > 0) return 1;
+            //if (diff < 0) return -1;
+            //else return 0;
         });
 
         int count = 1;
