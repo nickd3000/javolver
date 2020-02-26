@@ -1,5 +1,7 @@
 Notes
 
+(Example change)
+
 Test functions:
 	rosenbrock, schwefel, rastrigin
 
