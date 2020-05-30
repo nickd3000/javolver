@@ -21,7 +21,8 @@ public class MutationStrategySimple implements MutationStrategy {
 
 		if ((int)(frequency*(double)dnaSize)<1) randomisedCount=1;
 
-		
+		randomisedCount=1;
+
 		for (int i=0;i<randomisedCount;i++) {
 			index = MutationUtils.getRandomDnaIndexForIindividual(individual);
 			jiggle = (Math.random()-0.5) * amount * 2.0;
