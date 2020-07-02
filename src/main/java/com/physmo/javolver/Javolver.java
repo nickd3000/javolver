@@ -235,9 +235,10 @@ public class Javolver {
      * @param pool
      */
     private void scoreGenesSequential(ArrayList<Individual> pool) {
-        for (Individual gene : pool) {
-            gene.getScore();
-        }
+        pool.forEach(Individual::getScore);
+//        for (Individual gene : pool) {
+//            gene.getScore();
+//        }
     }
 
     /**
