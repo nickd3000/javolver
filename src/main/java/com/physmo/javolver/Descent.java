@@ -32,12 +32,25 @@ public class Descent {
             // Copy each dna element and mutate the one specific to this clone.
             for (int j = 0; j < dnaSize; j++) {
                 double dnaBit = bestGuy.dna.getDouble(j);
-                if (childId==j) {
-                    dnaBit+=(Math.random()-0.5)*mutationAmount;
-                }
                 child.dna.set(j, dnaBit);
-
             }
+
+            // Mutate one bit a few times and keep the best mutation.
+            double dnaBitOriginal = child.dna.getDouble(childId);
+            double mutationBestScore = 0;
+            double mutationBest = 0;
+            for (int j=0;j<5;j++) {
+                double mutation = dnaBitOriginal + (Math.random()-0.5);
+                child.dna.set(childId, mutation);
+                child.setUnprocessed();
+                double score = child.getScore();
+                if (score>mutationBestScore) {
+                    mutationBestScore = score;
+                    mutationBest = mutation;
+                }
+            }
+            child.dna.set(childId, mutationBest);
+
 
             // Score the new child and check if it's the new best one.
             double score = child.getScore();
