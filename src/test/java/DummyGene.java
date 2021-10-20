@@ -8,7 +8,7 @@ public class DummyGene extends Individual {
 
     private final int index;
     DummyGene(int index, double scoreMultiplier) {
-
+        dna.init(10);
         this.index = index;
         this.scoreMultiplier = scoreMultiplier;
     }
