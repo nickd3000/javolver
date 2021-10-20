@@ -6,7 +6,7 @@ import java.util.List;
 import com.physmo.javolver.Individual;
 
 
-// Create two children, each get half of each parents DNA with one crossover point.
+// Create two children, each get half of each parent's DNA with one crossover point.
 public class BreedingStrategyCrossover implements BreedingStrategy {
 
 	@Override

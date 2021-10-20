@@ -5,7 +5,6 @@ import java.util.ArrayList;
 /**
  * Chromosome is a simple list of double values (0..1), that supports some general functionality.
  * Values will be mapped to the required data ranges.
- * TODO: Why is this a list and not an array?????
  * @author nick
  */
 public class Chromosome {
@@ -13,7 +12,6 @@ public class Chromosome {
     /**
      * Genetic data store, stored as a list of real numbers.
      */
-    //ArrayList<Double> data;
     double [] data;
 
     public int getSize() {
@@ -25,8 +23,6 @@ public class Chromosome {
      * Default constructor.
      */
     public Chromosome() {
-
-        //data = new ArrayList<Double>();
         data = null;
     }
 
@@ -37,24 +33,17 @@ public class Chromosome {
      * @param size Length of DNA structure.
      */
     public void init(int size) {
-        //data.clear();
         data = new double[size];
         for (int i = 0; i < size; i++) {
-            //data.add(Math.random());
             data[i]=Math.random();
         }
     }
-
 
     /**
      * Accessor for DNA data.
      *
      * @return Chromosome data.
      */
-    //public ArrayList<Double> getData() {
-     //   return data;
-    //}
-
     public double[] getData() { return data; }
 
     /**
@@ -67,7 +56,6 @@ public class Chromosome {
         return data[i];
     }
 
-
     /**
      * Get a chromosome element mapped to an uppercase char.
      *
@@ -76,10 +64,9 @@ public class Chromosome {
      */
     public char getChar(int i) {
         if (i >= data.length) return 'x';
-        double span = (double) ((char) 'Z' - (char) 'A');
-        return (char) ((char) 'A' + (char) (span * data[i]));
+        double span = 'Z' - 'A';
+        return (char) ('A' + (char) (span * data[i]));
     }
-
 
     /**
      * Set an element of the chromosome.
@@ -88,10 +75,8 @@ public class Chromosome {
      * @param v Value
      */
     public void set(int i, double v) {
-        //data.set(i, v);
         data[i]=v;
     }
-
 
     /**
      * Clamp an element of the chromosome to the supplied range.
@@ -105,7 +90,6 @@ public class Chromosome {
         if (val < min) data[i] = min;
         if (val > max) data[i] = max;
     }
-
 
     public void swap(int index1, int index2) {
         double v1 = data[index1];
