@@ -44,7 +44,7 @@ public class TestSelectionStrategyRoulette {
     public List<Individual> generateTestPool(int size) {
         List<Individual> pool = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            pool.add(new DummyGene(i,1));
+            pool.add(new Individual(2));
         }
         return pool;
     }

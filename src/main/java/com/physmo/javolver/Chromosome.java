@@ -22,8 +22,8 @@ public class Chromosome {
     /**
      * Default constructor.
      */
-    public Chromosome() {
-        data = null;
+    public Chromosome(int dnaSize) {
+        init(dnaSize);
     }
 
 

@@ -28,7 +28,7 @@ public class TestJavolverRanking {
             reportIndividual(i);
         }
 
-        assertEquals(pool.get(0).getClass(), DummyGeneRandom.class);
+        //assertEquals(pool.get(0).getClass(), DummyGeneRandom.class);
         assertEquals(pool.get(0).getRankScore(),1);
         assertEquals(pool.get(poolSize-1).getRankScore(), poolSize);
     }
@@ -53,7 +53,7 @@ public class TestJavolverRanking {
     public List<Individual> generateTestPool(int size) {
         List<Individual> pool = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            pool.add(new DummyGeneRandom(i));
+            pool.add(new Individual(i));
         }
         return pool;
     }

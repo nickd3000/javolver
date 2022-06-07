@@ -16,8 +16,8 @@ public class TestBreedingStrategy {
 
     @Test
     public void TestBreedingStrategyAverage() {
-        Individual i1 = new DummyGene(1, 1);
-        Individual i2 = new DummyGene(2, 1);
+        Individual i1 = new Individual(2);
+        Individual i2 = new Individual(2);
 
         i1.dna.init(10);
         setAllDnaValuesTo(i1, 0);
@@ -38,8 +38,8 @@ public class TestBreedingStrategy {
 
     @Test
     public void TestBreedingStrategyCrossover() {
-        Individual i1 = new DummyGene(1, 1);
-        Individual i2 = new DummyGene(2, 1);
+        Individual i1 = new Individual(2);
+        Individual i2 = new Individual(2);
 
         i1.dna.init(10);
         setAllDnaValuesTo(i1, 0);

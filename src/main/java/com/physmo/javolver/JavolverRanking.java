@@ -96,7 +96,7 @@ public class JavolverRanking {
      */
     private static Chromosome CalculateAverageChromosome(ArrayList<Individual> pool) {
         int numElements = pool.get(0).dna.getData().length;
-        Chromosome average = new Chromosome();
+        Chromosome average = new Chromosome(numElements);
         average.init(numElements);
 
         // Clear average structure.

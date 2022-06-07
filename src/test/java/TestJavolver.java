@@ -8,77 +8,60 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class TestJavolver {
+    final double scoreTarget = 100;
 
     @Test
     public void testJavolver() {
 
-        int populationTargetSize = 50;
-
         // Create the evolver:
-        Javolver javolver = new Javolver(new TestGene(),populationTargetSize)
-                .keepBestIndividualAlive(true)
-                .parallelScoring(false)
+        Javolver javolver = Javolver.builder()
+                .dnaSize(5)
+                .populationTargetSize(50)
+                .keepBestIndividualAlive(false)
                 .addMutationStrategy(new MutationStrategySingle(0.2))
                 .setSelectionStrategy(new SelectionStrategyTournament(0.1))
-                .setBreedingStrategy(new BreedingStrategyCrossover());
+                .setBreedingStrategy(new BreedingStrategyCrossover())
+                .scoreFunction(i -> calculateScore(i))
+                .build();
 
-        for (int i=0;i<1000;i++) {
+        for (int i = 0; i < 1000; i++) {
             javolver.doOneCycle();
 
-            TestGene topScorer = (TestGene)javolver.findBestScoringIndividual();
+            Individual topScorer = javolver.findBestScoringIndividual();
 
-            if ((i%250)==0) {
-                System.out.println("Score: " + topScorer.getScore()+ " Target: "+TestGene.scoreTarget);
+            if ((i % 250) == 0) {
+                System.out.println("Score: " + topScorer.getScore() + " Target: " + 100);
             }
         }
 
-        double solutionTolerance = 0.01;
+        double solutionTolerance = 0.03;
         boolean solutionFound = false;
 
-        // Check we evolved a solition.
-        TestGene topScorer = (TestGene)javolver.findBestScoringIndividual();
-        double solutionDelta = TestGene.scoreTarget - topScorer.getScore();
-        if (Math.abs(solutionDelta)<solutionTolerance) solutionFound=true;
+        // Check that we evolved a solution.
+        Individual topScorer = javolver.findBestScoringIndividual();
+        double solutionDelta = scoreTarget - topScorer.getScore();
+        if (Math.abs(solutionDelta) < solutionTolerance) solutionFound = true;
         if (solutionFound) System.out.println("Solution found.");
 
         assertEquals(solutionFound, true);
 
     }
-}
 
-class TestGene extends Individual {
-    final int dnaSize = 5;
-    public static final double scoreTarget =100;
-
-    public TestGene() {
-        dna.init(10);
-    }
-
-    @Override
-    public Individual clone() {
-        return new TestGene();
-    }
-
-    @Override
-    public String toString() {
-        return "";
-    }
-
-    @Override
-    public double calculateScore() {
+    public double calculateScore(Individual individual) {
         // The score for this is represented by how
         // close the sum of all genes is to a certain number.
 
-        double sum=0;
+        double sum = 0;
 
-        for (int i=0;i<dnaSize;i++) {
-            sum+=dna.getDouble(i);
+        for (int i = 0; i < individual.getDna().getSize(); i++) {
+            sum += individual.getDna().getDouble(i);
         }
 
         double delta = Math.abs(scoreTarget - sum);
-        if (delta> scoreTarget) delta= scoreTarget;
+        if (delta > scoreTarget) delta = scoreTarget;
 
         return scoreTarget - delta;
     }
 }
+
 
