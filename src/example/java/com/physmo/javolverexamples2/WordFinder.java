@@ -2,6 +2,7 @@ package com.physmo.javolverexamples2;
 
 import com.physmo.javolver.Individual;
 import com.physmo.javolver.Javolver;
+import com.physmo.javolver.Solver;
 import com.physmo.javolver.breedingstrategy.BreedingStrategyUniform;
 import com.physmo.javolver.mutationstrategy.MutationStrategySimple;
 import com.physmo.javolver.selectionstrategy.SelectionStrategyRouletteRanked;
@@ -11,7 +12,7 @@ public class WordFinder {
 
     public static void main(String[] args) {
 
-        Javolver javolver = Javolver.builder()
+        Solver javolver = Javolver.builder()
                 .dnaSize(9)
                 .populationTargetSize(10)
                 .keepBestIndividualAlive(true)
@@ -30,8 +31,7 @@ public class WordFinder {
 
             // Print output every so often.
             if (j%20==0) {
-                System.out.println("Iteration " + j + "  " + javolver.report() + "  score:" + javolver.getBestScore(null));
-                System.out.println("[" + toString(best) + "]");
+                System.out.println("[" + toString(best) + "]"+"Iteration " + j + "  " + "  score:" + javolver.findBestScoringIndividual().getScore());
             }
 
             // Check if we have arrived at the target string.
