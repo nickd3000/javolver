@@ -4,31 +4,33 @@ import com.physmo.javolver.Individual;
 
 public class MutationStrategySimple implements MutationStrategy {
 
-	private final double amount;
-	private final double frequency;
-	
-	public MutationStrategySimple(double frequency, double amount) {
-		this.frequency = frequency;
-		this.amount = amount;
-	}
-	
-	@Override
-	public void mutate(Individual individual) {
-		double jiggle = 0, value = 0;
-		int index = 0;
-		int dnaSize = individual.dna.getSize();
-		int randomisedCount = (int)(Math.random()*(double)frequency*(double)dnaSize);//+1;
+    private final int changeCount;
+    private double amount;
 
-		if ((int)(frequency*(double)dnaSize)<1) randomisedCount=1;
+    public MutationStrategySimple(int changeCount, double amount) {
+        this.changeCount = changeCount;
+        this.amount = amount;
+    }
 
-		randomisedCount=1;
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
 
-		for (int i=0;i<randomisedCount;i++) {
-			index = MutationUtils.getRandomDnaIndexForIindividual(individual);
-			jiggle = (Math.random()-0.5) * amount * 2.0;
-			value = individual.dna.getDouble(index);
-			individual.dna.set(index, value+jiggle);
-		}
-	}
+    public double getAmount() {
+        return amount;
+    }
+
+    @Override
+    public void mutate(Individual individual) {
+        double jiggle, value;
+        int index;
+
+        for (int i = 0; i < changeCount; i++) {
+            index = MutationUtils.getRandomDnaIndexForIindividual(individual);
+            jiggle = (Math.random() - 0.5) * amount * 2.0;
+            value = individual.dna.getDouble(index);
+            individual.dna.set(index, value + jiggle);
+        }
+    }
 
 }
