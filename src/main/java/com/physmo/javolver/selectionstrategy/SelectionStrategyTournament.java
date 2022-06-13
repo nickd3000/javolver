@@ -21,7 +21,7 @@ public class SelectionStrategyTournament implements SelectionStrategy {
 		double tournamentSize = selectionRange;
 		
 		int tSize = (int)(tournamentSize*(double)poolSize);
-		if (tSize<1) tSize=1;
+		if (tSize<2) tSize=2;
 
 		for (int i=0;i<tSize;i++)
 		{

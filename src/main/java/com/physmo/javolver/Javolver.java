@@ -9,6 +9,8 @@ import com.physmo.javolver.selectionstrategy.SelectionStrategyTournament;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.IntToDoubleFunction;
 
 
 /**
@@ -69,6 +71,7 @@ public class Javolver implements Solver {
         for (int i = 0; i < target; i++) {
             n = new Individual(dnaSize);
             n.setScoreFunction(scoreFunction);
+            if (dnaInitializer!=null) n.getDna().initFromFunction(dnaInitializer);
             genePool.add(n);
         }
     }
@@ -108,7 +111,7 @@ public class Javolver implements Solver {
 
         selectionStrategy = new SelectionStrategyTournament(0.15);
 
-        mutationStrategies.add(new MutationStrategySimple(0.1, 0.012));
+        mutationStrategies.add(new MutationStrategySimple(1, 0.012));
 
         return this;
     }
@@ -274,6 +277,12 @@ public class Javolver implements Solver {
     public Individual findBestScoringIndividual() {
         return findBestScoringIndividual(genePool);
     }
+    // TODO: why is it find instead of get?
+
+    @Override
+    public void setTemperature(double temperature) {
+
+    }
 
     public void setScoreFunction(ScoreFunction scoreFunction) {
         this.scoreFunction = scoreFunction;
@@ -281,5 +290,11 @@ public class Javolver implements Solver {
 
     public ScoreFunction getScoreFunction() {
         return scoreFunction;
+    }
+
+    IntToDoubleFunction dnaInitializer = null;
+
+    public void setDnaInitializer(IntToDoubleFunction dnaInitializer) {
+        this.dnaInitializer = dnaInitializer;
     }
 }

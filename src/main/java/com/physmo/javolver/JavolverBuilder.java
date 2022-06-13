@@ -4,6 +4,8 @@ import com.physmo.javolver.breedingstrategy.BreedingStrategy;
 import com.physmo.javolver.mutationstrategy.MutationStrategy;
 import com.physmo.javolver.selectionstrategy.SelectionStrategy;
 
+import java.util.function.IntToDoubleFunction;
+
 public class JavolverBuilder {
 
     Javolver javolver;
@@ -12,6 +14,7 @@ public class JavolverBuilder {
         javolver = new Javolver();
     }
 
+    // TODO: add sanity check that all required setup is done.
     public Javolver build() {
         javolver.init();
         return javolver;
@@ -49,6 +52,11 @@ public class JavolverBuilder {
 
     public JavolverBuilder keepBestIndividualAlive(boolean val) {
         javolver.keepBestIndividualAlive(val);
+        return this;
+    }
+
+    public JavolverBuilder dnaInitializer(IntToDoubleFunction dnaInitializer) {
+        javolver.dnaInitializer = dnaInitializer;
         return this;
     }
 }

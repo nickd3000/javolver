@@ -97,7 +97,6 @@ public class Individual {
     public Individual clone() {
         Individual i = new Individual(dna.getSize());
         i.setScoreFunction(this.scoreFunction);
-
         return i;
     }
 
