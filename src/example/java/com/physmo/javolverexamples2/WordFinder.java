@@ -16,7 +16,7 @@ public class WordFinder {
                 .dnaSize(9)
                 .populationTargetSize(10)
                 .keepBestIndividualAlive(true)
-                .addMutationStrategy(new MutationStrategySimple(0.01, 0.25))
+                .addMutationStrategy(new MutationStrategySimple(1, 0.25))
                 .setSelectionStrategy(new SelectionStrategyRouletteRanked())
                 .setBreedingStrategy(new BreedingStrategyUniform())
                 .scoreFunction(i -> calculateScore(i))
@@ -31,7 +31,7 @@ public class WordFinder {
 
             // Print output every so often.
             if (j%20==0) {
-                System.out.println("[" + toString(best) + "]"+"Iteration " + j + "  " + "  score:" + javolver.findBestScoringIndividual().getScore());
+                System.out.println("[" + toString(best) + "] "+"Iteration " + j + "  " + "  score:" + javolver.findBestScoringIndividual().getScore());
             }
 
             // Check if we have arrived at the target string.
