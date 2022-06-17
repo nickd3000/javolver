@@ -9,7 +9,6 @@ import com.physmo.javolver.selectionstrategy.SelectionStrategyTournament;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.IntToDoubleFunction;
 
 
@@ -26,7 +25,7 @@ import java.util.function.IntToDoubleFunction;
 public class Javolver implements Solver {
 
     private final List<MutationStrategy> mutationStrategies = new ArrayList<MutationStrategy>();
-
+    IntToDoubleFunction dnaInitializer = null;
     // Keep the best individual alive between generations.
     private boolean keepBestIndividualAlive = false;
     // Use multi-threading for the scoring process.
@@ -71,7 +70,7 @@ public class Javolver implements Solver {
         for (int i = 0; i < target; i++) {
             n = new Individual(dnaSize);
             n.setScoreFunction(scoreFunction);
-            if (dnaInitializer!=null) n.getDna().initFromFunction(dnaInitializer);
+            if (dnaInitializer != null) n.getDna().initFromFunction(dnaInitializer);
             genePool.add(n);
         }
     }
@@ -141,7 +140,6 @@ public class Javolver implements Solver {
         return findBestScoringIndividual(pool).getScore();
     }
 
-
     public Individual findBestScoringIndividual(ArrayList<Individual> pool) {
         double highestScore = 0.0f;
         Individual highestGene = pool.get(0);
@@ -170,9 +168,6 @@ public class Javolver implements Solver {
     public void doOneCycle() {
         // Request that all individuals perform scoring.
         scoreGenes(genePool);
-
-        JavolverRanking.calculateFitnessRank(genePool);
-        JavolverRanking.calculateDiversityRank(genePool);
 
         ArrayList<Individual> newGenePool = new ArrayList<>();
 
@@ -205,7 +200,8 @@ public class Javolver implements Solver {
             // Mutate children.
             for (Individual child : children) {
                 for (MutationStrategy ms : mutationStrategies) {
-                    ms.mutate(child);
+                    if (Math.random() < 0.5)
+                        ms.mutate(child);
                 }
             }
 
@@ -268,6 +264,7 @@ public class Javolver implements Solver {
         Individual best = findBestScoringIndividual(genePool);
         return "Pool Size: " + genePool.size();
     }
+    // TODO: why is it find instead of get?
 
     /***
      * Search the supplied pool of individuals and return the highest scoring one.
@@ -277,7 +274,6 @@ public class Javolver implements Solver {
     public Individual findBestScoringIndividual() {
         return findBestScoringIndividual(genePool);
     }
-    // TODO: why is it find instead of get?
 
     @Override
     public void setTemperature(double temperature) {
@@ -291,8 +287,6 @@ public class Javolver implements Solver {
     public ScoreFunction getScoreFunction() {
         return scoreFunction;
     }
-
-    IntToDoubleFunction dnaInitializer = null;
 
     public void setDnaInitializer(IntToDoubleFunction dnaInitializer) {
         this.dnaInitializer = dnaInitializer;

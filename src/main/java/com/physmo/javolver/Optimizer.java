@@ -10,8 +10,9 @@ public class Optimizer implements Solver {
     private final List<MutationStrategy> mutationStrategies = new ArrayList<MutationStrategy>();
     Individual bestIndividual;
     int dnaSize = 10;
+    int stuckCounter = 0;
+    double stuckScore = 0;
     private ScoreFunction scoreFunction;
-
     private double temperature = 0;
 
     public Optimizer() {
@@ -41,12 +42,9 @@ public class Optimizer implements Solver {
         algorithm1();
     }
 
-    int stuckCounter = 0;
-    double stuckScore = 0;
-
     public void algorithm1() {
 
-        Individual clone = cloneIndividualFully(bestIndividual);
+        Individual clone = bestIndividual.cloneFully();
 
         for (MutationStrategy mutationStrategy : mutationStrategies) {
             mutationStrategy.mutate(clone);
@@ -56,44 +54,34 @@ public class Optimizer implements Solver {
         double newScore = clone.getScore();
 
         if (newScore > originalScore) {
-            if (newScore<0) {
-                int njd =2;
+            if (newScore < 0) {
+                int njd = 2;
                 njd++;
             }
             bestIndividual = clone;
 
-        }
-        else if (Math.random() < temperature && newScore > originalScore*0.999) {
+        } else if (Math.random() < temperature && newScore > originalScore * 0.999) {
 
-            if (newScore<0) {
-                int njd =2;
+            if (newScore < 0) {
+                int njd = 2;
                 njd++;
             }
             bestIndividual = clone;
-        }
-        else if (stuckCounter>20) {
+        } else if (stuckCounter > 20) {
             bestIndividual = clone;
-            stuckCounter=0;
+            stuckCounter = 0;
         }
 
 
-        if (originalScore!=stuckScore) {
-            stuckCounter=0;
-            stuckScore=originalScore;
+        if (originalScore != stuckScore) {
+            stuckCounter = 0;
+            stuckScore = originalScore;
         } else {
             stuckCounter++;
         }
     }
 
-    public Individual cloneIndividualFully(Individual i1) {
-        Individual i2 = new Individual(i1.getDna().getSize());
-        for (int i = 0; i < dnaSize; i++) {
-            i2.getDna().set(i, i1.getDna().getDouble(i));
-        }
-        i2.setScoreFunction(i1.getScoreFunction());
-        i2.setUnprocessed();
-        return i2;
-    }
+
 
     @Override
     public Individual findBestScoringIndividual() {

@@ -27,8 +27,6 @@ public class Individual {
      */
     boolean processed = false;
     double diversity = 0.0;
-    private int rankScore = 0;
-    private int rankDiversity = 0;
 
     /**
      * Default constructor.
@@ -39,10 +37,6 @@ public class Individual {
 
     public ScoreFunction getScoreFunction() {
         return scoreFunction;
-    }
-
-    public void setScoreFunction(ScoreFunction scoreFunction) {
-        this.scoreFunction = scoreFunction;
     }
 
     public Chromosome getDna() {
@@ -87,7 +81,7 @@ public class Individual {
     /**
      * Sets the individuals score.
      *
-     * @param    s The score.
+     * @param s The score.
      * @return The score (pass through).
      */
     public double setScore(double s) {
@@ -100,23 +94,17 @@ public class Individual {
         return i;
     }
 
-    public int getRankScore() {
-        return rankScore;
+
+    public Individual cloneFully() {
+        Individual clone = clone();
+        for (int i = 0; i < this.getDna().getSize(); i++) {
+            clone.getDna().set(i, getDna().getDouble(i));
+        }
+        return clone;
     }
 
-
-    public void setRankScore(int rankScore) {
-        this.rankScore = rankScore;
-    }
-
-
-    public int getRankDiversity() {
-        return rankDiversity;
-    }
-
-
-    public void setRankDiversity(int rankDiversity) {
-        this.rankDiversity = rankDiversity;
+    public void setScoreFunction(ScoreFunction scoreFunction) {
+        this.scoreFunction = scoreFunction;
     }
 
     /**

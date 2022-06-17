@@ -3,6 +3,7 @@ package com.physmo.javolverexamples2.travellingsalesman;
 import com.physmo.javolver.Chromosome;
 import com.physmo.javolver.Individual;
 import com.physmo.javolver.Javolver;
+import com.physmo.javolver.mutationstrategy.MutationStrategyShuffle;
 import com.physmo.javolver.mutationstrategy.MutationStrategySwap;
 import com.physmo.javolver.selectionstrategy.SelectionStrategyTournament;
 import com.physmo.minvio.BasicDisplay;
@@ -24,18 +25,16 @@ public class TravellingSalesman {
         travellingSalesman.go();
     }
 
-    // TODO: we need to initialise dna so that each element is unique location
-    // create a new dna initialiser thing class?
-
     private void go() {
         basicDisplay = new BasicDisplayAwt(400, 400);
-        initCityList(25);
+        initCityList(45);
         Javolver javolver = Javolver.builder()
                 .dnaSize(cityList.size())
                 .populationTargetSize(10)
                 .keepBestIndividualAlive(true)
                 .setSelectionStrategy(new SelectionStrategyTournament(.2))
-                .addMutationStrategy(new MutationStrategySwap(1, 1))
+                .addMutationStrategy(new MutationStrategySwap(1, 2))
+                .addMutationStrategy(new MutationStrategyShuffle(2))
                 .setBreedingStrategy(new BreedingStrategyTS())
                 .dnaInitializer(this::dnaInitializer)
                 .scoreFunction(this::scoreFunction)

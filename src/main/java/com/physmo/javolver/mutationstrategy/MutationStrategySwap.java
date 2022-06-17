@@ -16,9 +16,10 @@ public class MutationStrategySwap implements MutationStrategy {
     @Override
     public void mutate(Individual individual) {
         if (Math.random() > chance) return;
-        for (int i = 0; i < count; i++) {
-            int index1 = MutationUtils.getRandomDnaIndexForIindividual(individual);
-            int index2 = MutationUtils.getRandomDnaIndexForIindividual(individual);
+        int c = ((int) (Math.random() * 12345) % count);
+        for (int i = 0; i < c; i++) {
+            int index1 = MutationUtils.getRandomDnaIndexForIndividual(individual);
+            int index2 = MutationUtils.getRandomDnaIndexForIndividual(individual);
             individual.dna.swap(index1, index2);
         }
     }

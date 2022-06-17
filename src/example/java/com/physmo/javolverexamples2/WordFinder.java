@@ -5,7 +5,7 @@ import com.physmo.javolver.Javolver;
 import com.physmo.javolver.Solver;
 import com.physmo.javolver.breedingstrategy.BreedingStrategyUniform;
 import com.physmo.javolver.mutationstrategy.MutationStrategySimple;
-import com.physmo.javolver.selectionstrategy.SelectionStrategyRouletteRanked;
+import com.physmo.javolver.selectionstrategy.SelectionStrategyRoulette;
 
 public class WordFinder {
     public static String targetWord = "EVOLUTION";
@@ -17,7 +17,7 @@ public class WordFinder {
                 .populationTargetSize(10)
                 .keepBestIndividualAlive(true)
                 .addMutationStrategy(new MutationStrategySimple(1, 0.25))
-                .setSelectionStrategy(new SelectionStrategyRouletteRanked())
+                .setSelectionStrategy(new SelectionStrategyRoulette())
                 .setBreedingStrategy(new BreedingStrategyUniform())
                 .scoreFunction(i -> calculateScore(i))
                 .build();
@@ -30,8 +30,8 @@ public class WordFinder {
             Individual best = javolver.findBestScoringIndividual();
 
             // Print output every so often.
-            if (j%20==0) {
-                System.out.println("[" + toString(best) + "] "+"Iteration " + j + "  " + "  score:" + javolver.findBestScoringIndividual().getScore());
+            if (j % 20 == 0) {
+                System.out.println("[" + toString(best) + "] " + "Iteration " + j + "  " + "  score:" + javolver.findBestScoringIndividual().getScore());
             }
 
             // Check if we have arrived at the target string.
@@ -45,24 +45,22 @@ public class WordFinder {
     // Each character gets a higher score the closer it is to the target character.
     public static double calculateScore(Individual individual) {
         double total = 0.0;
-        for (int i=0;i<targetWord.length();i++) {
+        for (int i = 0; i < targetWord.length(); i++) {
             total += getScoreForCharacter(individual.getDna().getChar(i), targetWord.charAt(i));
         }
         return total;
     }
 
-    public static double getScoreForCharacter(char a, char b)
-    {
+    public static double getScoreForCharacter(char a, char b) {
         int maxDiff = 15;
-        int diff = Math.abs(a-b);
-        if (diff>maxDiff) return 0.0;
-        return ((maxDiff-diff)/10.0);
+        int diff = Math.abs(a - b);
+        if (diff > maxDiff) return 0.0;
+        return ((maxDiff - diff) / 10.0);
     }
 
-    public static String toString(Individual individual)
-    {
+    public static String toString(Individual individual) {
         String str = "";
-        for (int i=0;i<individual.getDna().getData().length;i++) {
+        for (int i = 0; i < individual.getDna().getData().length; i++) {
             str = str + individual.getDna().getChar(i);
         }
         return str;

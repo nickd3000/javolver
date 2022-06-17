@@ -2,11 +2,9 @@ package com.physmo.javolverexamples2.picturesolver;
 
 import com.physmo.javolver.Attenuator;
 import com.physmo.javolver.Individual;
-import com.physmo.javolver.Javolver;
+import com.physmo.javolver.Optimizer;
 import com.physmo.javolver.Solver;
-import com.physmo.javolver.breedingstrategy.BreedingStrategyCrossover;
 import com.physmo.javolver.mutationstrategy.MutationStrategySimple;
-import com.physmo.javolver.selectionstrategy.SelectionStrategyTournament;
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
 import com.physmo.minvio.utils.BasicGraph;
@@ -23,7 +21,7 @@ public class PictureSolver {
 
     BufferedImage targetImage = null;
     BufferedImage workImage = null;
-    int populationSize = 120;
+    int populationSize = 50;
     ImageComparer imageComparer;
     Graphics2D dc;
     int numObjects = 55; //50;
@@ -38,9 +36,10 @@ public class PictureSolver {
     }
 
     public void run() {
-        //drawerClass = new DnaDrawerPolys(); numObjects=30;
-        drawerClass = new DnaDrawerSimpleSquares();
-        numObjects = 80;
+        drawerClass = new DnaDrawerPolys();
+        numObjects = 30;
+        //drawerClass = new DnaDrawerSimpleSquares();numObjects = 80;
+
         //drawerClass = new DnaDrawerString(); numObjects=400;
         //drawerClass = new DnaDrawerCircles(); numObjects=80;
 
@@ -60,7 +59,7 @@ public class PictureSolver {
 
         attenuator.setScoreRange(0.70, 1.0);
         attenuator.addParameter("testImageSize", 25, 200);
-        attenuator.addParameter("mutationAmount", 0.1, 0.01);
+        attenuator.addParameter("mutationAmount", 0.4, 0.01);
         attenuator.addParameter("renderObjectCount", numObjects, numObjects);
         attenuator.addParameter("temperature", 0.02, 0.0);
 
@@ -68,21 +67,22 @@ public class PictureSolver {
 
         MutationStrategySimple mutationStrategySimple = new MutationStrategySimple(1, 0.1);
 
-        javolver = Javolver.builder()
-                .populationTargetSize(populationSize)
-                .dnaSize(numObjects * drawerClass.getObjectSize())
-                .keepBestIndividualAlive(false)
-                .addMutationStrategy(mutationStrategySimple)
-                .setSelectionStrategy(new SelectionStrategyTournament(0.2))
-                .setBreedingStrategy(new BreedingStrategyCrossover())
-                .scoreFunction(i -> calculateScore(i))
-                .build();
-
-//        javolver = Optimizer.builder()
+//        javolver = Javolver.builder()
+//                .populationTargetSize(populationSize)
 //                .dnaSize(numObjects * drawerClass.getObjectSize())
+//                .keepBestIndividualAlive(false)
 //                .addMutationStrategy(mutationStrategySimple)
+//                .addMutationStrategy(new MutationStrategyShuffle(2))
+//                .setSelectionStrategy(new SelectionStrategyTournament(0.2))
+//                .setBreedingStrategy(new BreedingStrategyCrossover())
 //                .scoreFunction(i -> calculateScore(i))
 //                .build();
+
+        javolver = Optimizer.builder()
+                .dnaSize(numObjects * drawerClass.getObjectSize())
+                .addMutationStrategy(mutationStrategySimple)
+                .scoreFunction(i -> calculateScore(i))
+                .build();
 
 
         // Perform a few iterations of evolution.

@@ -118,7 +118,7 @@ public class SpherePacker extends MinvioApp {
 
         bd.cls(new Color(64, 64, 64));
         drawIndividual(top, bd, pad, pad);
-        drawIndividual(topB, bd, pad+300, pad);
+        drawIndividual(topB, bd, pad + 300, pad);
 
         bd.setDrawColor(Color.white);
         bd.drawRect(pad, pad, boxSize, boxSize);

@@ -52,16 +52,16 @@ public class DnaDrawerSimpleSquares implements DnaDrawer {
             int x = (int) (dna.getDouble(baseIndex + 0) * (double) width);
             int y = (int) (dna.getDouble(baseIndex + 1) * (double) height);
             int size = (int) (dna.getDouble(baseIndex + 6) * squareSize);
-            penalty += calculatePositionPenalty(x, size , width);
-            penalty += calculatePositionPenalty(y, size , height);
+            penalty += calculatePositionPenalty(x, size, width);
+            penalty += calculatePositionPenalty(y, size, height);
         }
-        return penalty/width;
+        return penalty / width;
     }
 
     public double calculatePositionPenalty(double pos, double size, double fieldSize) {
         double scale = 0.5;
-        if (pos<0) return (0-pos)*scale;
-        if (pos+size>fieldSize) return (fieldSize-(pos+size))*scale*-1;
+        if (pos < 0) return (0 - pos) * scale;
+        if (pos + size > fieldSize) return (fieldSize - (pos + size)) * scale * -1;
         return 0;
     }
 

@@ -9,13 +9,13 @@ import java.util.List;
  */
 public class SelectionStrategyRandom implements SelectionStrategy {
 
-	@Override
-	public Individual select(List<Individual> pool) {
-		int numIndividuals = pool.size();
-		int randomOne = (int)(Math.random()*(double)numIndividuals);
+    @Override
+    public Individual select(List<Individual> pool) {
+        int numIndividuals = pool.size();
+        int randomOne = (int) (Math.random() * (double) numIndividuals);
 
-		return pool.get(randomOne);
+        return pool.get(randomOne);
 
-	}
+    }
 
 }

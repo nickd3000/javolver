@@ -9,9 +9,8 @@ import java.awt.Graphics2D;
  */
 public interface DnaDrawer {
     /**
-     *
-     * @param dc    Graphics context to draw to
-     * @param dna   Chromosome to base drawing from
+     * @param dc  Graphics context to draw to
+     * @param dna Chromosome to base drawing from
      */
     void render(Graphics2D dc, Chromosome dna, int objectCount, int width, int height);
 
@@ -21,7 +20,6 @@ public interface DnaDrawer {
     double getScoreAdjustments(Chromosome dna, int objectCount, int width, int height);
 
     /**
-     *
      * @return Number of dna elements that make up an object.
      */
     int getObjectSize();
