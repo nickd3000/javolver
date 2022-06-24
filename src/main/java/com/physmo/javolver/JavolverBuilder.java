@@ -18,7 +18,7 @@ public class JavolverBuilder {
     public Javolver build() {
         javolver.init();
 
-        if (javolver.getScoreFunction()==null) {
+        if (javolver.getScoreFunction() == null) {
             throw new Error("No score function defined.");
         }
 

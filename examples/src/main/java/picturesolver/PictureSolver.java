@@ -35,7 +35,8 @@ public class PictureSolver {
     }
 
     public void run() {
-        drawerClass = new DnaDrawerPolys(); numObjects = 10;
+        drawerClass = new DnaDrawerPolys();
+        numObjects = 10;
         //drawerClass = new DnaDrawerSimpleSquares();numObjects = 80;
 
         //drawerClass = new DnaDrawerString(); numObjects=400;

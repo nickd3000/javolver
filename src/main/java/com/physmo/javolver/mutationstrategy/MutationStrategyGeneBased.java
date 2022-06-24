@@ -33,7 +33,7 @@ public class MutationStrategyGeneBased implements MutationStrategy {
         double jiggle = 0, value = 0;
         int index = 0;
         int dnaSize = individual.dna.getSize();
-        int randomisedCount = (int) (Math.random() * (double) frequency * (double) dnaSize);//+1;
+        int randomisedCount = (int) (Math.random() * frequency * (double) dnaSize);//+1;
 
 
         for (int i = 0; i < randomisedCount; i++) {

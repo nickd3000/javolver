@@ -53,8 +53,8 @@ public class Attenuator {
     }
 
     public void setIterationRange(int maxIterations) {
-        this.minScore=0;
-        this.maxScore=maxIterations;
+        this.minScore = 0;
+        this.maxScore = maxIterations;
     }
 }
 

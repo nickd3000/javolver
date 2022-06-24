@@ -20,6 +20,8 @@ public class TravellingSalesman {
     int numCities = 10; // (for brute force, use 11)
     List<City> cityList = new ArrayList<>();
     BasicDisplay basicDisplay;
+    double bruteForceMinDistance = -1;
+    int[] bruteForceBestSolution = new int[numCities];
 
     public static void main(String[] args) throws Exception {
         TravellingSalesman travellingSalesman = new TravellingSalesman();
@@ -70,7 +72,7 @@ public class TravellingSalesman {
     }
 
     public double dnaInitializer(int i) {
-        return (double) i;
+        return i;
     }
 
     public double scoreFunction(Individual individual) {
@@ -135,8 +137,8 @@ public class TravellingSalesman {
 
     public void bruteForce(int size) {
         int[] list = new int[size];
-        for (int i=0;i<size;i++) {
-            list[i]=i;
+        for (int i = 0; i < size; i++) {
+            list[i] = i;
         }
         permute(list.length, list);
 
@@ -144,8 +146,8 @@ public class TravellingSalesman {
 
     public Individual createIndividualFromArray(int[] list) {
         Individual individual = new Individual(list.length);
-        for (int i=0;i<list.length;i++) {
-            individual.getDna().set(i,list[i]);
+        for (int i = 0; i < list.length; i++) {
+            individual.getDna().set(i, list[i]);
         }
         return individual;
     }
@@ -155,38 +157,35 @@ public class TravellingSalesman {
         return scoreFunction(individual);
     }
 
-    double bruteForceMinDistance = -1;
-    int[] bruteForceBestSolution = new int[numCities];
-
     public void checkSolution(int[] list) {
         double length = calculateLengthFromArray(list);
-        if (length>bruteForceMinDistance || bruteForceMinDistance==-1) {
-            bruteForceMinDistance=length;
-            System.arraycopy(list, 0, bruteForceBestSolution,0,list.length);
+        if (length > bruteForceMinDistance || bruteForceMinDistance == -1) {
+            bruteForceMinDistance = length;
+            System.arraycopy(list, 0, bruteForceBestSolution, 0, list.length);
         }
     }
 
     public void permute(int k, int[] list) {
-        if (k==1) {
+        if (k == 1) {
             // output a
             checkSolution(list);
         } else {
-            permute(k-1, list);
-            for (int i=0;i<k-1;i++) {
-                if ((k&1)==0) // If even
+            permute(k - 1, list);
+            for (int i = 0; i < k - 1; i++) {
+                if ((k & 1) == 0) // If even
                 {
-                    swap(i, k-1, list);
+                    swap(i, k - 1, list);
                 } else {
-                    swap(0, k-1, list);
+                    swap(0, k - 1, list);
                 }
-                permute(k-1, list);
+                permute(k - 1, list);
             }
         }
     }
 
     public void swap(int i, int j, int[] list) {
         int tmp = list[i];
-        list[i]=list[j];
-        list[j]=tmp;
+        list[i] = list[j];
+        list[j] = tmp;
     }
 }

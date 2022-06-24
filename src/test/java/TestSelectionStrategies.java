@@ -30,8 +30,8 @@ public class TestSelectionStrategies {
         }
 
         for (int i = 0; i < numIterations; i++) {
-            rouletteScore  += selectionStrategyRoulette.select(pool).getScore();
-            tournamentScore  += selectionStrategyTournament.select(pool).getScore();
+            rouletteScore += selectionStrategyRoulette.select(pool).getScore();
+            tournamentScore += selectionStrategyTournament.select(pool).getScore();
             randomScore += selectionStrategyRandom.select(pool).getScore();
         }
 

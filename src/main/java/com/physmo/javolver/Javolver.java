@@ -39,6 +39,7 @@ public class Javolver implements Solver {
     private int targetPopulationSize = 0;
     private int dnaSize = 0;
     private int iteration = 0;
+
     /**
      * Create Javolver object with prototype individual and set the population size.
      */

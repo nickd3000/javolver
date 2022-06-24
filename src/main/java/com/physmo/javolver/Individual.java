@@ -39,10 +39,6 @@ public class Individual {
         return scoreFunction;
     }
 
-    public Chromosome getDna() {
-        return dna;
-    }
-
     public void setDna(Chromosome dna) {
         this.dna = dna;
     }
@@ -88,19 +84,22 @@ public class Individual {
         return score = s;
     }
 
-    public Individual clone() {
-        Individual i = new Individual(dna.getSize());
-        i.setScoreFunction(this.scoreFunction);
-        return i;
-    }
-
-
     public Individual cloneFully() {
         Individual clone = clone();
         for (int i = 0; i < this.getDna().getSize(); i++) {
             clone.getDna().set(i, getDna().getDouble(i));
         }
         return clone;
+    }
+
+    public Chromosome getDna() {
+        return dna;
+    }
+
+    public Individual clone() {
+        Individual i = new Individual(dna.getSize());
+        i.setScoreFunction(this.scoreFunction);
+        return i;
     }
 
     public void setScoreFunction(ScoreFunction scoreFunction) {

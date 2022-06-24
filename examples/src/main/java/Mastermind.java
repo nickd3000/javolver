@@ -23,7 +23,7 @@ public class Mastermind {
                 .keepBestIndividualAlive(false)
                 .addMutationStrategy(new MutationStrategySimple(1, 0.5))
                 .addMutationStrategy(new MutationStrategyShuffle(1))
-                .addMutationStrategy(new MutationStrategySwap(0.1,2))
+                .addMutationStrategy(new MutationStrategySwap(0.1, 2))
                 .setSelectionStrategy(new SelectionStrategyTournament(0.15))
                 .setBreedingStrategy(new BreedingStrategyUniform())
                 .scoreFunction(i -> calculateScore(i)).build();
@@ -33,8 +33,8 @@ public class Mastermind {
             Individual bestA = testEvolver.getBestScoringIndividual();
 
             //if (i % 10 == 0) {
-                System.out.println("Iteration " + i);
-                System.out.println("Javolver:  " + bestA.getScore() + " " + toString(bestA));
+            System.out.println("Iteration " + i);
+            System.out.println("Javolver:  " + bestA.getScore() + " " + toString(bestA));
             //}
         }
 
