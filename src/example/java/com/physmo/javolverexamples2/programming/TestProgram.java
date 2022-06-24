@@ -20,7 +20,7 @@ public class TestProgram {
     static int batchSize = 10;
     ProgramEvaluator programEvaluator = new FunctionEvaluator();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         TestProgram testProgram = new TestProgram();
         testProgram.go();
     }
@@ -52,9 +52,9 @@ public class TestProgram {
 
             System.out.print("iteration: " + iteration + "  ");
             testEvolver.report();
-            System.out.println(testEvolver.findBestScoringIndividual().toString());
+            System.out.println(testEvolver.getBestScoringIndividual().toString());
 
-            Individual ind = testEvolver.findBestScoringIndividual();
+            Individual ind = testEvolver.getBestScoringIndividual();
             //((GeneProgram)ind).render(bd);
             render(bd, ind);
         }

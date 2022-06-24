@@ -11,23 +11,30 @@ import com.physmo.minvio.BasicDisplayAwt;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class TravellingSalesman {
 
+    int numCities = 10; // (for brute force, use 11)
     List<City> cityList = new ArrayList<>();
     BasicDisplay basicDisplay;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         TravellingSalesman travellingSalesman = new TravellingSalesman();
         travellingSalesman.go();
     }
 
     private void go() {
+        initCityList(numCities);
+
+        bruteForce(numCities);
+
+
         basicDisplay = new BasicDisplayAwt(400, 400);
-        initCityList(45);
+
         Javolver javolver = Javolver.builder()
                 .dnaSize(cityList.size())
                 .populationTargetSize(10)
@@ -37,18 +44,22 @@ public class TravellingSalesman {
                 .addMutationStrategy(new MutationStrategyShuffle(2))
                 .setBreedingStrategy(new BreedingStrategyTS())
                 .dnaInitializer(this::dnaInitializer)
-                .scoreFunction(this::scoreFunction)
+                //.scoreFunction(this::scoreFunction)
                 .build();
 
 
         for (int i = 0; i < 1000000; i++) {
             javolver.doOneCycle();
 
-            Individual bestScoringIndividual = javolver.findBestScoringIndividual();
+            Individual bestScoringIndividual = javolver.getBestScoringIndividual();
 
             System.out.println(bestScoringIndividual.getScore() + "  " + individualToString(bestScoringIndividual));
 
-            drawIndividual(bestScoringIndividual);
+            basicDisplay.cls(Color.LIGHT_GRAY);
+            drawIndividual(createIndividualFromArray(bruteForceBestSolution), Color.BLUE);
+            drawIndividual(bestScoringIndividual, Color.magenta);
+
+
         }
     }
 
@@ -104,14 +115,13 @@ public class TravellingSalesman {
         return str;
     }
 
-    public void drawIndividual(Individual individual) {
-        basicDisplay.cls(Color.LIGHT_GRAY);
+    public void drawIndividual(Individual individual, Color lineColor) {
+
 
         double scale = 400;
         int size = individual.getDna().getSize();
 
-
-        basicDisplay.setDrawColor(Color.magenta);
+        basicDisplay.setDrawColor(lineColor);
         for (int i = 0; i < size - 1; i++) {
             City city1 = cityList.get((int) individual.getDna().getDouble(i));
             City city2 = cityList.get((int) individual.getDna().getDouble(i + 1));
@@ -124,5 +134,60 @@ public class TravellingSalesman {
         basicDisplay.repaint();
     }
 
+    public void bruteForce(int size) {
+        int[] list = new int[size];
+        for (int i=0;i<size;i++) {
+            list[i]=i;
+        }
+        permute(list.length, list);
 
+    }
+
+    public Individual createIndividualFromArray(int[] list) {
+        Individual individual = new Individual(list.length);
+        for (int i=0;i<list.length;i++) {
+            individual.getDna().set(i,list[i]);
+        }
+        return individual;
+    }
+
+    public double calculateLengthFromArray(int[] list) {
+        Individual individual = createIndividualFromArray(list);
+        return scoreFunction(individual);
+    }
+
+    double bruteForceMinDistance = -1;
+    int[] bruteForceBestSolution = new int[numCities];
+
+    public void checkSolution(int[] list) {
+        double length = calculateLengthFromArray(list);
+        if (length>bruteForceMinDistance || bruteForceMinDistance==-1) {
+            bruteForceMinDistance=length;
+            System.arraycopy(list, 0, bruteForceBestSolution,0,list.length);
+        }
+    }
+
+    public void permute(int k, int[] list) {
+        if (k==1) {
+            // output a
+            checkSolution(list);
+        } else {
+            permute(k-1, list);
+            for (int i=0;i<k-1;i++) {
+                if ((k&1)==0) // If even
+                {
+                    swap(i, k-1, list);
+                } else {
+                    swap(0, k-1, list);
+                }
+                permute(k-1, list);
+            }
+        }
+    }
+
+    public void swap(int i, int j, int[] list) {
+        int tmp = list[i];
+        list[i]=list[j];
+        list[j]=tmp;
+    }
 }

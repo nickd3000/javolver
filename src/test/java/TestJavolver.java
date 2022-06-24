@@ -11,7 +11,7 @@ public class TestJavolver {
     final double scoreTarget = 100;
 
     @Test
-    public void testJavolver() {
+    public void testJavolver() throws Exception {
 
         // Create the evolver:
         Javolver javolver = Javolver.builder()
@@ -27,7 +27,7 @@ public class TestJavolver {
         for (int i = 0; i < 1000; i++) {
             javolver.doOneCycle();
 
-            Individual topScorer = javolver.findBestScoringIndividual();
+            Individual topScorer = javolver.getBestScoringIndividual();
 
             if ((i % 250) == 0) {
                 System.out.println("Score: " + topScorer.getScore() + " Target: " + 100);
@@ -38,7 +38,7 @@ public class TestJavolver {
         boolean solutionFound = false;
 
         // Check that we evolved a solution.
-        Individual topScorer = javolver.findBestScoringIndividual();
+        Individual topScorer = javolver.getBestScoringIndividual();
         double solutionDelta = scoreTarget - topScorer.getScore();
         if (Math.abs(solutionDelta) < solutionTolerance) solutionFound = true;
         if (solutionFound) System.out.println("Solution found.");

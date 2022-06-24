@@ -14,14 +14,13 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class PictureSolver {
 
     BufferedImage targetImage = null;
     BufferedImage workImage = null;
-    int populationSize = 50;
+    int populationSize = 5;
     ImageComparer imageComparer;
     Graphics2D dc;
     int numObjects = 55; //50;
@@ -30,14 +29,13 @@ public class PictureSolver {
 
     Attenuator attenuator = new Attenuator();
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) {
         PictureSolver pictureSolver = new PictureSolver();
         pictureSolver.run();
     }
 
     public void run() {
-        drawerClass = new DnaDrawerPolys();
-        numObjects = 30;
+        drawerClass = new DnaDrawerPolys(); numObjects = 10;
         //drawerClass = new DnaDrawerSimpleSquares();numObjects = 80;
 
         //drawerClass = new DnaDrawerString(); numObjects=400;
@@ -61,7 +59,6 @@ public class PictureSolver {
         attenuator.addParameter("testImageSize", 25, 200);
         attenuator.addParameter("mutationAmount", 0.4, 0.01);
         attenuator.addParameter("renderObjectCount", numObjects, numObjects);
-        attenuator.addParameter("temperature", 0.02, 0.0);
 
         Solver javolver;
 
@@ -70,9 +67,11 @@ public class PictureSolver {
 //        javolver = Javolver.builder()
 //                .populationTargetSize(populationSize)
 //                .dnaSize(numObjects * drawerClass.getObjectSize())
-//                .keepBestIndividualAlive(false)
+//                .keepBestIndividualAlive(true)
 //                .addMutationStrategy(mutationStrategySimple)
 //                .addMutationStrategy(new MutationStrategyShuffle(2))
+//                .addMutationStrategy(new MutationStrategySwap(0.2,2))
+//                .addMutationStrategy(new MutationStrategyRandomize(0.2))
 //                .setSelectionStrategy(new SelectionStrategyTournament(0.2))
 //                .setBreedingStrategy(new BreedingStrategyCrossover())
 //                .scoreFunction(i -> calculateScore(i))
@@ -90,11 +89,10 @@ public class PictureSolver {
 
             javolver.doOneCycle();
 
-            Individual top = javolver.findBestScoringIndividual();
+            Individual top = javolver.getBestScoringIndividual();
             double topScore = top.getScore();
             attenuator.setCurrentScore(topScore);
             mutationStrategySimple.setAmount(attenuator.getValue("mutationAmount"));
-            javolver.setTemperature(attenuator.getValue("temperature"));
 
             if (j % 20 == 0) {
                 //Individual top = javolver.findBestScoringIndividual();

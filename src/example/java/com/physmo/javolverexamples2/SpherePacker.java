@@ -1,11 +1,14 @@
 package com.physmo.javolverexamples2;
 
+import com.physmo.javolver.Attenuator;
 import com.physmo.javolver.Chromosome;
 import com.physmo.javolver.Individual;
 import com.physmo.javolver.Javolver;
 import com.physmo.javolver.Optimizer;
 import com.physmo.javolver.breedingstrategy.BreedingStrategyUniform;
+import com.physmo.javolver.mutationstrategy.MutationStrategyShuffle;
 import com.physmo.javolver.mutationstrategy.MutationStrategySimple;
+import com.physmo.javolver.mutationstrategy.MutationStrategySwap;
 import com.physmo.javolver.selectionstrategy.SelectionStrategyTournament;
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
@@ -15,12 +18,15 @@ import java.awt.Color;
 
 public class SpherePacker extends MinvioApp {
 
-    int populationSize = 25;
+    static String paramName = "mutationRate";
+    int populationSize = 50;
     int numberOfSpheres = 8;
     int objectSize = 3; // Number of dna elements per sphere
     double overlapPenaltyScale = 0.25;
     Javolver testEvolver;
     Optimizer testOptimizer;
+    MutationStrategySimple mutationStrategySimple;
+    Attenuator attenuator;
 
     public static void main(String[] args) {
         MinvioApp app = new SpherePacker();
@@ -30,17 +36,27 @@ public class SpherePacker extends MinvioApp {
     @Override
     public void init(BasicDisplay bd) {
 
+        attenuator = new Attenuator();
+        attenuator.addParameter(paramName, 0.5, 0.01);
+        attenuator.setScoreRange(0.5, 1.1);
+
+        mutationStrategySimple = new MutationStrategySimple(2, 0.01);
+
         testEvolver = Javolver.builder()
-                .populationTargetSize(populationSize).dnaSize(numberOfSpheres * objectSize)
+                .populationTargetSize(populationSize)
+                .dnaSize(numberOfSpheres * objectSize)
                 .keepBestIndividualAlive(false)
-                .addMutationStrategy(new MutationStrategySimple(1, 0.5))
-                .setSelectionStrategy(new SelectionStrategyTournament(0.15))
+                .parallelScoring(true)
+                .addMutationStrategy(mutationStrategySimple)
+                .setSelectionStrategy(new SelectionStrategyTournament(0.25))
                 .setBreedingStrategy(new BreedingStrategyUniform())
-                .scoreFunction(i -> calculateScore(i)).build();
+                .scoreFunction(i -> calculateScore(i))
+                .build();
+
 
         testOptimizer = Optimizer.builder()
                 .dnaSize(numberOfSpheres * objectSize)
-                .addMutationStrategy(new MutationStrategySimple(1, 0.5))
+                .addMutationStrategy(mutationStrategySimple)
                 .scoreFunction(i -> calculateScore(i)).build();
 
     }
@@ -82,6 +98,9 @@ public class SpherePacker extends MinvioApp {
 
     public double getWallPenalty(double x, double y, double r) {
         double w = 200;
+        x *= w;
+        y *= w;
+        r *= w;
         double penalty = 0;
         double scale = 5; //12.5;
 
@@ -107,33 +126,36 @@ public class SpherePacker extends MinvioApp {
         int boxSize = 200;
         int pad = 50;
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
             testEvolver.doOneCycle();
             testOptimizer.doOneCycle();
-
         }
 
-        Individual top = testEvolver.findBestScoringIndividual();
-        Individual topB = testOptimizer.findBestScoringIndividual();
+        Individual top = testEvolver.getBestScoringIndividual();
+        Individual topB = testOptimizer.getBestScoringIndividual();
+
+        attenuator.setCurrentScore(top.getScore());
+        mutationStrategySimple.setAmount(attenuator.getValue(paramName));
+        System.out.println("Top score:"+top.getScore()+"  mutation:"+attenuator.getValue(paramName));
 
         bd.cls(new Color(64, 64, 64));
-        drawIndividual(top, bd, pad, pad);
-        drawIndividual(topB, bd, pad + 300, pad);
+        drawIndividual(top, bd, pad, pad, boxSize);
+        drawIndividual(topB, bd, pad + 300, pad, boxSize);
 
         bd.setDrawColor(Color.white);
         bd.drawRect(pad, pad, boxSize, boxSize);
 
     }
 
-    public void drawIndividual(Individual idv, BasicDisplay disp, float offsx, float offsy) {
+    public void drawIndividual(Individual idv, BasicDisplay disp, float offsx, float offsy, float scale) {
         Chromosome dna = idv.getDna();
 
         for (int i = 0; i < numberOfSpheres * objectSize; i += objectSize) {
             disp.setDrawColor(disp.getDistinctColor(i, 0.8f));
             disp.drawFilledCircle(
-                    offsx + dna.getDouble(i),
-                    offsy + dna.getDouble(i + 1),
-                    dna.getDouble(i + 2));
+                    offsx + (dna.getDouble(i) * scale),
+                    offsy + (dna.getDouble(i + 1) * scale),
+                    dna.getDouble(i + 2) * scale);
         }
 
     }

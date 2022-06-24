@@ -6,6 +6,7 @@ import com.physmo.javolver.Solver;
 import com.physmo.javolver.breedingstrategy.BreedingStrategyUniform;
 import com.physmo.javolver.mutationstrategy.MutationStrategySimple;
 import com.physmo.javolver.selectionstrategy.SelectionStrategyRoulette;
+import com.physmo.javolver.selectionstrategy.SelectionStrategyTournament;
 
 public class WordFinder {
     public static String targetWord = "EVOLUTION";
@@ -14,24 +15,24 @@ public class WordFinder {
 
         Solver javolver = Javolver.builder()
                 .dnaSize(9)
-                .populationTargetSize(10)
+                .populationTargetSize(20)
                 .keepBestIndividualAlive(true)
-                .addMutationStrategy(new MutationStrategySimple(1, 0.25))
-                .setSelectionStrategy(new SelectionStrategyRoulette())
+                .addMutationStrategy(new MutationStrategySimple(1, 0.55))
+                .setSelectionStrategy(new SelectionStrategyTournament(0.3))
                 .setBreedingStrategy(new BreedingStrategyUniform())
                 .scoreFunction(i -> calculateScore(i))
                 .build();
 
         // Run evolution until we get exact solution.
-        for (int j = 0; j < 250; j++) {
+        for (int j = 0; j < 50; j++) {
             // Perform one evolution step.
             javolver.doOneCycle();
 
-            Individual best = javolver.findBestScoringIndividual();
+            Individual best = javolver.getBestScoringIndividual();
 
             // Print output every so often.
-            if (j % 20 == 0) {
-                System.out.println("[" + toString(best) + "] " + "Iteration " + j + "  " + "  score:" + javolver.findBestScoringIndividual().getScore());
+            if (j % 5 == 0) {
+                System.out.println("[" + toString(best) + "] " + "Iteration " + j + "  " + "  score:" + javolver.getBestScoringIndividual().getScore());
             }
 
             // Check if we have arrived at the target string.

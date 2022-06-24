@@ -5,7 +5,6 @@ public interface Solver {
 
     void doOneCycle();
 
-    Individual findBestScoringIndividual();
+    Individual getBestScoringIndividual();
 
-    void setTemperature(double temperature);
 }

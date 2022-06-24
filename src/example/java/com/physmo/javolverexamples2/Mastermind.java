@@ -2,22 +2,21 @@ package com.physmo.javolverexamples2;
 
 import com.physmo.javolver.Individual;
 import com.physmo.javolver.Javolver;
-import com.physmo.javolver.Optimizer;
 import com.physmo.javolver.Solver;
 import com.physmo.javolver.breedingstrategy.BreedingStrategyUniform;
+import com.physmo.javolver.mutationstrategy.MutationStrategyShuffle;
 import com.physmo.javolver.mutationstrategy.MutationStrategySimple;
+import com.physmo.javolver.mutationstrategy.MutationStrategySwap;
 import com.physmo.javolver.selectionstrategy.SelectionStrategyTournament;
 
 public class Mastermind {
 
     int[] solution = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         Mastermind mastermind = new Mastermind();
         mastermind.go();
-
     }
-
 
     private void go() {
 
@@ -25,32 +24,21 @@ public class Mastermind {
                 .populationTargetSize(50).dnaSize(solution.length)
                 .keepBestIndividualAlive(false)
                 .addMutationStrategy(new MutationStrategySimple(1, 0.5))
+                .addMutationStrategy(new MutationStrategyShuffle(1))
+                .addMutationStrategy(new MutationStrategySwap(0.1,2))
                 .setSelectionStrategy(new SelectionStrategyTournament(0.15))
                 .setBreedingStrategy(new BreedingStrategyUniform())
                 .scoreFunction(i -> calculateScore(i)).build();
 
-        Solver testOptimizer = Optimizer.builder()
-                .dnaSize(solution.length)
-                .addMutationStrategy(new MutationStrategySimple(1, 0.5))
-                .scoreFunction(i -> calculateScore(i)).build();
-
-        testOptimizer.setTemperature(0.1);
-
-        for (int i = 0; i < 1000; i++) {
-
+        for (int i = 0; i < 20; i++) {
             testEvolver.doOneCycle();
-            testOptimizer.doOneCycle();
+            Individual bestA = testEvolver.getBestScoringIndividual();
 
-            Individual bestA = testEvolver.findBestScoringIndividual();
-            Individual bestB = testOptimizer.findBestScoringIndividual();
-
-            if (i % 10 == 0) {
+            //if (i % 10 == 0) {
                 System.out.println("Iteration " + i);
                 System.out.println("Javolver:  " + bestA.getScore() + " " + toString(bestA));
-                System.out.println("Optimizer: " + bestB.getScore() + " " + toString(bestB));
-            }
+            //}
         }
-
 
     }
 

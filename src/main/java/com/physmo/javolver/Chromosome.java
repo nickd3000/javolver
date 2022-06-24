@@ -13,7 +13,7 @@ public class Chromosome {
     /**
      * Genetic data store, stored as a list of real numbers.
      */
-    double[] data;
+    private double[] data;
 
     /**
      * Default constructor.

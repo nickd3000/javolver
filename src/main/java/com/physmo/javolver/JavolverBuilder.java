@@ -17,6 +17,11 @@ public class JavolverBuilder {
     // TODO: add sanity check that all required setup is done.
     public Javolver build() {
         javolver.init();
+
+        if (javolver.getScoreFunction()==null) {
+            throw new Error("No score function defined.");
+        }
+
         return javolver;
     }
 
@@ -57,6 +62,11 @@ public class JavolverBuilder {
 
     public JavolverBuilder dnaInitializer(IntToDoubleFunction dnaInitializer) {
         javolver.dnaInitializer = dnaInitializer;
+        return this;
+    }
+
+    public JavolverBuilder parallelScoring(boolean val) {
+        javolver.parallelScoring(val);
         return this;
     }
 }

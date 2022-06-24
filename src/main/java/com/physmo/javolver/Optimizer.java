@@ -13,7 +13,6 @@ public class Optimizer implements Solver {
     int stuckCounter = 0;
     double stuckScore = 0;
     private ScoreFunction scoreFunction;
-    private double temperature = 0;
 
     public Optimizer() {
 
@@ -60,13 +59,6 @@ public class Optimizer implements Solver {
             }
             bestIndividual = clone;
 
-        } else if (Math.random() < temperature && newScore > originalScore * 0.999) {
-
-            if (newScore < 0) {
-                int njd = 2;
-                njd++;
-            }
-            bestIndividual = clone;
         } else if (stuckCounter > 20) {
             bestIndividual = clone;
             stuckCounter = 0;
@@ -81,16 +73,9 @@ public class Optimizer implements Solver {
         }
     }
 
-
-
     @Override
-    public Individual findBestScoringIndividual() {
+    public Individual getBestScoringIndividual() {
         return bestIndividual;
-    }
-
-    @Override
-    public void setTemperature(double temperature) {
-        this.temperature = temperature;
     }
 
     public void addMutationStrategy(MutationStrategy strategy) {

@@ -9,6 +9,7 @@ import com.physmo.javolver.selectionstrategy.SelectionStrategyTournament;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.function.IntToDoubleFunction;
 
 
@@ -20,26 +21,25 @@ import java.util.function.IntToDoubleFunction;
  * @version 1.0
  * @since 2016-04-01
  */
-// TODO: make list types use interface type instead of ArrayList etc.
-
 public class Javolver implements Solver {
 
     private final List<MutationStrategy> mutationStrategies = new ArrayList<MutationStrategy>();
     IntToDoubleFunction dnaInitializer = null;
     // Keep the best individual alive between generations.
     private boolean keepBestIndividualAlive = false;
+
     // Use multi-threading for the scoring process.
-    // Set this to true if your {@link Individual#calculateScore()} method
-    // is expensive to run and may benefit from parallelization.
     private boolean parallelScoring = false;
     private ScoreFunction scoreFunction;
-    private ArrayList<Individual> genePool = new ArrayList<>();
+    private List<Individual> genePool = new ArrayList<>();
     //private final Individual proto; // Copy of type of chromosome we will use.
     private boolean allScored = false;
     private BreedingStrategy breedingStrategy = null;
     private SelectionStrategy selectionStrategy = null;
     private int targetPopulationSize = 0;
     private int dnaSize = 0;
+
+    Random random = new Random();
 
     /**
      * Create Javolver object with prototype individual and set the population size.
@@ -135,12 +135,12 @@ public class Javolver implements Solver {
      *
      * @return The best score of any individual in the current generation.
      */
-    public double getBestScore(ArrayList<Individual> pool) {
+    public double getBestScore(List<Individual> pool) {
         if (pool == null) pool = genePool;
         return findBestScoringIndividual(pool).getScore();
     }
 
-    public Individual findBestScoringIndividual(ArrayList<Individual> pool) {
+    public Individual findBestScoringIndividual(List<Individual> pool) {
         double highestScore = 0.0f;
         Individual highestGene = pool.get(0);
         for (Individual gene : pool) {
@@ -199,10 +199,8 @@ public class Javolver implements Solver {
 
             // Mutate children.
             for (Individual child : children) {
-                for (MutationStrategy ms : mutationStrategies) {
-                    if (Math.random() < 0.5)
-                        ms.mutate(child);
-                }
+                MutationStrategy ms = mutationStrategies.get(random.nextInt(mutationStrategies.size()));
+                ms.mutate(child);
             }
 
             // Add children to new gene pool.
@@ -222,7 +220,7 @@ public class Javolver implements Solver {
      * The sequential or parallel method is used depending on config settings.
      * @param    pool    ArrayList of individuals to be scored.
      */
-    public void scoreGenes(ArrayList<Individual> pool) {
+    public void scoreGenes(List<Individual> pool) {
         if (pool == null) pool = getPool();
 
         if (allScored) return;
@@ -236,14 +234,14 @@ public class Javolver implements Solver {
         allScored = true;
     }
 
-    public ArrayList<Individual> getPool() {
+    public List<Individual> getPool() {
         return genePool;
     }
 
     /**
      * Score each individual in turn.
      */
-    private void scoreGenesSequential(ArrayList<Individual> pool) {
+    private void scoreGenesSequential(List<Individual> pool) {
         pool.forEach(Individual::getScore);
     }
 
@@ -252,7 +250,7 @@ public class Javolver implements Solver {
      *
      * @param pool
      */
-    private void scoreGenesParallel(ArrayList<Individual> pool) {
+    private void scoreGenesParallel(List<Individual> pool) {
         pool.parallelStream().unordered().forEach(Individual::getScore);
     }
 
@@ -264,20 +262,14 @@ public class Javolver implements Solver {
         Individual best = findBestScoringIndividual(genePool);
         return "Pool Size: " + genePool.size();
     }
-    // TODO: why is it find instead of get?
 
     /***
      * Search the supplied pool of individuals and return the highest scoring one.
      * @return Highest scoring member of the supplied list.
      */
     @Override
-    public Individual findBestScoringIndividual() {
+    public Individual getBestScoringIndividual() {
         return findBestScoringIndividual(genePool);
-    }
-
-    @Override
-    public void setTemperature(double temperature) {
-
     }
 
     public void setScoreFunction(ScoreFunction scoreFunction) {
