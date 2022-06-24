@@ -4,23 +4,24 @@ import com.physmo.javolver.Individual;
 
 public class MutationStrategySwap implements MutationStrategy {
 
-	// Number of swaps to perform.
+    // Number of swaps to perform.
     private final double chance;
-	private final int count;
-	
-	public MutationStrategySwap(double chance, int count) {
-		this.chance = chance;
-		this.count = (int)(count*Math.random());
-	}
-	
-	@Override
-	public void mutate(Individual individual) {
-		if (Math.random()>chance) return; // heavily limit this.
-		for (int i=0;i<count;i++) {
-			int index1 = MutationUtils.getRandomDnaIndexForIindividual(individual);
-			int index2 = MutationUtils.getRandomDnaIndexForIindividual(individual);
-			individual.dna.swap(index1, index2);
-		}
-	}
+    private final int count;
+
+    public MutationStrategySwap(double chance, int count) {
+        this.chance = chance;
+        this.count = count;
+    }
+
+    @Override
+    public void mutate(Individual individual) {
+        if (Math.random() > chance) return;
+        int c = ((int) (Math.random() * 12345) % count);
+        for (int i = 0; i < c; i++) {
+            int index1 = MutationUtils.getRandomDnaIndexForIndividual(individual);
+            int index2 = MutationUtils.getRandomDnaIndexForIndividual(individual);
+            individual.dna.swap(index1, index2);
+        }
+    }
 
 }

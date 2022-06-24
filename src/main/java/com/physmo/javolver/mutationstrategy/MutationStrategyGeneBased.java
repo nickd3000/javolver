@@ -6,42 +6,42 @@ import com.physmo.javolver.Individual;
 // the frequency and amount of mutation.
 public class MutationStrategyGeneBased implements MutationStrategy {
 
-	private double amount;
-	private double frequency;
+    private double amount;
+    private double frequency;
 
-	private int geneAmount = 0;
-	private int geneFrequency = 0;
+    private int geneAmount = 0;
+    private int geneFrequency = 0;
 
 
-	public MutationStrategyGeneBased(int geneFrequency, int geneAmount) {
-		this.geneAmount = geneFrequency;
-		this.geneFrequency = geneFrequency;
-	}
-	
-	@Override
-	public void mutate(Individual individual) {
+    public MutationStrategyGeneBased(int geneFrequency, int geneAmount) {
+        this.geneAmount = geneFrequency;
+        this.geneFrequency = geneFrequency;
+    }
 
-		amount = individual.dna.getDouble(geneAmount);
-		frequency = individual.dna.getDouble(geneFrequency);
+    @Override
+    public void mutate(Individual individual) {
 
-		if (amount<0.001) amount=0.001;
-		if (frequency<0.001) frequency=0.001;
+        amount = individual.dna.getDouble(geneAmount);
+        frequency = individual.dna.getDouble(geneFrequency);
 
-		amount=0.001;
-		frequency=0.001;
+        if (amount < 0.001) amount = 0.001;
+        if (frequency < 0.001) frequency = 0.001;
 
-		double jiggle = 0, value = 0;
-		int index = 0;
-		int dnaSize = individual.dna.getSize();
-		int randomisedCount = (int)(Math.random()*(double)frequency*(double)dnaSize);//+1;
-		
-		
-		for (int i=0;i<randomisedCount;i++) {
-			index = MutationUtils.getRandomDnaIndexForIindividual(individual);
-			jiggle = (Math.random()-0.5) * amount * 2.0;
-			value = individual.dna.getDouble(index);
-			individual.dna.set(index, value+jiggle);
-		}
-	}
+        amount = 0.001;
+        frequency = 0.001;
+
+        double jiggle = 0, value = 0;
+        int index = 0;
+        int dnaSize = individual.dna.getSize();
+        int randomisedCount = (int) (Math.random() * frequency * (double) dnaSize);//+1;
+
+
+        for (int i = 0; i < randomisedCount; i++) {
+            index = MutationUtils.getRandomDnaIndexForIndividual(individual);
+            jiggle = (Math.random() - 0.5) * amount * 2.0;
+            value = individual.dna.getDouble(index);
+            individual.dna.set(index, value + jiggle);
+        }
+    }
 
 }

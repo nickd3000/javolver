@@ -1,10 +1,11 @@
 package com.physmo.javolver;
 
-import java.util.ArrayList;
+import java.util.function.IntToDoubleFunction;
 
 /**
  * Chromosome is a simple list of double values (0..1), that supports some general functionality.
  * Values will be mapped to the required data ranges.
+ *
  * @author nick
  */
 public class Chromosome {
@@ -12,20 +13,14 @@ public class Chromosome {
     /**
      * Genetic data store, stored as a list of real numbers.
      */
-    double [] data;
-
-    public int getSize() {
-        if (data == null) return 0;
-        return data.length;
-    }
+    private double[] data;
 
     /**
      * Default constructor.
      */
-    public Chromosome() {
-        data = null;
+    public Chromosome(int dnaSize) {
+        init(dnaSize);
     }
-
 
     /**
      * Init data to specified size with random values in the range 0..1
@@ -35,7 +30,18 @@ public class Chromosome {
     public void init(int size) {
         data = new double[size];
         for (int i = 0; i < size; i++) {
-            data[i]=Math.random();
+            data[i] = Math.random();
+        }
+    }
+
+    public int getSize() {
+        if (data == null) return 0;
+        return data.length;
+    }
+
+    public void initFromFunction(IntToDoubleFunction initFunction) {
+        for (int i = 0; i < data.length; i++) {
+            data[i] = initFunction.applyAsDouble(i);
         }
     }
 
@@ -44,7 +50,9 @@ public class Chromosome {
      *
      * @return Chromosome data.
      */
-    public double[] getData() { return data; }
+    public double[] getData() {
+        return data;
+    }
 
     /**
      * Get raw double value.
@@ -75,7 +83,7 @@ public class Chromosome {
      * @param v Value
      */
     public void set(int i, double v) {
-        data[i]=v;
+        data[i] = v;
     }
 
     /**
