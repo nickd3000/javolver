@@ -8,16 +8,10 @@ import java.util.List;
 
 public class TestBreedingStrategy {
 
-    public void setAllDnaValuesTo(Individual individual, double val) {
-        for (int i=0;i<individual.dna.getSize();i++) {
-            individual.dna.set(i, val);
-        }
-    }
-
     @Test
     public void TestBreedingStrategyAverage() {
-        Individual i1 = new DummyGene(1, 1);
-        Individual i2 = new DummyGene(2, 1);
+        Individual i1 = new Individual(2);
+        Individual i2 = new Individual(2);
 
         i1.dna.init(10);
         setAllDnaValuesTo(i1, 0);
@@ -36,10 +30,16 @@ public class TestBreedingStrategy {
 
     }
 
+    public void setAllDnaValuesTo(Individual individual, double val) {
+        for (int i = 0; i < individual.dna.getSize(); i++) {
+            individual.dna.set(i, val);
+        }
+    }
+
     @Test
     public void TestBreedingStrategyCrossover() {
-        Individual i1 = new DummyGene(1, 1);
-        Individual i2 = new DummyGene(2, 1);
+        Individual i1 = new Individual(2);
+        Individual i2 = new Individual(2);
 
         i1.dna.init(10);
         setAllDnaValuesTo(i1, 0);
@@ -55,7 +55,7 @@ public class TestBreedingStrategy {
         Individual c1 = children.get(0);
         Individual c2 = children.get(1);
 
-        for (int i=0;i<10;i++) {
+        for (int i = 0; i < 10; i++) {
             double sum = c1.dna.getDouble(i) + c2.dna.getDouble(i);
             Assert.assertEquals(sum, 1.0, 0.0001);
         }
