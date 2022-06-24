@@ -1,11 +1,8 @@
-package com.physmo.javolverexamples2;
-
 import com.physmo.javolver.Individual;
 import com.physmo.javolver.Javolver;
 import com.physmo.javolver.Solver;
 import com.physmo.javolver.breedingstrategy.BreedingStrategyUniform;
 import com.physmo.javolver.mutationstrategy.MutationStrategySimple;
-import com.physmo.javolver.selectionstrategy.SelectionStrategyRoulette;
 import com.physmo.javolver.selectionstrategy.SelectionStrategyTournament;
 
 public class WordFinder {
@@ -24,19 +21,20 @@ public class WordFinder {
                 .build();
 
         // Run evolution until we get exact solution.
-        for (int j = 0; j < 50; j++) {
+        for (int j = 0; j < 500; j++) {
             // Perform one evolution step.
             javolver.doOneCycle();
 
             Individual best = javolver.getBestScoringIndividual();
+            boolean exactMatch = toString(best).trim().equals(targetWord);
 
             // Print output every so often.
-            if (j % 5 == 0) {
+            if (j % 5 == 0 || exactMatch) {
                 System.out.println("[" + toString(best) + "] " + "Iteration " + j + "  " + "  score:" + javolver.getBestScoringIndividual().getScore());
             }
 
-            // Check if we have arrived at the target string.
-            if (best.toString().trim().equals(targetWord)) break;
+            // Stop if we have an exact match.
+            if (exactMatch) break;
         }
 
         System.out.print("END");

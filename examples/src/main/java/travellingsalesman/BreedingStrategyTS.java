@@ -1,4 +1,4 @@
-package com.physmo.javolverexamples2.travellingsalesman;
+package travellingsalesman;
 
 import com.physmo.javolver.Individual;
 import com.physmo.javolver.breedingstrategy.BreedingStrategy;

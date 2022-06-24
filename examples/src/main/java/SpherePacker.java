@@ -1,14 +1,10 @@
-package com.physmo.javolverexamples2;
-
 import com.physmo.javolver.Attenuator;
 import com.physmo.javolver.Chromosome;
 import com.physmo.javolver.Individual;
 import com.physmo.javolver.Javolver;
 import com.physmo.javolver.Optimizer;
 import com.physmo.javolver.breedingstrategy.BreedingStrategyUniform;
-import com.physmo.javolver.mutationstrategy.MutationStrategyShuffle;
 import com.physmo.javolver.mutationstrategy.MutationStrategySimple;
-import com.physmo.javolver.mutationstrategy.MutationStrategySwap;
 import com.physmo.javolver.selectionstrategy.SelectionStrategyTournament;
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
@@ -20,13 +16,15 @@ public class SpherePacker extends MinvioApp {
 
     static String paramName = "mutationRate";
     int populationSize = 50;
-    int numberOfSpheres = 8;
+    int numberOfSpheres = 9;
     int objectSize = 3; // Number of dna elements per sphere
     double overlapPenaltyScale = 0.25;
     Javolver testEvolver;
     Optimizer testOptimizer;
     MutationStrategySimple mutationStrategySimple;
     Attenuator attenuator;
+    int boxSize = 200;
+    int padding = 50;
 
     public static void main(String[] args) {
         MinvioApp app = new SpherePacker();
@@ -37,8 +35,8 @@ public class SpherePacker extends MinvioApp {
     public void init(BasicDisplay bd) {
 
         attenuator = new Attenuator();
-        attenuator.addParameter(paramName, 0.5, 0.01);
-        attenuator.setScoreRange(0.5, 1.1);
+        attenuator.addParameter(paramName, 0.2, 0.002);
+        attenuator.setIterationRange(1000);
 
         mutationStrategySimple = new MutationStrategySimple(2, 0.01);
 
@@ -121,29 +119,30 @@ public class SpherePacker extends MinvioApp {
     }
 
     @Override
-    public void draw(BasicDisplay bd, double delta) {
-
-        int boxSize = 200;
-        int pad = 50;
-
+    public void update(double delta) {
         for (int i = 0; i < 10; i++) {
             testEvolver.doOneCycle();
             testOptimizer.doOneCycle();
         }
+    }
+
+    @Override
+    public void draw(BasicDisplay bd, double delta) {
+
 
         Individual top = testEvolver.getBestScoringIndividual();
         Individual topB = testOptimizer.getBestScoringIndividual();
 
-        attenuator.setCurrentScore(top.getScore());
+        attenuator.setCurrentIteration(testEvolver.getIteration());
         mutationStrategySimple.setAmount(attenuator.getValue(paramName));
-        System.out.println("Top score:"+top.getScore()+"  mutation:"+attenuator.getValue(paramName));
+        System.out.println("Top score:" + top.getScore() + "  mutation:" + attenuator.getValue(paramName));
 
         bd.cls(new Color(64, 64, 64));
-        drawIndividual(top, bd, pad, pad, boxSize);
-        drawIndividual(topB, bd, pad + 300, pad, boxSize);
+        drawIndividual(top, bd, padding, padding, boxSize);
+        drawIndividual(topB, bd, padding + 300, padding, boxSize);
 
         bd.setDrawColor(Color.white);
-        bd.drawRect(pad, pad, boxSize, boxSize);
+        bd.drawRect(padding, padding, boxSize, boxSize);
 
     }
 

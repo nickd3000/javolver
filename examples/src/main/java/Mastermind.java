@@ -1,5 +1,3 @@
-package com.physmo.javolverexamples2;
-
 import com.physmo.javolver.Individual;
 import com.physmo.javolver.Javolver;
 import com.physmo.javolver.Solver;

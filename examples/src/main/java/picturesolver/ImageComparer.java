@@ -1,4 +1,4 @@
-package com.physmo.javolverexamples2.picturesolver;
+package picturesolver;
 
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;

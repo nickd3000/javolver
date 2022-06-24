@@ -25,9 +25,9 @@ public class Javolver implements Solver {
 
     private final List<MutationStrategy> mutationStrategies = new ArrayList<MutationStrategy>();
     IntToDoubleFunction dnaInitializer = null;
+    Random random = new Random();
     // Keep the best individual alive between generations.
     private boolean keepBestIndividualAlive = false;
-
     // Use multi-threading for the scoring process.
     private boolean parallelScoring = false;
     private ScoreFunction scoreFunction;
@@ -38,9 +38,7 @@ public class Javolver implements Solver {
     private SelectionStrategy selectionStrategy = null;
     private int targetPopulationSize = 0;
     private int dnaSize = 0;
-
-    Random random = new Random();
-
+    private int iteration = 0;
     /**
      * Create Javolver object with prototype individual and set the population size.
      */
@@ -50,6 +48,10 @@ public class Javolver implements Solver {
 
     public static JavolverBuilder builder() {
         return new JavolverBuilder();
+    }
+
+    public int getIteration() {
+        return iteration;
     }
 
     @Override
@@ -166,6 +168,8 @@ public class Javolver implements Solver {
      */
     @Override
     public void doOneCycle() {
+        iteration++;
+
         // Request that all individuals perform scoring.
         scoreGenes(genePool);
 

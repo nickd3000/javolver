@@ -1,4 +1,4 @@
-package com.physmo.javolverexamples2.programming;
+package programming;
 
 import com.physmo.javolver.Individual;
 import com.physmo.javolver.Javolver;

@@ -1,4 +1,4 @@
-package com.physmo.javolverexamples2.programming;
+package programming;
 
 public class SimpleMachine {
 

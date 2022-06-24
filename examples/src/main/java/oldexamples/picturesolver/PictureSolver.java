@@ -12,6 +12,7 @@ import com.physmo.javolverexamples.TestLinePic;
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
 import com.physmo.minvio.utils.BasicGraph;
+import picturesolver.DnaDrawerPolys;
 
 import javax.imageio.ImageIO;
 import java.awt.Color;

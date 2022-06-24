@@ -1,4 +1,4 @@
-package com.physmo.javolverexamples2.picturesolver;
+package picturesolver;
 
 import com.physmo.javolver.Chromosome;
 

@@ -29,6 +29,10 @@ public class Attenuator {
         return normalisedScore;
     }
 
+    public double setCurrentIteration(int iteration) {
+        return setCurrentScore(iteration);
+    }
+
     public double getValue(String name) {
         double[] doubles = parameters.get(name);
         return lerp(doubles[0], doubles[1], normalisedScore);
@@ -48,6 +52,10 @@ public class Attenuator {
         this.maxScore = maxScore;
     }
 
+    public void setIterationRange(int maxIterations) {
+        this.minScore=0;
+        this.maxScore=maxIterations;
+    }
 }
 
 

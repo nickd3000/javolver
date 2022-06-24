@@ -1,4 +1,4 @@
-package com.physmo.javolverexamples2.travellingsalesman;
+package travellingsalesman;
 
 import com.physmo.javolver.Chromosome;
 import com.physmo.javolver.Individual;
@@ -11,7 +11,6 @@ import com.physmo.minvio.BasicDisplayAwt;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +43,7 @@ public class TravellingSalesman {
                 .addMutationStrategy(new MutationStrategyShuffle(2))
                 .setBreedingStrategy(new BreedingStrategyTS())
                 .dnaInitializer(this::dnaInitializer)
-                //.scoreFunction(this::scoreFunction)
+                .scoreFunction(this::scoreFunction)
                 .build();
 
 

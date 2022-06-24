@@ -1,4 +1,4 @@
-package com.physmo.javolverexamples2.programming;
+package programming;
 
 import com.physmo.javolver.Chromosome;
 import com.physmo.minvio.BasicDisplay;

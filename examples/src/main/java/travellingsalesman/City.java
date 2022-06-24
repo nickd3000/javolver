@@ -1,4 +1,4 @@
-package com.physmo.javolverexamples2.travellingsalesman;
+package travellingsalesman;
 
 public class City {
 
