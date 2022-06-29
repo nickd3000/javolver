@@ -11,10 +11,8 @@ public class DnaDrawerString implements DnaDrawer {
     int objectSize = 2;
 
     @Override
-    public void render(Graphics2D dc, Chromosome dna, int objectCount, int width, int height) {
-
+    public void render(Graphics2D dc, Chromosome dna, int width, int height) {
         int numObjects = dna.getSize() / objectSize;
-        if (objectCount < numObjects) numObjects = objectCount;
 
         int baseIndex;
         double radius = Math.max(width, height) * 0.5;
@@ -37,7 +35,7 @@ public class DnaDrawerString implements DnaDrawer {
 
 
     @Override
-    public double getScoreAdjustments(Chromosome dna, int objectCount, int width, int height) {
+    public double getScoreAdjustments(Chromosome dna, int width, int height) {
         return 0;
     }
 

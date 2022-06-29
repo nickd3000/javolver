@@ -6,5 +6,12 @@ public interface Solver {
     void doOneCycle();
 
     Individual getBestScoringIndividual();
+    // 0..1 value controlling mutation amount.
+    void setChangeAmount(double changeAmount);
 
+    int getIteration();
+
+    void setScoreFunction(ScoreFunction scoreFunction);
+
+    void setDnaSize(int size);
 }

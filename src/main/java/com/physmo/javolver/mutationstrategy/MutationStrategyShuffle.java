@@ -14,7 +14,7 @@ public class MutationStrategyShuffle implements MutationStrategy {
     }
 
     @Override
-    public void mutate(Individual individual) {
+    public void mutate(Individual individual, double scaleChange) {
         double jiggle, value;
         int index;
         int dnaSize = individual.getDna().getSize();

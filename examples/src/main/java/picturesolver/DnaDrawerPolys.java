@@ -8,9 +8,10 @@ import java.awt.Graphics2D;
 public class DnaDrawerPolys implements DnaDrawer {
 
     int objectSize = 12;
+    double penaltyScale = 0.0050;
 
     @Override
-    public void render(Graphics2D dc, Chromosome dna, int objectCount, int width, int height) {
+    public void render(Graphics2D dc, Chromosome dna, int width, int height) {
 
         int numObjects = dna.getSize() / objectSize;
         int[] xl = new int[3];
@@ -20,9 +21,6 @@ public class DnaDrawerPolys implements DnaDrawer {
         double lowestDepth = -100;
         double lowestDepthRolling;
         int lowestDepthIndex;
-
-        // Allow us to specify how many polys to render
-        if (numObjects > objectCount) numObjects = objectCount;
 
         for (int i = 0; i < numObjects; i++) {
 
@@ -81,19 +79,19 @@ public class DnaDrawerPolys implements DnaDrawer {
     }
 
     @Override
-    public double getScoreAdjustments(Chromosome dna, int objectCount, int width, int height) {
-
-        int[] xl = new int[3];
-        int[] yl = new int[3];
+    public double getScoreAdjustments(Chromosome dna, int width, int height) {
+        int numObjects = dna.getSize() / objectSize;
+        double[] xl = new double[3];
+        double[] yl = new double[3];
         double penalty = 0;
-        for (int i = 0; i < objectCount; i++) {
+        for (int i = 0; i < numObjects; i++) {
             int baseIndex = objectSize * i;
-            xl[0] = (int) (dna.getDouble(baseIndex + 0));
-            yl[0] = (int) (dna.getDouble(baseIndex + 1));
-            xl[1] = (int) (dna.getDouble(baseIndex + 2));
-            yl[1] = (int) (dna.getDouble(baseIndex + 3));
-            xl[2] = (int) (dna.getDouble(baseIndex + 4));
-            yl[2] = (int) (dna.getDouble(baseIndex + 5));
+            xl[0] = (dna.getDouble(baseIndex + 0));
+            yl[0] = (dna.getDouble(baseIndex + 1));
+            xl[1] = (dna.getDouble(baseIndex + 2));
+            yl[1] = (dna.getDouble(baseIndex + 3));
+            xl[2] = (dna.getDouble(baseIndex + 4));
+            yl[2] = (dna.getDouble(baseIndex + 5));
             for (int j = 0; j < 3; j++) {
                 penalty += calculatePositionPenalty(xl[j], 1);
                 penalty += calculatePositionPenalty(yl[j], 1);
@@ -104,9 +102,9 @@ public class DnaDrawerPolys implements DnaDrawer {
     }
 
     public double calculatePositionPenalty(double pos, double limit) {
-        double scale = 5.8;
-        if (pos < 0) return (0 - pos) * scale;
-        if (pos > limit) return (limit - pos) * scale * -1;
+
+        if (pos < 0) return (0 - pos) * penaltyScale;
+        if (pos > limit) return (limit - pos) * penaltyScale * -1;
         return 0;
     }
 

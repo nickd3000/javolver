@@ -12,23 +12,15 @@ public class MutationStrategySimple implements MutationStrategy {
         this.amount = amount;
     }
 
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
     @Override
-    public void mutate(Individual individual) {
+    public void mutate(Individual individual, double scaleChange) {
         double jiggle, value;
         int index;
 
         for (int i = 0; i < changeCount; i++) {
             if (i > 0 && Math.random() > 0.5) continue;
             index = MutationUtils.getRandomDnaIndexForIndividual(individual);
-            jiggle = (Math.random() - 0.5) * amount * 2.0;
+            jiggle = (Math.random() - 0.5) * amount * 2.0 * scaleChange;
             value = individual.dna.getDouble(index);
             individual.dna.set(index, value + jiggle);
         }

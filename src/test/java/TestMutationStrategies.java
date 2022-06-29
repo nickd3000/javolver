@@ -21,11 +21,11 @@ public class TestMutationStrategies {
         ArrayList<Individual> pool = (ArrayList<Individual>) Helpers.generateTestPool(50);
 
         for (int i = 0; i < 1000; i++) {
-            mutationStrategyRandomize.mutate(pool.get(0));
-            mutationStrategySimple.mutate(pool.get(0));
-            mutationStrategyShuffle.mutate(pool.get(0));
-            mutationStrategySwap.mutate(pool.get(0));
-            mutationStrategySingle.mutate(pool.get(0));
+            mutationStrategyRandomize.mutate(pool.get(0),1);
+            mutationStrategySimple.mutate(pool.get(0),1);
+            mutationStrategyShuffle.mutate(pool.get(0),1);
+            mutationStrategySwap.mutate(pool.get(0),1);
+            mutationStrategySingle.mutate(pool.get(0),1);
         }
 
     }

@@ -12,6 +12,8 @@ public class Optimizer implements Solver {
     int dnaSize = 10;
     int stuckCounter = 0;
     double stuckScore = 0;
+    double changeAmount = 1;
+    int iteration = 0;
     private ScoreFunction scoreFunction;
 
     public Optimizer() {
@@ -28,16 +30,19 @@ public class Optimizer implements Solver {
         bestIndividual.setScoreFunction(scoreFunction);
     }
 
+    @Override
     public void setDnaSize(int dnaSize) {
         this.dnaSize = dnaSize;
     }
 
+    @Override
     public void setScoreFunction(ScoreFunction scoreFunction) {
         this.scoreFunction = scoreFunction;
     }
 
     @Override
     public void doOneCycle() {
+        iteration++;
         algorithm1();
     }
 
@@ -46,24 +51,18 @@ public class Optimizer implements Solver {
         Individual clone = bestIndividual.cloneFully();
 
         for (MutationStrategy mutationStrategy : mutationStrategies) {
-            mutationStrategy.mutate(clone);
+            mutationStrategy.mutate(clone, changeAmount);
         }
 
         double originalScore = bestIndividual.getScore();
         double newScore = clone.getScore();
 
         if (newScore > originalScore) {
-            if (newScore < 0) {
-                int njd = 2;
-                njd++;
-            }
             bestIndividual = clone;
-
         } else if (stuckCounter > 20) {
             bestIndividual = clone;
             stuckCounter = 0;
         }
-
 
         if (originalScore != stuckScore) {
             stuckCounter = 0;
@@ -76,6 +75,16 @@ public class Optimizer implements Solver {
     @Override
     public Individual getBestScoringIndividual() {
         return bestIndividual;
+    }
+
+    @Override
+    public void setChangeAmount(double changeAmount) {
+        this.changeAmount = changeAmount;
+    }
+
+    @Override
+    public int getIteration() {
+        return iteration;
     }
 
     public void addMutationStrategy(MutationStrategy strategy) {

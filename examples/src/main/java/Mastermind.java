@@ -11,14 +11,14 @@ public class Mastermind {
 
     int[] solution = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         Mastermind mastermind = new Mastermind();
         mastermind.go();
     }
 
     private void go() {
 
-        Solver testEvolver = Javolver.builder()
+        Solver solver = Javolver.builder()
                 .populationTargetSize(50).dnaSize(solution.length)
                 .keepBestIndividualAlive(false)
                 .addMutationStrategy(new MutationStrategySimple(1, 0.5))
@@ -29,13 +29,10 @@ public class Mastermind {
                 .scoreFunction(i -> calculateScore(i)).build();
 
         for (int i = 0; i < 20; i++) {
-            testEvolver.doOneCycle();
-            Individual bestA = testEvolver.getBestScoringIndividual();
+            solver.doOneCycle();
+            Individual bestA = solver.getBestScoringIndividual();
 
-            //if (i % 10 == 0) {
-            System.out.println("Iteration " + i);
-            System.out.println("Javolver:  " + bestA.getScore() + " " + toString(bestA));
-            //}
+            System.out.printf("Iteration: %2d  score: %4.1f   solution: %s %n", i, bestA.getScore(), toString(bestA));
         }
 
     }

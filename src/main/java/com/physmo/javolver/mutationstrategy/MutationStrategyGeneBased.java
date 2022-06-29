@@ -19,7 +19,7 @@ public class MutationStrategyGeneBased implements MutationStrategy {
     }
 
     @Override
-    public void mutate(Individual individual) {
+    public void mutate(Individual individual, double scaleChange) {
 
         amount = individual.dna.getDouble(geneAmount);
         frequency = individual.dna.getDouble(geneFrequency);
@@ -38,7 +38,7 @@ public class MutationStrategyGeneBased implements MutationStrategy {
 
         for (int i = 0; i < randomisedCount; i++) {
             index = MutationUtils.getRandomDnaIndexForIndividual(individual);
-            jiggle = (Math.random() - 0.5) * amount * 2.0;
+            jiggle = (Math.random() - 0.5) * amount * 2.0*scaleChange;
             value = individual.dna.getDouble(index);
             individual.dna.set(index, value + jiggle);
         }

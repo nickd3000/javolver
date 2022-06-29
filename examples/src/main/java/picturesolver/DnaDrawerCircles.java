@@ -15,13 +15,11 @@ public class DnaDrawerCircles implements DnaDrawer {
     double radMax = 80;
 
     @Override
-    public void render(Graphics2D dc, Chromosome dna, int objectCount, int width, int height) {
+    public void render(Graphics2D dc, Chromosome dna, int width, int height) {
         int numObjects = dna.getSize() / objectSize;
         int xpos = 0, ypos = 0, rad = 0;
         float[] cols = new float[4];
         int baseIndex = 0;
-
-        if (objectCount < numObjects) numObjects = objectCount;
 
         for (int i = 0; i < numObjects; i++) {
             baseIndex = objectSize * i;
@@ -57,8 +55,33 @@ public class DnaDrawerCircles implements DnaDrawer {
     }
 
     @Override
-    public double getScoreAdjustments(Chromosome dna, int objectCount, int width, int height) {
-        return 0;
+    public double getScoreAdjustments(Chromosome dna, int width, int height) {
+        double penalty = 0;
+        int numObjects = dna.getSize() / objectSize;
+        for (int i = 0; i < numObjects; i++) {
+            int baseIndex = objectSize * i;
+
+            double xpos = (dna.getDouble(baseIndex + 0));
+            double ypos = (dna.getDouble(baseIndex + 1));
+            double rad = (dna.getDouble(baseIndex + 2) * radMax);
+
+            penalty += getWallPenalty(xpos, ypos, rad);
+
+        }
+
+        return penalty*0.0001;
+    }
+
+    public double getWallPenalty(double x, double y, double r) {
+
+        double penalty = 0;
+
+        if (x < r) penalty += Math.abs((r - x));
+        if (y < r) penalty += Math.abs((r - y));
+        if (x > 1 - r) penalty += Math.abs(((r) - x));
+        if (y > 1 - r) penalty += Math.abs(((r) - y));
+
+        return penalty;
     }
 
     @Override

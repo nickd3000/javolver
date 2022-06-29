@@ -8,6 +8,7 @@ import com.physmo.javolver.selectionstrategy.SelectionStrategy;
 import com.physmo.javolver.selectionstrategy.SelectionStrategyTournament;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import java.util.function.IntToDoubleFunction;
@@ -39,6 +40,7 @@ public class Javolver implements Solver {
     private int targetPopulationSize = 0;
     private int dnaSize = 0;
     private int iteration = 0;
+    private double changeAmount = 1;
 
     /**
      * Create Javolver object with prototype individual and set the population size.
@@ -51,9 +53,13 @@ public class Javolver implements Solver {
         return new JavolverBuilder();
     }
 
+    @Override
     public int getIteration() {
         return iteration;
     }
+
+
+
 
     @Override
     public void init() {
@@ -82,6 +88,7 @@ public class Javolver implements Solver {
         return dnaSize;
     }
 
+    @Override
     public void setDnaSize(int dnaSize) {
         this.dnaSize = dnaSize;
     }
@@ -144,15 +151,17 @@ public class Javolver implements Solver {
     }
 
     public Individual findBestScoringIndividual(List<Individual> pool) {
-        double highestScore = 0.0f;
-        Individual highestGene = pool.get(0);
-        for (Individual gene : pool) {
-            if (gene.getScore() > highestScore) {
-                highestGene = gene;
-                highestScore = gene.getScore();
-            }
-        }
-        return highestGene;
+        return pool.stream().max(Comparator.comparing(Individual::getScore)).get();
+
+//        double highestScore = 0.0f;
+//        Individual highestGene = pool.get(0);
+//        for (Individual gene : pool) {
+//            if (gene.getScore() > highestScore) {
+//                highestGene = gene;
+//                highestScore = gene.getScore();
+//            }
+//        }
+//        return highestGene;
     }
 
     public double getBestScore() {
@@ -205,7 +214,7 @@ public class Javolver implements Solver {
             // Mutate children.
             for (Individual child : children) {
                 MutationStrategy ms = mutationStrategies.get(random.nextInt(mutationStrategies.size()));
-                ms.mutate(child);
+                ms.mutate(child, changeAmount);
             }
 
             // Add children to new gene pool.
@@ -277,9 +286,16 @@ public class Javolver implements Solver {
         return findBestScoringIndividual(genePool);
     }
 
+    @Override
+    public void setChangeAmount(double changeAmount) {
+        this.changeAmount = changeAmount;
+    }
+
+    @Override
     public void setScoreFunction(ScoreFunction scoreFunction) {
         this.scoreFunction = scoreFunction;
     }
+
 
     public ScoreFunction getScoreFunction() {
         return scoreFunction;

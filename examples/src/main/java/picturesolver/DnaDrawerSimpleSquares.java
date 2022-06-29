@@ -11,11 +11,9 @@ public class DnaDrawerSimpleSquares implements DnaDrawer {
     double squareSize = 40;
 
     @Override
-    public void render(Graphics2D dc, Chromosome dna, int objectCount, int width, int height) {
+    public void render(Graphics2D dc, Chromosome dna, int width, int height) {
 
         int numObjects = dna.getSize() / objectSize;
-
-        if (objectCount < numObjects) numObjects = objectCount;
 
         int baseIndex = 0;
         for (int i = 0; i < numObjects; i++) {
@@ -41,10 +39,9 @@ public class DnaDrawerSimpleSquares implements DnaDrawer {
     }
 
     @Override
-    public double getScoreAdjustments(Chromosome dna, int objectCount, int width, int height) {
+    public double getScoreAdjustments(Chromosome dna, int width, int height) {
         int numObjects = dna.getSize() / objectSize;
 
-        if (objectCount < numObjects) numObjects = objectCount;
         double penalty = 0;
         int baseIndex = 0;
         for (int i = 0; i < numObjects; i++) {

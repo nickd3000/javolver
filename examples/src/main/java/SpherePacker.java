@@ -2,7 +2,8 @@ import com.physmo.javolver.Attenuator;
 import com.physmo.javolver.Chromosome;
 import com.physmo.javolver.Individual;
 import com.physmo.javolver.Javolver;
-import com.physmo.javolver.Optimizer;
+import com.physmo.javolver.OptimizerES;
+import com.physmo.javolver.Solver;
 import com.physmo.javolver.breedingstrategy.BreedingStrategyUniform;
 import com.physmo.javolver.mutationstrategy.MutationStrategySimple;
 import com.physmo.javolver.selectionstrategy.SelectionStrategyTournament;
@@ -14,14 +15,14 @@ import java.awt.Color;
 
 public class SpherePacker extends MinvioApp {
 
-    static String paramName = "mutationRate";
+    static String MUTATION_RATE = "mutationRate";
     int populationSize = 50;
     int numberOfSpheres = 9;
     int objectSize = 3; // Number of dna elements per sphere
     double overlapPenaltyScale = 0.25;
     Javolver testEvolver;
-    Optimizer testOptimizer;
-    MutationStrategySimple mutationStrategySimple;
+    Solver testOptimizer;
+
     Attenuator attenuator;
     int boxSize = 200;
     int padding = 50;
@@ -35,27 +36,30 @@ public class SpherePacker extends MinvioApp {
     public void init(BasicDisplay bd) {
 
         attenuator = new Attenuator();
-        attenuator.addParameter(paramName, 0.2, 0.002);
+        attenuator.addParameter(MUTATION_RATE, 1, 0.01);
         attenuator.setIterationRange(1000);
-
-        mutationStrategySimple = new MutationStrategySimple(2, 0.01);
 
         testEvolver = Javolver.builder()
                 .populationTargetSize(populationSize)
                 .dnaSize(numberOfSpheres * objectSize)
                 .keepBestIndividualAlive(false)
                 .parallelScoring(true)
-                .addMutationStrategy(mutationStrategySimple)
+                .addMutationStrategy(new MutationStrategySimple(2, 0.01))
                 .setSelectionStrategy(new SelectionStrategyTournament(0.25))
                 .setBreedingStrategy(new BreedingStrategyUniform())
                 .scoreFunction(i -> calculateScore(i))
                 .build();
 
 
-        testOptimizer = Optimizer.builder()
-                .dnaSize(numberOfSpheres * objectSize)
-                .addMutationStrategy(mutationStrategySimple)
-                .scoreFunction(i -> calculateScore(i)).build();
+//        testOptimizer = Optimizer.builder()
+//                .dnaSize(numberOfSpheres * objectSize)
+//                .addMutationStrategy(mutationStrategySimple)
+//                .scoreFunction(i -> calculateScore(i)).build();
+
+        testOptimizer = new OptimizerES();
+        ((OptimizerES) testOptimizer).setDnaSize(numberOfSpheres * objectSize);
+        testOptimizer.setScoreFunction(i -> calculateScore(i));
+        testOptimizer.init();
 
     }
 
@@ -133,9 +137,17 @@ public class SpherePacker extends MinvioApp {
         Individual top = testEvolver.getBestScoringIndividual();
         Individual topB = testOptimizer.getBestScoringIndividual();
 
+
         attenuator.setCurrentIteration(testEvolver.getIteration());
-        mutationStrategySimple.setAmount(attenuator.getValue(paramName));
-        System.out.println("Top score:" + top.getScore() + "  mutation:" + attenuator.getValue(paramName));
+        double mutationRate = attenuator.getValue(MUTATION_RATE);
+
+        testEvolver.setChangeAmount(mutationRate);
+        testOptimizer.setChangeAmount(mutationRate);
+
+
+
+        System.out.printf("Top score:%5.3f  mutation: %5.4f %n", top.getScore(), attenuator.getValue(MUTATION_RATE));
+        //System.out.println("Top score:" + top.getScore() + "  mutation:" + attenuator.getValue(paramName));
 
         bd.cls(new Color(64, 64, 64));
         drawIndividual(top, bd, padding, padding, boxSize);
@@ -154,7 +166,7 @@ public class SpherePacker extends MinvioApp {
             disp.drawFilledCircle(
                     offsx + (dna.getDouble(i) * scale),
                     offsy + (dna.getDouble(i + 1) * scale),
-                    dna.getDouble(i + 2) * scale);
+                    dna.getDouble(i + 2) * scale );
         }
 
     }

@@ -12,7 +12,7 @@ public class WordFinder {
 
         Solver javolver = Javolver.builder()
                 .dnaSize(9)
-                .populationTargetSize(20)
+                .populationTargetSize(50)
                 .keepBestIndividualAlive(true)
                 .addMutationStrategy(new MutationStrategySimple(1, 0.55))
                 .setSelectionStrategy(new SelectionStrategyTournament(0.3))
@@ -30,7 +30,7 @@ public class WordFinder {
 
             // Print output every so often.
             if (j % 5 == 0 || exactMatch) {
-                System.out.println("[" + toString(best) + "] " + "Iteration " + j + "  " + "  score:" + javolver.getBestScoringIndividual().getScore());
+                System.out.printf("[%s] Iteration %d Score %6.2f %n", toString(best), j, javolver.getBestScoringIndividual().getScore());
             }
 
             // Stop if we have an exact match.
