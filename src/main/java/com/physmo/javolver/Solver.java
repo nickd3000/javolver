@@ -7,7 +7,7 @@ public interface Solver {
 
     Individual getBestScoringIndividual();
     // 0..1 value controlling mutation amount.
-    void setChangeAmount(double changeAmount);
+    void setTemperature(double temperature);
 
     int getIteration();
 
