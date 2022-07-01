@@ -24,7 +24,7 @@ import java.util.function.IntToDoubleFunction;
  */
 public class Javolver implements Solver {
 
-    private final List<MutationStrategy> mutationStrategies = new ArrayList<MutationStrategy>();
+    private final List<MutationStrategy> mutationStrategies = new ArrayList<>();
     IntToDoubleFunction dnaInitializer = null;
     Random random = new Random();
     // Keep the best individual alive between generations.
@@ -195,15 +195,21 @@ public class Javolver implements Solver {
         }
 
         Individual g1, g2;
+        boolean useSpeciation = true;
 
         while (newGenePool.size() < targetPop) {
             g1 = g2 = null;
-
+            int speciationClashes=0;
             // Select parents
             for (int ii = 0; ii < 100; ii++) {
 
                 g1 = selectionStrategy.select(genePool);
                 g2 = selectionStrategy.select(genePool);
+
+                if (useSpeciation && !isSameSpecies(g1, g2) && speciationClashes<50) {
+                    speciationClashes++;
+                    continue;
+                }
 
                 if (g1 != null && g2 != null && g1 != g2) break;
             }
@@ -268,6 +274,23 @@ public class Javolver implements Solver {
         pool.parallelStream().unordered().forEach(Individual::getScore);
     }
 
+    private boolean isSameSpecies(Individual i1, Individual i2) {
+
+        double d1[] = i1.getDna().getData();
+        double d2[] = i2.getDna().getData();
+
+        int differences = 0;
+        double differenceThreshold = 0.001;
+        int allowedDifferences = 3;
+
+        for (int i = 0; i < d1.length; i++) {
+            if (Math.abs(d1[i] - d2[i]) > differenceThreshold) differences++;
+            if (differences > allowedDifferences) return false;
+        }
+
+        return true;
+    }
+
     /***
      * Return a string containing some basic information about the state of the system.
      * @return String containing simple report
@@ -287,8 +310,8 @@ public class Javolver implements Solver {
     }
 
     @Override
-    public void setChangeAmount(double changeAmount) {
-        this.changeAmount = changeAmount;
+    public void setTemperature(double temperature) {
+        this.changeAmount = temperature;
     }
 
     @Override
