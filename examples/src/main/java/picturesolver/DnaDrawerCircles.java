@@ -63,13 +63,13 @@ public class DnaDrawerCircles implements DnaDrawer {
 
             double xpos = (dna.getDouble(baseIndex + 0));
             double ypos = (dna.getDouble(baseIndex + 1));
-            double rad = (dna.getDouble(baseIndex + 2) * radMax);
+            double rad = (dna.getDouble(baseIndex + 2) );
 
             penalty += getWallPenalty(xpos, ypos, rad);
 
         }
 
-        return penalty*0.0001;
+        return penalty*0.001;
     }
 
     public double getWallPenalty(double x, double y, double r) {
@@ -78,8 +78,8 @@ public class DnaDrawerCircles implements DnaDrawer {
 
         if (x < r) penalty += Math.abs((r - x));
         if (y < r) penalty += Math.abs((r - y));
-        if (x > 1 - r) penalty += Math.abs(((r) - x));
-        if (y > 1 - r) penalty += Math.abs(((r) - y));
+        if (x-r > 1 ) penalty += Math.abs(1-(x-r));
+        if (y-r > 1 ) penalty += Math.abs(1-(y-r));
 
         return penalty;
     }

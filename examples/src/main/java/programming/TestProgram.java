@@ -38,7 +38,7 @@ public class TestProgram {
                 //.addMutationStrategy(new MutationStrategyRandomize(0.1))
                 .setSelectionStrategy(new SelectionStrategyTournament(0.15))
                 .setBreedingStrategy(new BreedingStrategyCrossover())
-                .scoreFunction(i -> calculateScore(i))
+                .scoreFunction(this::calculateScore)
                 .build();
 
         int iteration = 0;

@@ -17,7 +17,7 @@ public class WordFinder {
                 .addMutationStrategy(new MutationStrategySimple(1, 0.55))
                 .setSelectionStrategy(new SelectionStrategyTournament(0.3))
                 .setBreedingStrategy(new BreedingStrategyUniform())
-                .scoreFunction(i -> calculateScore(i))
+                .scoreFunction(WordFinder::calculateScore)
                 .build();
 
         // Run evolution until we get exact solution.

@@ -47,7 +47,7 @@ public class SpherePacker extends MinvioApp {
                 .addMutationStrategy(new MutationStrategySimple(2, 0.01))
                 .setSelectionStrategy(new SelectionStrategyTournament(0.25))
                 .setBreedingStrategy(new BreedingStrategyUniform())
-                .scoreFunction(i -> calculateScore(i))
+                .scoreFunction(this::calculateScore)
                 .build();
 
 
@@ -58,7 +58,7 @@ public class SpherePacker extends MinvioApp {
 
         testOptimizer = new OptimizerES();
         ((OptimizerES) testOptimizer).setDnaSize(numberOfSpheres * objectSize);
-        testOptimizer.setScoreFunction(i -> calculateScore(i));
+        testOptimizer.setScoreFunction(this::calculateScore);
         testOptimizer.init();
 
     }
@@ -141,8 +141,8 @@ public class SpherePacker extends MinvioApp {
         attenuator.setCurrentIteration(testEvolver.getIteration());
         double mutationRate = attenuator.getValue(MUTATION_RATE);
 
-        testEvolver.setChangeAmount(mutationRate);
-        testOptimizer.setChangeAmount(mutationRate);
+        testEvolver.setTemperature(mutationRate);
+        testOptimizer.setTemperature(mutationRate);
 
 
 
