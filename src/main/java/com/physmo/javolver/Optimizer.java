@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Optimizer implements Solver {
 
-    private final List<MutationStrategy> mutationStrategies = new ArrayList<MutationStrategy>();
+    private final List<MutationStrategy> mutationStrategies = new ArrayList<>();
     Individual bestIndividual;
     int dnaSize = 10;
     int stuckCounter = 0;
@@ -78,8 +78,8 @@ public class Optimizer implements Solver {
     }
 
     @Override
-    public void setChangeAmount(double changeAmount) {
-        this.changeAmount = changeAmount;
+    public void setTemperature(double temperature) {
+        this.changeAmount = temperature;
     }
 
     @Override

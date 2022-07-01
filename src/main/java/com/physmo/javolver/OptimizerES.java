@@ -11,12 +11,12 @@ import java.util.Random;
 // Evelutionary Strategies experiment
 public class OptimizerES implements Solver {
 
-    private final List<MutationStrategy> mutationStrategies = new ArrayList<MutationStrategy>();
+    private final List<MutationStrategy> mutationStrategies = new ArrayList<>();
     Individual bestIndividual;
     int dnaSize = 10;
-    int poolSize = 10;
-    int combineSize = 3;
-    int mutationCount = 1;
+    int poolSize = 20;
+    int combineSize = 5;
+    int mutationCount = 2;
     int iteration = 0;
     Random random = new Random();
     double changeAmount = 1;
@@ -56,7 +56,7 @@ public class OptimizerES implements Solver {
 
         // Create pool of mutated clones.
         for (int i = 0; i < poolSize; i++) {
-            pool.add(createMutatedClone(bestIndividual, 2.0));
+            pool.add(createMutatedClone(bestIndividual, 5.0));
         }
 
         // Sort pool.
@@ -101,8 +101,8 @@ public class OptimizerES implements Solver {
     }
 
     @Override
-    public void setChangeAmount(double changeAmount) {
-        this.changeAmount = changeAmount;
+    public void setTemperature(double temperature) {
+        this.changeAmount = temperature;
     }
 
     @Override
