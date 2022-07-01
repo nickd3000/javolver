@@ -7,14 +7,11 @@ import java.util.List;
 
 public class MutationStrategyShuffle implements MutationStrategy {
 
-    private final int count;
-
     public MutationStrategyShuffle(int count) {
-        this.count = count;
     }
 
     @Override
-    public void mutate(Individual individual, double scaleChange) {
+    public void mutate(Individual individual, double temperature) {
         double jiggle, value;
         int index;
         int dnaSize = individual.getDna().getSize();

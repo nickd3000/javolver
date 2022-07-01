@@ -14,7 +14,7 @@ public class MutationStrategySwap implements MutationStrategy {
     }
 
     @Override
-    public void mutate(Individual individual, double scaleChange) {
+    public void mutate(Individual individual, double temperature) {
         if (Math.random() > chance) return;
         int c = ((int) (Math.random() * 12345) % count);
         for (int i = 0; i < c; i++) {

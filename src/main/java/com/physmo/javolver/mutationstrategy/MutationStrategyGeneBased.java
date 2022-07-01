@@ -6,9 +6,6 @@ import com.physmo.javolver.Individual;
 // the frequency and amount of mutation.
 public class MutationStrategyGeneBased implements MutationStrategy {
 
-    private double amount;
-    private double frequency;
-
     private int geneAmount = 0;
     private int geneFrequency = 0;
 
@@ -19,10 +16,10 @@ public class MutationStrategyGeneBased implements MutationStrategy {
     }
 
     @Override
-    public void mutate(Individual individual, double scaleChange) {
+    public void mutate(Individual individual, double temperature) {
 
-        amount = individual.dna.getDouble(geneAmount);
-        frequency = individual.dna.getDouble(geneFrequency);
+        double amount = individual.dna.getDouble(geneAmount);
+        double frequency = individual.dna.getDouble(geneFrequency);
 
         if (amount < 0.001) amount = 0.001;
         if (frequency < 0.001) frequency = 0.001;
@@ -38,7 +35,7 @@ public class MutationStrategyGeneBased implements MutationStrategy {
 
         for (int i = 0; i < randomisedCount; i++) {
             index = MutationUtils.getRandomDnaIndexForIndividual(individual);
-            jiggle = (Math.random() - 0.5) * amount * 2.0*scaleChange;
+            jiggle = (Math.random() - 0.5) * amount * 2.0* temperature;
             value = individual.dna.getDouble(index);
             individual.dna.set(index, value + jiggle);
         }
