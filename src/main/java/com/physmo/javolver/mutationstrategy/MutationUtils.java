@@ -2,7 +2,11 @@ package com.physmo.javolver.mutationstrategy;
 
 import com.physmo.javolver.Individual;
 
+import java.util.Random;
+
 class MutationUtils {
+    private static Random random = new Random();
+
     /**
      * Swap two DNA elements at random.
      * NOTE: seems quite destructive so it's been limited to only
@@ -28,6 +32,6 @@ class MutationUtils {
      * @return Random number between 0 and DNA size.
      */
     public static int getRandomDnaIndexForIndividual(Individual individual) {
-        return (int) ((double) individual.dna.getSize() * Math.random());
+        return random.nextInt(individual.dna.getSize());
     }
 }

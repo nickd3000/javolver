@@ -9,9 +9,7 @@ public class Helpers {
         for (int i = 0; i < size; i++) {
             Individual individual = new Individual(2);
             individual.getDna().set(0, i);
-            individual.setScoreFunction(i1 -> {
-                return i1.getDna().getDouble(0);
-            });
+            individual.setScoreFunction(i1 -> i1.getDna().getDouble(0));
             pool.add(individual);
         }
         return pool;

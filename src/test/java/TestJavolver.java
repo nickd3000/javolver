@@ -21,7 +21,7 @@ public class TestJavolver {
                 .addMutationStrategy(new MutationStrategySingle(0.2))
                 .setSelectionStrategy(new SelectionStrategyTournament(0.1))
                 .setBreedingStrategy(new BreedingStrategyCrossover())
-                .scoreFunction(i -> calculateScore(i))
+                .scoreFunction(this::calculateScore)
                 .build();
 
         for (int i = 0; i < 1000; i++) {

@@ -25,8 +25,8 @@ public class TestSelectionStrategies {
         int numIterations = 1000000;
         Individual individual;
 
-        for (int i = 0; i < pool.size(); i++) {
-            scoreOfWholePopulation += pool.get(i).getScore();
+        for (Individual value : pool) {
+            scoreOfWholePopulation += value.getScore();
         }
 
         for (int i = 0; i < numIterations; i++) {

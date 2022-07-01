@@ -35,7 +35,7 @@ public class TestIndividual {
     @Test
     public void testClone() {
         Individual individual = createTestIndividual();
-        Individual clone = individual.clone();
+        Individual clone = new Individual(individual);
         Individual fullClone = individual.cloneFully();
 
         double score1 = clone.getScore();
