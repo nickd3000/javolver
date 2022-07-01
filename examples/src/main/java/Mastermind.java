@@ -26,7 +26,7 @@ public class Mastermind {
                 .addMutationStrategy(new MutationStrategySwap(0.1, 2))
                 .setSelectionStrategy(new SelectionStrategyTournament(0.15))
                 .setBreedingStrategy(new BreedingStrategyUniform())
-                .scoreFunction(i -> calculateScore(i)).build();
+                .scoreFunction(this::calculateScore).build();
 
         for (int i = 0; i < 20; i++) {
             solver.doOneCycle();
@@ -58,8 +58,8 @@ public class Mastermind {
     }
 
     public boolean isNumberInSolution(int number) {
-        for (int i = 0; i < solution.length; i++) {
-            if (number == solution[i]) return true;
+        for (int j : solution) {
+            if (number == j) return true;
         }
         return false;
     }
