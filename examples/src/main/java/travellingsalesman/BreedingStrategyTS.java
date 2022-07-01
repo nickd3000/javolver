@@ -9,7 +9,7 @@ import java.util.List;
 public class BreedingStrategyTS implements BreedingStrategy {
     @Override
     public List<Individual> breed(Individual parent1, Individual parent2) {
-        Individual child1 = parent1.clone();
+        Individual child1 = new Individual(parent1);
         int dnaSize = parent1.dna.getData().length;
 
         boolean[] usedList = new boolean[dnaSize];

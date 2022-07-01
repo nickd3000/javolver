@@ -35,6 +35,11 @@ public class Individual {
         dna = new Chromosome(dnaSize);
     }
 
+    public Individual(Individual cloneSource) {
+        this.dna = new Chromosome(cloneSource.getDna().getSize());
+        this.scoreFunction = (cloneSource.scoreFunction);
+    }
+
     public ScoreFunction getScoreFunction() {
         return scoreFunction;
     }
@@ -85,7 +90,7 @@ public class Individual {
     }
 
     public Individual cloneFully() {
-        Individual clone = clone();
+        Individual clone = new Individual(this);
         for (int i = 0; i < this.getDna().getSize(); i++) {
             clone.getDna().set(i, getDna().getDouble(i));
         }
@@ -96,11 +101,6 @@ public class Individual {
         return dna;
     }
 
-    public Individual clone() {
-        Individual i = new Individual(dna.getSize());
-        i.setScoreFunction(this.scoreFunction);
-        return i;
-    }
 
     public void setScoreFunction(ScoreFunction scoreFunction) {
         this.scoreFunction = scoreFunction;
