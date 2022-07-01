@@ -17,11 +17,13 @@ import java.util.Map;
 
 public class TravellingSalesman {
 
-    int numCities = 10; // (for brute force, use 11)
+    int numCities = 100; // (for brute force, use 11)
     List<City> cityList = new ArrayList<>();
     BasicDisplay basicDisplay;
     double bruteForceMinDistance = -1;
     int[] bruteForceBestSolution = new int[numCities];
+
+    boolean performBruteForce = false;
 
     public static void main(String[] args) throws Exception {
         TravellingSalesman travellingSalesman = new TravellingSalesman();
@@ -31,10 +33,12 @@ public class TravellingSalesman {
     private void go() {
         initCityList(numCities);
 
-        bruteForce(numCities);
-
+        if (performBruteForce) {
+            bruteForce(numCities);
+        }
 
         basicDisplay = new BasicDisplayAwt(400, 400);
+
 
         Javolver javolver = Javolver.builder()
                 .dnaSize(cityList.size())
@@ -48,18 +52,23 @@ public class TravellingSalesman {
                 .scoreFunction(this::scoreFunction)
                 .build();
 
+        long lastTime = System.currentTimeMillis();
 
         for (int i = 0; i < 1000000; i++) {
             javolver.doOneCycle();
 
             Individual bestScoringIndividual = javolver.getBestScoringIndividual();
 
-            System.out.println(bestScoringIndividual.getScore() + "  " + individualToString(bestScoringIndividual));
+            if (System.currentTimeMillis()-lastTime>1000) {
+                lastTime = System.currentTimeMillis();
+                System.out.format("Iteration: %d  score: %.2f  %s %n", javolver.getIteration(), bestScoringIndividual.getScore(), individualToString(bestScoringIndividual));
 
-            basicDisplay.cls(Color.LIGHT_GRAY);
-            drawIndividual(createIndividualFromArray(bruteForceBestSolution), Color.BLUE);
-            drawIndividual(bestScoringIndividual, Color.magenta);
-
+                basicDisplay.cls(Color.LIGHT_GRAY);
+                if (performBruteForce) {
+                    drawIndividual(createIndividualFromArray(bruteForceBestSolution), Color.BLUE);
+                }
+                drawIndividual(bestScoringIndividual, Color.magenta);
+            }
 
         }
     }
@@ -95,9 +104,15 @@ public class TravellingSalesman {
             }
         }
 
-        for (Integer integer : dupes.keySet()) {
-            if (dupes.get(integer) > 1) {
-                distance += dupes.get(integer) * 10;
+//        for (Integer integer : dupes.keySet()) {
+//            if (dupes.get(integer) > 1) {
+//                distance += dupes.get(integer) * 10;
+//            }
+//        }
+
+        for (Integer value : dupes.values()) {
+            if (value > 1) {
+                distance += value * 10;
             }
         }
 
