@@ -12,11 +12,11 @@ public class MutationStrategyRandomize implements MutationStrategy {
     }
 
     @Override
-    public void mutate(Individual individual) {
+    public void mutate(Individual individual, double temperature) {
         if (Math.random() >= probability) return;
 
         for (int i = 0; i < individual.dna.getSize(); i++) {
-            individual.dna.set(i, Math.random());
+            individual.dna.set(i, Math.random() * temperature);
         }
     }
 

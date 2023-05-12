@@ -2,33 +2,29 @@ package com.physmo.javolver.mutationstrategy;
 
 import com.physmo.javolver.Individual;
 
+import java.util.Random;
+
 public class MutationStrategySimple implements MutationStrategy {
 
     private final int changeCount;
-    private double amount;
+    private final double amount;
+    private Random random = new Random();
 
     public MutationStrategySimple(int changeCount, double amount) {
         this.changeCount = changeCount;
         this.amount = amount;
     }
 
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
     @Override
-    public void mutate(Individual individual) {
+    public void mutate(Individual individual, double temperature) {
         double jiggle, value;
         int index;
 
-        for (int i = 0; i < changeCount; i++) {
-            if (i > 0 && Math.random() > 0.5) continue;
+        int changes = random.nextInt( changeCount) + 1;
+
+        for (int i = 0; i < changes; i++) {
             index = MutationUtils.getRandomDnaIndexForIndividual(individual);
-            jiggle = (Math.random() - 0.5) * amount * 2.0;
+            jiggle = (Math.random() - 0.5) * amount * 2.0 * temperature;
             value = individual.dna.getDouble(index);
             individual.dna.set(index, value + jiggle);
         }

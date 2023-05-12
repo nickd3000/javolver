@@ -14,7 +14,7 @@ public class BreedingStrategyUniform implements BreedingStrategy {
     @Override
     public List<Individual> breed(Individual parent1, Individual parent2) {
         ArrayList<Individual> childList = new ArrayList<>();
-        Individual child = parent1.clone();
+        Individual child = new Individual(parent1);
         int dnaSize = parent1.dna.getData().length;
         double d1 = 0, d2 = 0;
 

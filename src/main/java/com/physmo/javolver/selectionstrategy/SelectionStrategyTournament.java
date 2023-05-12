@@ -3,10 +3,12 @@ package com.physmo.javolver.selectionstrategy;
 import com.physmo.javolver.Individual;
 
 import java.util.List;
+import java.util.Random;
 
 public class SelectionStrategyTournament implements SelectionStrategy {
 
     private final double selectionRange;
+    private final Random random = new Random();
 
     public SelectionStrategyTournament(double selectionRange) {
         this.selectionRange = selectionRange;
@@ -35,24 +37,14 @@ public class SelectionStrategyTournament implements SelectionStrategy {
         return currentWinner;
     }
 
-    /**
-     * Used to get score for an individual while performing selection.
-     * This takes into account any extra affects like preferring diversity.
-     *
-     * @param ind The Individual
-     * @return Score or rank value.
-     */
+
     private double getSelectionScore(Individual ind) {
         return ind.getScore();
     }
 
-    /***
-     * Return an individual randomly selected from the supplied list of individuals.
-     * @param    pool    The pool of individuals to select from.
-     * @return Random member of the supplied list.
-     */
     private Individual getRandomIndividual(List<Individual> pool) {
-        int id = (int) ((float) (pool.size() - 1) * Math.random());
+        //int id = (int) ((float) (pool.size() - 1) * Math.random());
+        int id = random.nextInt(pool.size());
         return pool.get(id);
     }
 }
