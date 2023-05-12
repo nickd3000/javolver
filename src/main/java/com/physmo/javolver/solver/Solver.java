@@ -1,4 +1,7 @@
-package com.physmo.javolver;
+package com.physmo.javolver.solver;
+
+import com.physmo.javolver.Individual;
+import com.physmo.javolver.ScoreFunction;
 
 public interface Solver {
     void init();

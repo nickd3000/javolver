@@ -1,6 +1,9 @@
-package com.physmo.javolver;
+package com.physmo.javolver.solver;
 
+import com.physmo.javolver.Individual;
+import com.physmo.javolver.ScoreFunction;
 import com.physmo.javolver.mutationstrategy.MutationStrategy;
+import com.physmo.javolver.solver.Solver;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,8 +53,6 @@ public class OptimizerES implements Solver {
     }
 
     public void algorithm1() {
-        double originalScore = bestIndividual.getScore();
-
         List<Individual> pool = new ArrayList<>();
 
         // Create pool of mutated clones.
@@ -64,7 +65,7 @@ public class OptimizerES implements Solver {
 
         // Combine top results.
         Individual clone = bestIndividual.cloneFully();
-        clone.setUnprocessed();
+        clone.setProcessed(false);
 
         double[] cloneDnaArray = clone.getDna().getData();
         Arrays.fill(cloneDnaArray, 0);
@@ -75,16 +76,13 @@ public class OptimizerES implements Solver {
             }
         }
 
-        double cloneScore = clone.getScore();
-
-        //if (cloneScore > originalScore) {
         bestIndividual = clone;
-        //}
+
     }
 
     public Individual createMutatedClone(Individual parent, double mutationAmount) {
         Individual clone = parent.cloneFully();
-        clone.setUnprocessed();
+        clone.setProcessed(false);
 
         for (int j = 0; j < mutationCount; j++) {
             int i = random.nextInt(clone.getDna().getSize());

@@ -1,7 +1,7 @@
 package programming;
 
 import com.physmo.javolver.Individual;
-import com.physmo.javolver.Javolver;
+import com.physmo.javolver.solver.Javolver;
 import com.physmo.javolver.breedingstrategy.BreedingStrategyCrossover;
 import com.physmo.javolver.mutationstrategy.MutationStrategyShuffle;
 import com.physmo.javolver.mutationstrategy.MutationStrategySimple;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class TestProgram {
 
-    static int populationSize = 100;
+    static int populationSize = 50;
     static int batchSize = 10;
     ProgramEvaluator programEvaluator = new FunctionEvaluator();
 
@@ -32,7 +32,7 @@ public class TestProgram {
                 .dnaSize(150)
                 .populationTargetSize(populationSize)
                 .keepBestIndividualAlive(false)
-                .addMutationStrategy(new MutationStrategySimple(2, 0.2))
+                .addMutationStrategy(new MutationStrategySimple(2, 0.5))
                 .addMutationStrategy(new MutationStrategySwap(0.1, 2))
                 .addMutationStrategy(new MutationStrategyShuffle(2))
                 //.addMutationStrategy(new MutationStrategyRandomize(0.1))
@@ -72,9 +72,9 @@ public class TestProgram {
             sm = new SimpleMachine();
 
             setupSimpleMachineFromDNA(sm, individual);
-            programEvaluator.preEvaluateStep(sm, individual.getDna(), step / 10);
+            programEvaluator.preEvaluateStep(sm, individual.getDna(), (double)(step / 10.0));
             runSimpleMachine(sm);
-            stepScore = programEvaluator.evaluate(sm, individual.getDna(), step / 10);
+            stepScore = programEvaluator.evaluate(sm, individual.getDna(), step / 10.0);
             score += stepScore;
 
             //consoleOutput+=" "+stepScore;

@@ -1,4 +1,4 @@
-package com.physmo.javolverexamples.picturesolver;
+package oldexamples.picturesolver;
 
 import com.physmo.javolver.Descent;
 import com.physmo.javolver.Javolver;
@@ -15,7 +15,7 @@ import com.physmo.minvio.utils.BasicGraph;
 import picturesolver.DnaDrawerPolys;
 
 import javax.imageio.ImageIO;
-import java.awt.Color;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -25,7 +25,7 @@ import java.util.List;
 public class PictureSolver {
 
 
-    public static GenePicSolver GetRandomIndividual(List<GenePicSolver> bestIndividuals) {
+    public static com.physmo.javolverexamples.picturesolver.GenePicSolver GetRandomIndividual(List<com.physmo.javolverexamples.picturesolver.GenePicSolver> bestIndividuals) {
         int count = bestIndividuals.size();
         int index = (int)(Math.random()*(double)count);
         return bestIndividuals.get(index);
@@ -60,7 +60,7 @@ public class PictureSolver {
         BasicDisplay dispGraph = new BasicDisplayAwt(400, 200);
         BasicGraph graph = new BasicGraph(500);
 
-        GenePicSolver gps = new GenePicSolver(targetImage, drawerClass, numberOfDrawingElements, scoreStep);
+        com.physmo.javolverexamples.picturesolver.GenePicSolver gps = new com.physmo.javolverexamples.picturesolver.GenePicSolver(targetImage, drawerClass, numberOfDrawingElements, scoreStep);
 
         MutationStrategy ms = new MutationStrategySimple(0.1, 0.5);
 
@@ -108,7 +108,7 @@ public class PictureSolver {
             if (j % 20 == 0) {
 
 
-                GenePicSolver top = (GenePicSolver) javolver.findBestScoringIndividual();
+                com.physmo.javolverexamples.picturesolver.GenePicSolver top = (com.physmo.javolverexamples.picturesolver.GenePicSolver) javolver.findBestScoringIndividual();
                 disp.drawImage(targetImage, 0, 0);
                 disp.drawImage(top.getImage(), targetImage.getWidth(), 0);
                 disp.repaint();

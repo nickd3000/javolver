@@ -71,11 +71,7 @@ public class Individual {
      * @return Score value squared.
      */
     public double getScoreSquared() {
-        if (!processed) {
-            score = scoreFunction.score(this);
-            processed = true;
-        }
-
+        getScore();
         return (score * score);
     }
 
@@ -123,7 +119,15 @@ public class Individual {
         return diff / (double) size;
     }
 
-    public void setUnprocessed() {
-        processed = false;
+    public void setProcessed(boolean processed) {
+        this.processed = processed;
+    }
+
+    public int getHash() {
+        int combined=0;
+        for (double val : dna.getData()) {
+            combined += Double.hashCode(val);
+        }
+        return Integer.hashCode(combined);
     }
 }

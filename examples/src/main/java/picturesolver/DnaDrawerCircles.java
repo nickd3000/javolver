@@ -8,10 +8,8 @@ import java.awt.Graphics2D;
 public class DnaDrawerCircles implements DnaDrawer {
 
     int objectSize = 8;
-    boolean enableTransparency = false;
-    double radiusDivider = 6.0;
-
-    double radMin = 20;
+    boolean enableTransparency = true;
+    double radMin = 5;
     double radMax = 80;
 
     @Override

@@ -4,8 +4,11 @@ import com.physmo.javolver.Individual;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 public class MutationStrategyShuffle implements MutationStrategy {
+
+    Random random = new Random();
 
     public MutationStrategyShuffle(int count) {
     }
@@ -21,8 +24,8 @@ public class MutationStrategyShuffle implements MutationStrategy {
             list.add(list.size(), individual.getDna().getDouble(i));
         }
 
-        int p1 = (int) (Math.random() * dnaSize);
-        int p2 = (int) (Math.random() * (dnaSize - 1));
+        int p1 = random.nextInt(dnaSize);
+        int p2 = random.nextInt(dnaSize-1);
 
         double val = individual.getDna().getDouble(p1);
         list.remove(p1);

@@ -1,7 +1,6 @@
 package picturesolver;
 
 import com.physmo.javolver.Individual;
-import com.physmo.javolver.mutationstrategy.MutationStrategy;
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
 
@@ -26,21 +25,27 @@ public class MultiViewer {
         Graphics2D dc = image.createGraphics();
 
         //int scaleFactor = width / (int) Math.sqrt(pool.size());
-double scaleFactor = ((double)bd.getWidth() / (double)width) / (int) Math.sqrt(pool.size());
+        double scaleFactor = 1;
+        if (width>=height) {
+            scaleFactor = ((double) bd.getWidth() / (double) width) / (int) Math.sqrt(pool.size());
+        } else {
+            scaleFactor = ((double) bd.getHeight() / (double) height) / (int) Math.sqrt(pool.size());
+        }
+
 //        int scaledWidth = bd.getWidth() / (int) Math.sqrt(pool.size());
 //        int scaledHeight = bd.getHeight() / (int) Math.sqrt(pool.size());
 
         int scaledWidth = (int) (width * scaleFactor);
         int scaledHeight = (int) (height * scaleFactor);
 
-        int x=0,y=0;
-        for (int i=0;i<pool.size();i++) {
+        int x = 0, y = 0;
+        for (int i = 0; i < pool.size(); i++) {
             drawer.render(dc, pool.get(i).getDna(), width, height);
-            bd.drawImage(image, x,y, scaledWidth, scaledHeight);
-            x+=scaledWidth;
-            if (x+scaledWidth>bd.getWidth()) {
-                y+=scaledHeight;
-                x=0;
+            bd.drawImage(image, x, y, scaledWidth, scaledHeight);
+            x += scaledWidth;
+            if (x + scaledWidth > bd.getWidth()) {
+                y += scaledHeight;
+                x = 0;
             }
         }
 

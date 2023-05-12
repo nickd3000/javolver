@@ -20,8 +20,7 @@ public class MutationStrategySimple implements MutationStrategy {
         double jiggle, value;
         int index;
 
-        int changes = random.nextInt( changeCount);
-        if (changes==0) changes=1;
+        int changes = random.nextInt( changeCount) + 1;
 
         for (int i = 0; i < changes; i++) {
             index = MutationUtils.getRandomDnaIndexForIndividual(individual);

@@ -1,6 +1,6 @@
 import com.physmo.javolver.Individual;
-import com.physmo.javolver.Javolver;
-import com.physmo.javolver.Solver;
+import com.physmo.javolver.solver.Javolver;
+import com.physmo.javolver.solver.Solver;
 import com.physmo.javolver.breedingstrategy.BreedingStrategyUniform;
 import com.physmo.javolver.mutationstrategy.MutationStrategyShuffle;
 import com.physmo.javolver.mutationstrategy.MutationStrategySimple;

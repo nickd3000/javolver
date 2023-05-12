@@ -14,8 +14,8 @@ public class DnaDrawerPolys implements DnaDrawer {
     public void render(Graphics2D dc, Chromosome dna, int width, int height) {
 
         int numObjects = dna.getSize() / objectSize;
-        int[] xl = new int[3];
-        int[] yl = new int[3];
+//        int[] xl = new int[3];
+//        int[] yl = new int[3];
 
         int baseIndex = 0;
         double lowestDepth = -100;

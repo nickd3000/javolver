@@ -1,3 +1,5 @@
+package com.physmo.javolver;
+
 import com.physmo.javolver.Individual;
 import org.junit.Assert;
 import org.junit.Test;
@@ -9,7 +11,7 @@ public class TestIndividual {
         Individual individual1 = new Individual(2);
         individual1.getDna().set(0, 0);
         individual1.getDna().set(1, 1);
-        individual1.setUnprocessed();
+        individual1.setProcessed(false);
     }
 
     @Test

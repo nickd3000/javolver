@@ -1,9 +1,9 @@
 import com.physmo.javolver.Attenuator;
 import com.physmo.javolver.Chromosome;
 import com.physmo.javolver.Individual;
-import com.physmo.javolver.Javolver;
-import com.physmo.javolver.OptimizerES;
-import com.physmo.javolver.Solver;
+import com.physmo.javolver.solver.Javolver;
+import com.physmo.javolver.solver.OptimizerES;
+import com.physmo.javolver.solver.Solver;
 import com.physmo.javolver.breedingstrategy.BreedingStrategyUniform;
 import com.physmo.javolver.mutationstrategy.MutationStrategySimple;
 import com.physmo.javolver.selectionstrategy.SelectionStrategyTournament;

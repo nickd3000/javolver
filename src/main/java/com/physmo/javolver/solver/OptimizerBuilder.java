@@ -1,5 +1,6 @@
-package com.physmo.javolver;
+package com.physmo.javolver.solver;
 
+import com.physmo.javolver.ScoreFunction;
 import com.physmo.javolver.mutationstrategy.MutationStrategy;
 
 public class OptimizerBuilder {

@@ -8,20 +8,21 @@ public class SelectionStrategyRoulette implements SelectionStrategy {
 
     @Override
     public Individual select(List<Individual> pool) {
-        float totalScore = 0;
-        float runningScore = 0;
+        double totalScore = 0;
+        double runningScore = 0;
+        double nextScore;
         for (Individual g : pool) {
             totalScore += g.getScoreSquared();
         }
 
-        float rnd = (float) (Math.random() * totalScore);
+        double rnd = (Math.random() * totalScore);
 
         for (Individual g : pool) {
-            if (rnd >= runningScore &&
-                    rnd <= runningScore + g.getScoreSquared()) {
+            nextScore = runningScore + g.getScoreSquared();
+            if (rnd >= runningScore && rnd <= nextScore) {
                 return g;
             }
-            runningScore += g.getScoreSquared();
+            runningScore = nextScore;
         }
 
         return null;

@@ -1,5 +1,7 @@
-package com.physmo.javolver;
+package com.physmo.javolver.solver;
 
+import com.physmo.javolver.ScoreFunction;
+import com.physmo.javolver.SpeciesCheck;
 import com.physmo.javolver.breedingstrategy.BreedingStrategy;
 import com.physmo.javolver.mutationstrategy.MutationStrategy;
 import com.physmo.javolver.selectionstrategy.SelectionStrategy;
@@ -67,6 +69,11 @@ public class JavolverBuilder {
 
     public JavolverBuilder parallelScoring(boolean val) {
         javolver.parallelScoring(val);
+        return this;
+    }
+
+    public JavolverBuilder setSpeciesCheck(SpeciesCheck speciesCheck) {
+        javolver.setSpeciesCheck(speciesCheck);
         return this;
     }
 }

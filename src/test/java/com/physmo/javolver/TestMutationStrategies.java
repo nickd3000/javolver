@@ -1,3 +1,5 @@
+package com.physmo.javolver;
+
 import com.physmo.javolver.Individual;
 import com.physmo.javolver.mutationstrategy.MutationStrategyRandomize;
 import com.physmo.javolver.mutationstrategy.MutationStrategyShuffle;

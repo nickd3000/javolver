@@ -7,7 +7,6 @@ public class Attenuator {
 
     double minScore;
     double maxScore;
-    double currentScore;
     double normalisedScore;
 
     Map<String, double[]> parameters = new HashMap<>();
@@ -17,7 +16,6 @@ public class Attenuator {
     }
 
     public double setCurrentScore(double currentScore) {
-        this.currentScore = currentScore;
 
         if (currentScore <= minScore) {
             normalisedScore = 0.0;

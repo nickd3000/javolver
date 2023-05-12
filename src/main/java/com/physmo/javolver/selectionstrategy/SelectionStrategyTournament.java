@@ -3,10 +3,12 @@ package com.physmo.javolver.selectionstrategy;
 import com.physmo.javolver.Individual;
 
 import java.util.List;
+import java.util.Random;
 
 public class SelectionStrategyTournament implements SelectionStrategy {
 
     private final double selectionRange;
+    private final Random random = new Random();
 
     public SelectionStrategyTournament(double selectionRange) {
         this.selectionRange = selectionRange;
@@ -41,7 +43,8 @@ public class SelectionStrategyTournament implements SelectionStrategy {
     }
 
     private Individual getRandomIndividual(List<Individual> pool) {
-        int id = (int) ((float) (pool.size() - 1) * Math.random());
+        //int id = (int) ((float) (pool.size() - 1) * Math.random());
+        int id = random.nextInt(pool.size());
         return pool.get(id);
     }
 }

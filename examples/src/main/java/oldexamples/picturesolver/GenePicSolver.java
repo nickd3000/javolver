@@ -1,4 +1,4 @@
-package com.physmo.javolverexamples.picturesolver;
+package oldexamples.picturesolver;
 
 import com.physmo.javolver.Individual;
 

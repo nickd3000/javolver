@@ -2,7 +2,7 @@ package travellingsalesman;
 
 import com.physmo.javolver.Chromosome;
 import com.physmo.javolver.Individual;
-import com.physmo.javolver.Javolver;
+import com.physmo.javolver.solver.Javolver;
 import com.physmo.javolver.mutationstrategy.MutationStrategyShuffle;
 import com.physmo.javolver.mutationstrategy.MutationStrategySwap;
 import com.physmo.javolver.selectionstrategy.SelectionStrategyTournament;
@@ -59,7 +59,7 @@ public class TravellingSalesman {
 
             Individual bestScoringIndividual = javolver.getBestScoringIndividual();
 
-            if (System.currentTimeMillis()-lastTime>1000) {
+            if (System.currentTimeMillis()-lastTime>100) {
                 lastTime = System.currentTimeMillis();
                 System.out.format("Iteration: %d  score: %.2f  %s %n", javolver.getIteration(), bestScoringIndividual.getScore(), individualToString(bestScoringIndividual));
 

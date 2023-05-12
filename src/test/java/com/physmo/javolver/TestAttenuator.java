@@ -1,4 +1,5 @@
-import com.physmo.javolver.Attenuator;
+package com.physmo.javolver;
+
 import org.junit.Assert;
 import org.junit.Test;
 

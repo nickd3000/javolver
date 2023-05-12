@@ -1,17 +1,17 @@
 import com.physmo.javolver.Individual;
-import com.physmo.javolver.Javolver;
-import com.physmo.javolver.Solver;
+import com.physmo.javolver.solver.Javolver;
+import com.physmo.javolver.solver.Solver;
 import com.physmo.javolver.breedingstrategy.BreedingStrategyUniform;
 import com.physmo.javolver.mutationstrategy.MutationStrategySimple;
 import com.physmo.javolver.selectionstrategy.SelectionStrategyTournament;
 
 public class WordFinder {
-    public static String targetWord = "EVOLUTION";
+    public static final String targetWord = "EVOLUTION OF A WORD";
 
     public static void main(String[] args) {
 
         Solver javolver = Javolver.builder()
-                .dnaSize(9)
+                .dnaSize(targetWord.length())
                 .populationTargetSize(50)
                 .keepBestIndividualAlive(true)
                 .addMutationStrategy(new MutationStrategySimple(1, 0.55))

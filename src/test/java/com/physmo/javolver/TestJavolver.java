@@ -1,8 +1,10 @@
+package com.physmo.javolver;
+
 import com.physmo.javolver.Individual;
-import com.physmo.javolver.Javolver;
 import com.physmo.javolver.breedingstrategy.BreedingStrategyCrossover;
 import com.physmo.javolver.mutationstrategy.MutationStrategySingle;
 import com.physmo.javolver.selectionstrategy.SelectionStrategyTournament;
+import com.physmo.javolver.solver.Javolver;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
