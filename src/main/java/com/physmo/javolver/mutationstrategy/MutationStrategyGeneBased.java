@@ -35,7 +35,7 @@ public class MutationStrategyGeneBased implements MutationStrategy {
 
         for (int i = 0; i < randomisedCount; i++) {
             index = MutationUtils.getRandomDnaIndexForIndividual(individual);
-            jiggle = (Math.random() - 0.5) * amount * 2.0* temperature;
+            jiggle = (Math.random() - 0.5) * amount * 2.0 * temperature;
             value = individual.dna.getDouble(index);
             individual.dna.set(index, value + jiggle);
         }

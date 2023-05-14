@@ -9,6 +9,7 @@ public interface Solver {
     void doOneCycle();
 
     Individual getBestScoringIndividual();
+
     // 0..1 value controlling mutation amount.
     void setTemperature(double temperature);
 

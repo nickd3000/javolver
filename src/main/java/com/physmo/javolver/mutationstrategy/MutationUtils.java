@@ -5,7 +5,7 @@ import com.physmo.javolver.Individual;
 import java.util.Random;
 
 class MutationUtils {
-    private static Random random = new Random();
+    private static final Random random = new Random();
 
     /**
      * Swap two DNA elements at random.

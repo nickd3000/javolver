@@ -25,7 +25,7 @@ public class MutationStrategyShuffle implements MutationStrategy {
         }
 
         int p1 = random.nextInt(dnaSize);
-        int p2 = random.nextInt(dnaSize-1);
+        int p2 = random.nextInt(dnaSize - 1);
 
         double val = individual.getDna().getDouble(p1);
         list.remove(p1);

@@ -8,7 +8,7 @@ public class MutationStrategySimple implements MutationStrategy {
 
     private final int changeCount;
     private final double amount;
-    private Random random = new Random();
+    private final Random random = new Random();
 
     public MutationStrategySimple(int changeCount, double amount) {
         this.changeCount = changeCount;
@@ -20,7 +20,7 @@ public class MutationStrategySimple implements MutationStrategy {
         double jiggle, value;
         int index;
 
-        int changes = random.nextInt( changeCount) + 1;
+        int changes = random.nextInt(changeCount) + 1;
 
         for (int i = 0; i < changes; i++) {
             index = MutationUtils.getRandomDnaIndexForIndividual(individual);

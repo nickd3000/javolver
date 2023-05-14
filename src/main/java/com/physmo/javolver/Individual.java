@@ -44,8 +44,8 @@ public class Individual {
         return scoreFunction;
     }
 
-    public void setDna(Chromosome dna) {
-        this.dna = dna;
+    public void setScoreFunction(ScoreFunction scoreFunction) {
+        this.scoreFunction = scoreFunction;
     }
 
     /**
@@ -97,9 +97,8 @@ public class Individual {
         return dna;
     }
 
-
-    public void setScoreFunction(ScoreFunction scoreFunction) {
-        this.scoreFunction = scoreFunction;
+    public void setDna(Chromosome dna) {
+        this.dna = dna;
     }
 
     /**
@@ -124,7 +123,7 @@ public class Individual {
     }
 
     public int getHash() {
-        int combined=0;
+        int combined = 0;
         for (double val : dna.getData()) {
             combined += Double.hashCode(val);
         }

@@ -4,12 +4,7 @@ import com.physmo.javolver.Individual;
 import com.physmo.javolver.ScoreFunction;
 import com.physmo.javolver.mutationstrategy.MutationStrategy;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Random;
-
+import java.util.*;
 
 
 /**

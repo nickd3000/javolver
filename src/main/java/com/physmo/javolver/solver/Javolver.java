@@ -27,13 +27,12 @@ import java.util.function.IntToDoubleFunction;
  */
 public class Javolver implements Solver {
 
-    private List<Individual> genePool = new ArrayList<>();
     private final List<MutationStrategy> mutationStrategies = new ArrayList<>();
-    private BreedingStrategy breedingStrategy = null;
-    private SelectionStrategy selectionStrategy = null;
-
     IntToDoubleFunction dnaInitializer = null;
     Random random = new Random();
+    private List<Individual> genePool = new ArrayList<>();
+    private BreedingStrategy breedingStrategy = null;
+    private SelectionStrategy selectionStrategy = null;
     // Keep the best individual alive between generations.
     private boolean keepBestIndividualAlive = false;
     // Use multi-threading for the scoring process.
@@ -46,7 +45,7 @@ public class Javolver implements Solver {
     private int dnaSize = 0;
     private int iteration = 0;
     private double changeAmount = 1;
-    private boolean preventDuplicateChildren = false;
+    private final boolean preventDuplicateChildren = false;
     private SpeciesCheck speciesCheck = null;
 
     /**
@@ -58,6 +57,7 @@ public class Javolver implements Solver {
 
     /**
      * Builder for Javolver
+     *
      * @return
      */
     public static JavolverBuilder builder() {
@@ -66,6 +66,7 @@ public class Javolver implements Solver {
 
     /**
      * Number of iteration performed.
+     *
      * @return Number of iterations so far
      */
     @Override
@@ -140,6 +141,7 @@ public class Javolver implements Solver {
 
     /**
      * Set the single breeding strategy for the solver.
+     *
      * @param strategy
      * @return the Javolver object
      */
@@ -150,6 +152,7 @@ public class Javolver implements Solver {
 
     /**
      * Set the single selection strategy for the solver.
+     *
      * @param strategy
      * @return the Javolver object
      */
@@ -160,6 +163,7 @@ public class Javolver implements Solver {
 
     /**
      * Set one or more mutation strategies for the solver.
+     *
      * @param strategy
      * @return the Javolver object
      */
@@ -248,7 +252,7 @@ public class Javolver implements Solver {
                         if (individual.getHash() == child.getHash()) skip = true;
                     }
                 }
-                if (skip == true) {
+                if (skip) {
                     //System.out.println("skipping");
                     continue;
                 }
@@ -330,17 +334,17 @@ public class Javolver implements Solver {
         this.changeAmount = temperature;
     }
 
-    @Override
-    public void setScoreFunction(ScoreFunction scoreFunction) {
-        this.scoreFunction = scoreFunction;
-    }
-
     public void setSpeciesCheck(SpeciesCheck speciesCheck) {
         this.speciesCheck = speciesCheck;
     }
 
     public ScoreFunction getScoreFunction() {
         return scoreFunction;
+    }
+
+    @Override
+    public void setScoreFunction(ScoreFunction scoreFunction) {
+        this.scoreFunction = scoreFunction;
     }
 
     public void setDnaInitializer(IntToDoubleFunction dnaInitializer) {
