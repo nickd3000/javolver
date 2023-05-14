@@ -56,10 +56,18 @@ public class Javolver implements Solver {
 
     }
 
+    /**
+     * Builder for Javolver
+     * @return
+     */
     public static JavolverBuilder builder() {
         return new JavolverBuilder();
     }
 
+    /**
+     * Number of iteration performed.
+     * @return Number of iterations so far
+     */
     @Override
     public int getIteration() {
         return iteration;
@@ -130,16 +138,31 @@ public class Javolver implements Solver {
         return this;
     }
 
+    /**
+     * Set the single breeding strategy for the solver.
+     * @param strategy
+     * @return the Javolver object
+     */
     public Javolver setBreedingStrategy(BreedingStrategy strategy) {
         this.breedingStrategy = strategy;
         return this;
     }
 
+    /**
+     * Set the single selection strategy for the solver.
+     * @param strategy
+     * @return the Javolver object
+     */
     public Javolver setSelectionStrategy(SelectionStrategy strategy) {
         this.selectionStrategy = strategy;
         return this;
     }
 
+    /**
+     * Set one or more mutation strategies for the solver.
+     * @param strategy
+     * @return the Javolver object
+     */
     public Javolver addMutationStrategy(MutationStrategy strategy) {
         mutationStrategies.add(strategy);
         return this;

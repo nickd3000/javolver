@@ -36,6 +36,8 @@ public class TestJavolver {
             }
         }
 
+        double bestScore = javolver.getBestScore();
+
         double solutionTolerance = 0.03;
         boolean solutionFound = false;
 

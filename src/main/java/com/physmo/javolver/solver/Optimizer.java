@@ -45,10 +45,10 @@ public class Optimizer implements Solver {
     @Override
     public void doOneCycle() {
         iteration++;
-        algorithm1();
+        algorithm();
     }
 
-    public void algorithm1() {
+    public void algorithm() {
 
         Individual clone = bestIndividual.cloneFully();
 
