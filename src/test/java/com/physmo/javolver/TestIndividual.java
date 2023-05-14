@@ -1,6 +1,5 @@
 package com.physmo.javolver;
 
-import com.physmo.javolver.Individual;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -47,4 +46,27 @@ public class TestIndividual {
         Assert.assertEquals(5.0, score2, 0.001);
 
     }
+
+    @Test
+    public void testDifference() {
+        Individual individual1 = createTestIndividual();
+        Individual individual2 = createTestIndividual();
+        double[] data = individual2.getDna().getData();
+        data[0] = 5.0;
+        double difference = individual1.getDifference(individual2);
+        Assert.assertEquals(0.5, difference, 0.001);
+    }
+
+    @Test
+    public void testHash() {
+        Individual individual1 = createTestIndividual();
+        Individual individual2 = createTestIndividual();
+        double[] data = individual2.getDna().getData();
+        data[0] = 5.0;
+        int hash1 = individual1.getHash();
+        int hash2 = individual2.getHash();
+
+        Assert.assertNotEquals(hash1,hash2);
+    }
+
 }
