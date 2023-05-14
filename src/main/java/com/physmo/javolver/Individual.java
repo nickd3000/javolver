@@ -38,6 +38,9 @@ public class Individual {
     public Individual(Individual cloneSource) {
         this.dna = new Chromosome(cloneSource.getDna().getSize());
         this.scoreFunction = (cloneSource.scoreFunction);
+        this.processed=false;
+        this.score=0;
+        this.diversity=0;
     }
 
     public ScoreFunction getScoreFunction() {

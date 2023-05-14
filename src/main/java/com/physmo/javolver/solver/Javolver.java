@@ -28,6 +28,7 @@ import java.util.function.IntToDoubleFunction;
 public class Javolver implements Solver {
 
     private final List<MutationStrategy> mutationStrategies = new ArrayList<>();
+    private final boolean preventDuplicateChildren = false;
     IntToDoubleFunction dnaInitializer = null;
     Random random = new Random();
     private List<Individual> genePool = new ArrayList<>();
@@ -38,14 +39,11 @@ public class Javolver implements Solver {
     // Use multi-threading for the scoring process.
     private boolean parallelScoring = false;
     private ScoreFunction scoreFunction;
-
     private boolean allScored = false;
-
     private int targetPopulationSize = 0;
     private int dnaSize = 0;
     private int iteration = 0;
     private double changeAmount = 1;
-    private final boolean preventDuplicateChildren = false;
     private SpeciesCheck speciesCheck = null;
 
     /**

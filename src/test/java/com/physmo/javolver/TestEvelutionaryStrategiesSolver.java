@@ -1,7 +1,5 @@
 package com.physmo.javolver;
 
-import com.physmo.javolver.mutationstrategy.MutationStrategySimple;
-import com.physmo.javolver.solver.Optimizer;
 import com.physmo.javolver.solver.OptimizerES;
 import com.physmo.javolver.solver.Solver;
 import org.junit.Test;
@@ -12,7 +10,7 @@ public class TestEvelutionaryStrategiesSolver {
     public void testOptimizer() {
         Solver optimizer = new OptimizerES();
         optimizer.setDnaSize(10);
-        optimizer.setScoreFunction(i -> calculateScore(i));
+        optimizer.setScoreFunction(this::calculateScore);
         optimizer.init();
 
         for (int i = 0; i < 10; i++) {

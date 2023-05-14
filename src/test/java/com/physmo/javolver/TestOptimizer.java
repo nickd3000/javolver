@@ -12,7 +12,7 @@ public class TestOptimizer {
         Solver optimizer = Optimizer.builder()
                 .dnaSize(10)
                 .addMutationStrategy(new MutationStrategySimple(2, 0.01))
-                .scoreFunction(i -> calculateScore(i))
+                .scoreFunction(this::calculateScore)
                 .build();
 
         for (int i = 0; i < 10; i++) {

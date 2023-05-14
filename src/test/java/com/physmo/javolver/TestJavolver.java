@@ -1,13 +1,12 @@
 package com.physmo.javolver;
 
-import com.physmo.javolver.Individual;
 import com.physmo.javolver.breedingstrategy.BreedingStrategyCrossover;
 import com.physmo.javolver.mutationstrategy.MutationStrategySingle;
 import com.physmo.javolver.selectionstrategy.SelectionStrategyTournament;
 import com.physmo.javolver.solver.Javolver;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class TestJavolver {
     final double scoreTarget = 100;
@@ -47,7 +46,7 @@ public class TestJavolver {
         if (Math.abs(solutionDelta) < solutionTolerance) solutionFound = true;
         if (solutionFound) System.out.println("Solution found.");
 
-        assertEquals(solutionFound, true);
+        assertTrue(solutionFound);
 
     }
 
