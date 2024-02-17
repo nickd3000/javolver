@@ -1,4 +1,4 @@
-package com.physmo.javolver.selectionstrategy;
+package com.physmo.javolver.selectionoperator;
 
 import com.physmo.javolver.Individual;
 
@@ -8,7 +8,7 @@ import java.util.Random;
 /*
 	Note, this selection strategy has no real use except in testing.
  */
-public class SelectionStrategyRandom implements SelectionStrategy {
+public class SelectionOperatorRandom implements SelectionOperator {
     private final Random random = new Random();
 
     @Override

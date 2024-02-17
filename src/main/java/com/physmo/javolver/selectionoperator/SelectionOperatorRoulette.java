@@ -1,10 +1,10 @@
-package com.physmo.javolver.selectionstrategy;
+package com.physmo.javolver.selectionoperator;
 
 import com.physmo.javolver.Individual;
 
 import java.util.List;
 
-public class SelectionStrategyRoulette implements SelectionStrategy {
+public class SelectionOperatorRoulette implements SelectionOperator {
 
     @Override
     public Individual select(List<Individual> pool) {

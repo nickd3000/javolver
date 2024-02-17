@@ -1,13 +1,13 @@
-package com.physmo.javolver.mutationstrategy;
+package com.physmo.javolver.mutationoperator;
 
 import com.physmo.javolver.Individual;
 
 // Fully randomise the individual.
-public class MutationStrategyRandomize implements MutationStrategy {
+public class MutationOperatorRandomize implements MutationOperator {
 
     private final double probability;
 
-    public MutationStrategyRandomize(double probability) {
+    public MutationOperatorRandomize(double probability) {
         this.probability = probability;
     }
 

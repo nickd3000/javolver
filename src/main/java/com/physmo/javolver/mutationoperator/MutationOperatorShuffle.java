@@ -1,4 +1,4 @@
-package com.physmo.javolver.mutationstrategy;
+package com.physmo.javolver.mutationoperator;
 
 import com.physmo.javolver.Individual;
 
@@ -6,11 +6,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-public class MutationStrategyShuffle implements MutationStrategy {
+public class MutationOperatorShuffle implements MutationOperator {
 
     Random random = new Random();
 
-    public MutationStrategyShuffle(int count) {
+    public MutationOperatorShuffle(int count) {
     }
 
     @Override

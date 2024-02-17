@@ -1,4 +1,4 @@
-package com.physmo.javolver.mutationstrategy;
+package com.physmo.javolver.mutationoperator;
 
 import com.physmo.javolver.Individual;
 
@@ -9,7 +9,7 @@ class MutationUtils {
 
     /**
      * Swap two DNA elements at random.
-     * NOTE: seems quite destructive so it's been limited to only
+     * NOTE: seems quite destructive, so it's been limited to only
      * run 10% of the time for now.
      *
      * @param individual The Individual
@@ -25,7 +25,7 @@ class MutationUtils {
     }
 
     /**
-     * Return an random integer index into the individuals
+     * Return a random integer index into the individuals
      * dna structure.
      *
      * @param individual The individual

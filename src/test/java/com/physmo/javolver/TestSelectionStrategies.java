@@ -1,9 +1,8 @@
 package com.physmo.javolver;
 
-import com.physmo.javolver.Individual;
-import com.physmo.javolver.selectionstrategy.SelectionStrategyRandom;
-import com.physmo.javolver.selectionstrategy.SelectionStrategyRoulette;
-import com.physmo.javolver.selectionstrategy.SelectionStrategyTournament;
+import com.physmo.javolver.selectionoperator.SelectionOperatorRandom;
+import com.physmo.javolver.selectionoperator.SelectionOperatorRoulette;
+import com.physmo.javolver.selectionoperator.SelectionOperatorTournament;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -12,9 +11,9 @@ public class TestSelectionStrategies {
 
     @Test
     public void testStrategy() {
-        SelectionStrategyRoulette selectionStrategyRoulette = new SelectionStrategyRoulette();
-        SelectionStrategyTournament selectionStrategyTournament = new SelectionStrategyTournament(0.2);
-        SelectionStrategyRandom selectionStrategyRandom = new SelectionStrategyRandom();
+        SelectionOperatorRoulette selectionStrategyRoulette = new SelectionOperatorRoulette();
+        SelectionOperatorTournament selectionStrategyTournament = new SelectionOperatorTournament(0.2);
+        SelectionOperatorRandom selectionStrategyRandom = new SelectionOperatorRandom();
 
         ArrayList<Individual> pool = (ArrayList<Individual>) Helpers.generateTestPool(50);
 

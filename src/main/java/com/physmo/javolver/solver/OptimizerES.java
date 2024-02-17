@@ -2,7 +2,7 @@ package com.physmo.javolver.solver;
 
 import com.physmo.javolver.Individual;
 import com.physmo.javolver.ScoreFunction;
-import com.physmo.javolver.mutationstrategy.MutationStrategy;
+import com.physmo.javolver.mutationoperator.MutationOperator;
 
 import java.util.*;
 
@@ -10,9 +10,9 @@ import java.util.*;
 /**
  * Evelutionary Strategies based solver.
  */
-public class OptimizerES implements Solver {
+public class OptimizerES extends Solver {
 
-    private final List<MutationStrategy> mutationStrategies = new ArrayList<>();
+    private final List<MutationOperator> mutationStrategies = new ArrayList<>();
     Individual bestIndividual;
     int dnaSize = 10;
     int poolSize = 20;
@@ -45,7 +45,7 @@ public class OptimizerES implements Solver {
     }
 
     @Override
-    public void doOneCycle() {
+    public void runOneGeneration() {
         iteration++;
         algorithm();
     }
@@ -106,7 +106,7 @@ public class OptimizerES implements Solver {
         return iteration;
     }
 
-    public void addMutationStrategy(MutationStrategy strategy) {
+    public void addMutationStrategy(MutationOperator strategy) {
         mutationStrategies.add(strategy);
     }
 }

@@ -3,19 +3,14 @@ package com.physmo.javolver.solver;
 import com.physmo.javolver.Individual;
 import com.physmo.javolver.ScoreFunction;
 import com.physmo.javolver.SpeciesCheck;
-import com.physmo.javolver.breedingstrategy.BreedingStrategy;
-import com.physmo.javolver.breedingstrategy.BreedingStrategyUniform;
-import com.physmo.javolver.mutationstrategy.MutationStrategy;
-import com.physmo.javolver.mutationstrategy.MutationStrategySimple;
-import com.physmo.javolver.selectionstrategy.SelectionStrategy;
-import com.physmo.javolver.selectionstrategy.SelectionStrategyTournament;
+import com.physmo.javolver.mutationoperator.MutationOperator;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
-import java.util.function.IntToDoubleFunction;
 
+// TODO: Would it be better to move all configuration to a different class?
 
 /**
  * Javolver is a simple engine that processes a pool of individuals using genetic selection.
@@ -25,32 +20,21 @@ import java.util.function.IntToDoubleFunction;
  * @version 1.0
  * @since 2016-04-01
  */
-public class Javolver implements Solver {
+public class Javolver extends Solver {
 
-    private final List<MutationStrategy> mutationStrategies = new ArrayList<>();
-    private final boolean preventDuplicateChildren = false;
-    IntToDoubleFunction dnaInitializer = null;
     Random random = new Random();
     private List<Individual> genePool = new ArrayList<>();
-    private BreedingStrategy breedingStrategy = null;
-    private SelectionStrategy selectionStrategy = null;
-    // Keep the best individual alive between generations.
-    private boolean keepBestIndividualAlive = false;
-    // Use multi-threading for the scoring process.
-    private boolean parallelScoring = false;
-    private ScoreFunction scoreFunction;
     private boolean allScored = false;
-    private int targetPopulationSize = 0;
-    private int dnaSize = 0;
-    private int iteration = 0;
+    //private int iteration = 0;
     private double changeAmount = 1;
     private SpeciesCheck speciesCheck = null;
+    private JavolverConfig config;
 
     /**
      * Create Javolver object with prototype individual and set the population size.
      */
-    public Javolver() {
-
+    public Javolver(JavolverConfig javolverConfig) {
+        this.config = javolverConfig;
     }
 
     /**
@@ -60,6 +44,14 @@ public class Javolver implements Solver {
      */
     public static JavolverBuilder builder() {
         return new JavolverBuilder();
+    }
+
+    public JavolverConfig getConfig() {
+        return config;
+    }
+
+    public void setConfig(JavolverConfig config) {
+        this.config = config;
     }
 
     /**
@@ -75,7 +67,7 @@ public class Javolver implements Solver {
 
     @Override
     public void init() {
-        increasePopulation(targetPopulationSize);
+        increasePopulation(config.getTargetPopulationSize());
     }
 
     /**
@@ -83,92 +75,28 @@ public class Javolver implements Solver {
      *
      * @param targetCount The target number of individuals that the population will reach.
      */
-    private void increasePopulation(int targetCount) {
+    public void increasePopulation(int targetCount) {
         Individual n;
         int target = targetCount - genePool.size();
         if (target < 1) return;
 
         for (int i = 0; i < target; i++) {
-            n = new Individual(dnaSize);
-            n.setScoreFunction(scoreFunction);
-            if (dnaInitializer != null) n.getDna().initFromFunction(dnaInitializer);
+            n = new Individual(config.getDnaSize());
+            n.setScoreFunction(config.getScoreFunction());
+            if (config.getDnaInitializer() != null) n.getDna().initFromFunction(config.getDnaInitializer());
             genePool.add(n);
         }
     }
 
     public int getDnaSize() {
-        return dnaSize;
+        return config.getDnaSize();
     }
 
     @Override
     public void setDnaSize(int dnaSize) {
-        this.dnaSize = dnaSize;
+        config.setDnaSize(dnaSize);
     }
 
-    public int getTargetPopulationSize() {
-        return targetPopulationSize;
-    }
-
-    public void setTargetPopulationSize(int targetPopulationSize) {
-        this.targetPopulationSize = targetPopulationSize;
-    }
-
-    public void keepBestIndividualAlive(boolean val) {
-        keepBestIndividualAlive = val;
-    }
-
-    public void parallelScoring(boolean val) {
-        parallelScoring = val;
-    }
-
-    /**
-     * Apply some sensible default strategies.
-     *
-     * @return
-     */
-    public Javolver setDefaultStrategies() {
-
-        breedingStrategy = new BreedingStrategyUniform();
-
-        selectionStrategy = new SelectionStrategyTournament(0.15);
-
-        mutationStrategies.add(new MutationStrategySimple(1, 0.012));
-
-        return this;
-    }
-
-    /**
-     * Set the single breeding strategy for the solver.
-     *
-     * @param strategy
-     * @return the Javolver object
-     */
-    public Javolver setBreedingStrategy(BreedingStrategy strategy) {
-        this.breedingStrategy = strategy;
-        return this;
-    }
-
-    /**
-     * Set the single selection strategy for the solver.
-     *
-     * @param strategy
-     * @return the Javolver object
-     */
-    public Javolver setSelectionStrategy(SelectionStrategy strategy) {
-        this.selectionStrategy = strategy;
-        return this;
-    }
-
-    /**
-     * Set one or more mutation strategies for the solver.
-     *
-     * @param strategy
-     * @return the Javolver object
-     */
-    public Javolver addMutationStrategy(MutationStrategy strategy) {
-        mutationStrategies.add(strategy);
-        return this;
-    }
 
     /**
      * Find the best score of any individual in the current generation.
@@ -197,7 +125,7 @@ public class Javolver implements Solver {
      * The size of the new pool will match the previous generation population.
      */
     @Override
-    public void doOneCycle() {
+    public void runOneGeneration() {
         iteration++;
 
         // Request that all individuals perform scoring.
@@ -208,7 +136,7 @@ public class Javolver implements Solver {
         int targetPop = genePool.size();
 
         // Elitism - keep the best individual in the new pool.
-        if (keepBestIndividualAlive) {
+        if (config.isKeepBestIndividualAlive()) {
             Individual bestScorer = findBestScoringIndividual(genePool);
             bestScorer.setProcessed(false);
             newGenePool.add(bestScorer);
@@ -222,8 +150,8 @@ public class Javolver implements Solver {
             // Select parents
             for (int ii = 0; ii < 100; ii++) {
 
-                g1 = selectionStrategy.select(genePool);
-                g2 = selectionStrategy.select(genePool);
+                g1 = config.getSelectionOperator().select(genePool);
+                g2 = config.getSelectionOperator().select(genePool);
 
 
                 if (speciesCheck != null && !speciesCheck.isSameSpecies(g1, g2) && speciationClashes < 50) {
@@ -235,15 +163,15 @@ public class Javolver implements Solver {
             }
 
             // Breed
-            List<Individual> children = breedingStrategy.breed(g1, g2);
+            List<Individual> children = config.getBreedingOperator().breed(g1, g2);
 
             // Mutate children.
             for (Individual child : children) {
-                MutationStrategy ms = mutationStrategies.get(random.nextInt(mutationStrategies.size()));
+                MutationOperator ms = config.getMutationOperators().get(random.nextInt(config.getMutationOperators().size()));
                 ms.mutate(child, changeAmount);
             }
 
-            if (preventDuplicateChildren) {
+            if (config.isPreventDuplicateChildren()) {
                 boolean skip = false;
                 for (Individual child : children) {
                     for (Individual individual : newGenePool) {
@@ -279,7 +207,7 @@ public class Javolver implements Solver {
 
         if (allScored) return;
 
-        if (parallelScoring) {
+        if (config.isParallelScoring()) {
             scoreGenesParallel(pool);
         } else {
             scoreGenesSequential(pool);
@@ -327,25 +255,10 @@ public class Javolver implements Solver {
         return findBestScoringIndividual(genePool);
     }
 
-    @Override
-    public void setTemperature(double temperature) {
-        this.changeAmount = temperature;
-    }
-
-    public void setSpeciesCheck(SpeciesCheck speciesCheck) {
-        this.speciesCheck = speciesCheck;
-    }
-
-    public ScoreFunction getScoreFunction() {
-        return scoreFunction;
-    }
 
     @Override
     public void setScoreFunction(ScoreFunction scoreFunction) {
-        this.scoreFunction = scoreFunction;
+        config.setScoreFunction(scoreFunction);
     }
 
-    public void setDnaInitializer(IntToDoubleFunction dnaInitializer) {
-        this.dnaInitializer = dnaInitializer;
-    }
 }

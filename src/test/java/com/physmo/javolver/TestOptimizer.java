@@ -1,6 +1,6 @@
 package com.physmo.javolver;
 
-import com.physmo.javolver.mutationstrategy.MutationStrategySimple;
+import com.physmo.javolver.mutationoperator.MutationOperatorSimple;
 import com.physmo.javolver.solver.Optimizer;
 import com.physmo.javolver.solver.Solver;
 import org.junit.Test;
@@ -11,7 +11,7 @@ public class TestOptimizer {
     public void testOptimizer() {
         Solver optimizer = Optimizer.builder()
                 .dnaSize(10)
-                .addMutationStrategy(new MutationStrategySimple(2, 0.01))
+                .addMutationStrategy(new MutationOperatorSimple(2, 0.01))
                 .scoreFunction(this::calculateScore)
                 .build();
 

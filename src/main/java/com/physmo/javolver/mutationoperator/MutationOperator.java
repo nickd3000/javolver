@@ -1,7 +1,7 @@
-package com.physmo.javolver.mutationstrategy;
+package com.physmo.javolver.mutationoperator;
 
 import com.physmo.javolver.Individual;
 
-public interface MutationStrategy {
+public interface MutationOperator {
     void mutate(Individual individual, double temperature);
 }

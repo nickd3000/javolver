@@ -1,16 +1,16 @@
-package com.physmo.javolver.selectionstrategy;
+package com.physmo.javolver.selectionoperator;
 
 import com.physmo.javolver.Individual;
 
 import java.util.List;
 import java.util.Random;
 
-public class SelectionStrategyTournament implements SelectionStrategy {
+public class SelectionOperatorTournament implements SelectionOperator {
 
     private final double selectionRange;
     private final Random random = new Random();
 
-    public SelectionStrategyTournament(double selectionRange) {
+    public SelectionOperatorTournament(double selectionRange) {
         this.selectionRange = selectionRange;
     }
 

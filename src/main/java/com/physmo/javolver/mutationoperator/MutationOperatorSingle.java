@@ -1,12 +1,12 @@
-package com.physmo.javolver.mutationstrategy;
+package com.physmo.javolver.mutationoperator;
 
 import com.physmo.javolver.Individual;
 
-public class MutationStrategySingle implements MutationStrategy {
+public class MutationOperatorSingle implements MutationOperator {
 
     private final double amount;
 
-    public MutationStrategySingle(double amount) {
+    public MutationOperatorSingle(double amount) {
         this.amount = amount;
     }
 

@@ -1,7 +1,7 @@
 package com.physmo.javolver.solver;
 
 import com.physmo.javolver.ScoreFunction;
-import com.physmo.javolver.mutationstrategy.MutationStrategy;
+import com.physmo.javolver.mutationoperator.MutationOperator;
 
 public class OptimizerBuilder {
 
@@ -26,7 +26,7 @@ public class OptimizerBuilder {
         return this;
     }
 
-    public OptimizerBuilder addMutationStrategy(MutationStrategy strategy) {
+    public OptimizerBuilder addMutationStrategy(MutationOperator strategy) {
         optimizer.addMutationStrategy(strategy);
         return this;
     }
