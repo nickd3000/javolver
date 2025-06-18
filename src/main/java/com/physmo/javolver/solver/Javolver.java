@@ -26,7 +26,7 @@ public class Javolver extends Solver {
     private List<Individual> genePool = new ArrayList<>();
     private boolean allScored = false;
     //private int iteration = 0;
-    private double changeAmount = 1;
+    private final double changeAmount = 1;
     private SpeciesCheck speciesCheck = null;
     private JavolverConfig config;
 
