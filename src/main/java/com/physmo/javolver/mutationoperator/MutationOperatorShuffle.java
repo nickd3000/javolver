@@ -15,8 +15,7 @@ public class MutationOperatorShuffle implements MutationOperator {
 
     @Override
     public void mutate(Individual individual, double temperature) {
-        double jiggle, value;
-        int index;
+
         int dnaSize = individual.getDna().getSize();
         List<Double> list = new LinkedList<>();
 

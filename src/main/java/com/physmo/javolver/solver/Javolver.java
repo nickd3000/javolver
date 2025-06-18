@@ -10,54 +10,62 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
-// TODO: Would it be better to move all configuration to a different class?
-
 /**
- * Javolver is a simple engine that processes a pool of individuals using genetic selection.
- * The user must derive a class from the Individual class and supply an object of this derived type to the constructor.
+ * Javolver is the main engine for processing a population of individuals using genetic algorithms.
+ * It orchestrates the evolutionary process, including selection, breeding, and mutation,
+ * based on the provided configuration.
  *
  * @author Nick Donnelly (Twitter: @nickd3000)
- * @version 1.0
- * @since 2016-04-01
  */
 public class Javolver extends Solver {
 
     Random random = new Random();
     private List<Individual> genePool = new ArrayList<>();
     private boolean allScored = false;
-    //private int iteration = 0;
     private final double changeAmount = 1;
     private SpeciesCheck speciesCheck = null;
     private JavolverConfig config;
 
     /**
-     * Create Javolver object with prototype individual and set the population size.
+     * Constructs a Javolver instance with a given configuration.
+     *
+     * @param javolverConfig The configuration object specifying all solver settings.
      */
     public Javolver(JavolverConfig javolverConfig) {
         this.config = javolverConfig;
     }
 
     /**
-     * Builder for Javolver
+     * Provides a builder for conveniently creating and configuring a Javolver instance.
      *
-     * @return
+     * @return A new {@link JavolverBuilder} instance.
      */
     public static JavolverBuilder builder() {
         return new JavolverBuilder();
     }
 
+    /**
+     * Retrieves the current configuration of the solver.
+     *
+     * @return The {@link JavolverConfig} object.
+     */
     public JavolverConfig getConfig() {
         return config;
     }
 
+    /**
+     * Sets a new configuration for the solver.
+     *
+     * @param config The {@link JavolverConfig} object to set.
+     */
     public void setConfig(JavolverConfig config) {
         this.config = config;
     }
 
     /**
-     * Number of iteration performed.
+     * Returns the number of iterations (generations) performed so far.
      *
-     * @return Number of iterations so far
+     * @return The current iteration count.
      */
     @Override
     public int getIteration() {
@@ -65,15 +73,18 @@ public class Javolver extends Solver {
     }
 
 
+    /**
+     * Initializes the solver by creating the initial population.
+     */
     @Override
     public void init() {
         increasePopulation(config.getTargetPopulationSize());
     }
 
     /**
-     * Add a number of randomly initialized genes to the population, until it reaches specified size.
+     * Adds new, randomly initialized individuals to the population until it reaches the target size.
      *
-     * @param targetCount The target number of individuals that the population will reach.
+     * @param targetCount The desired size of the population.
      */
     public void increasePopulation(int targetCount) {
         Individual n;
@@ -88,10 +99,20 @@ public class Javolver extends Solver {
         }
     }
 
+    /**
+     * Gets the DNA size for individuals in the population.
+     *
+     * @return The configured DNA size.
+     */
     public int getDnaSize() {
         return config.getDnaSize();
     }
 
+    /**
+     * Sets the DNA size for individuals in the population.
+     *
+     * @param dnaSize The new DNA size.
+     */
     @Override
     public void setDnaSize(int dnaSize) {
         config.setDnaSize(dnaSize);
@@ -99,43 +120,54 @@ public class Javolver extends Solver {
 
 
     /**
-     * Find the best score of any individual in the current generation.
+     * Finds the best score of any individual in the supplied pool.
      *
-     * @return The best score of any individual in the current generation.
+     * @param pool The list of individuals to check.
+     * @return The best score found in the pool.
      */
     public double getBestScore(List<Individual> pool) {
         if (pool == null) pool = genePool;
         return findBestScoringIndividual(pool).getScore();
     }
 
+    /**
+     * Finds the individual with the highest score in the supplied pool.
+     *
+     * @param pool The list of individuals to search.
+     * @return The best-scoring individual.
+     */
     public Individual findBestScoringIndividual(List<Individual> pool) {
         return pool.stream().max(Comparator.comparing(Individual::getScore)).get();
     }
 
+    /**
+     * Finds the best score among all individuals in the current population.
+     *
+     * @return The highest score in the current generation.
+     */
     public double getBestScore() {
         return findBestScoringIndividual(genePool).getScore();
     }
 
     /**
-     * The main function that does most of the work to evolve the system.<br>
-     * 1. All individuals scoring mechanisms get called.<br>
-     * 2. The best scoring individual is automatically moved to the next generation.<br>
-     * 3. A new generation of individuals is created by breeding selected member from the current generation.<br>
-     * <br>
-     * The size of the new pool will match the previous generation population.
+     * Executes one full generation of the evolutionary process. This involves:
+     * 1. Scoring all individuals in the population.
+     * 2. Optionally preserving the best individual (elitism).
+     * 3. Selecting parents and breeding them to create a new generation.
+     * 4. Mutating the offspring to introduce genetic diversity.
+     * 5. Replacing the old population with the new one.
      */
     @Override
     public void runOneGeneration() {
         iteration++;
 
-        // Request that all individuals perform scoring.
+        // Ensure all individuals have an up-to-date score.
         scoreGenes(genePool);
 
         ArrayList<Individual> newGenePool = new ArrayList<>();
-
         int targetPop = genePool.size();
 
-        // Elitism - keep the best individual in the new pool.
+        // Elitism: keep the best individual if configured to do so.
         if (config.isKeepBestIndividualAlive()) {
             Individual bestScorer = findBestScoringIndividual(genePool);
             bestScorer.setProcessed(false);
@@ -144,15 +176,14 @@ public class Javolver extends Solver {
 
         Individual g1, g2;
 
+        // Create the new generation.
         while (newGenePool.size() < targetPop) {
             g1 = g2 = null;
             int speciationClashes = 0;
-            // Select parents
+            // Select two distinct parents.
             for (int ii = 0; ii < 100; ii++) {
-
                 g1 = config.getSelectionOperator().select(genePool);
                 g2 = config.getSelectionOperator().select(genePool);
-
 
                 if (speciesCheck != null && !speciesCheck.isSameSpecies(g1, g2) && speciationClashes < 50) {
                     speciationClashes++;
@@ -162,15 +193,16 @@ public class Javolver extends Solver {
                 if (g1 != null && g2 != null && g1 != g2) break;
             }
 
-            // Breed
+            // Breed parents to produce children.
             List<Individual> children = config.getBreedingOperator().breed(g1, g2);
 
-            // Mutate children.
+            // Mutate the children.
             for (Individual child : children) {
                 MutationOperator ms = config.getMutationOperators().get(random.nextInt(config.getMutationOperators().size()));
                 ms.mutate(child, changeAmount);
             }
 
+            // Optionally prevent duplicate individuals in the new generation.
             if (config.isPreventDuplicateChildren()) {
                 boolean skip = false;
                 for (Individual child : children) {
@@ -179,32 +211,31 @@ public class Javolver extends Solver {
                     }
                 }
                 if (skip) {
-                    //System.out.println("skipping");
                     continue;
                 }
             }
 
 
-            // Add children to new gene pool.
+            // Add children to the new gene pool.
             newGenePool.addAll(children);
         }
 
-        // Copy new pool over main pool.
+        // Replace the old population with the new one.
         genePool = newGenePool;
         allScored = false;
 
-        // Request that all individuals perform scoring.
+        // Score the new generation.
         scoreGenes(genePool);
     }
 
-    /***
-     * Triggers each individual in the pool to calculate it's score.
-     * The sequential or parallel method is used depending on config settings.
-     * @param    pool    ArrayList of individuals to be scored.
+    /**
+     * Triggers the scoring calculation for each individual in a given pool.
+     * This can be run sequentially or in parallel, based on the solver's configuration.
+     *
+     * @param pool The list of individuals to be scored.
      */
     public void scoreGenes(List<Individual> pool) {
         if (pool == null) pool = getPool();
-
         if (allScored) return;
 
         if (config.isParallelScoring()) {
@@ -216,39 +247,44 @@ public class Javolver extends Solver {
         allScored = true;
     }
 
+    /**
+     * Retrieves the current population of individuals.
+     *
+     * @return A list of all individuals in the gene pool.
+     */
     public List<Individual> getPool() {
         return genePool;
     }
 
     /**
-     * Score each individual in turn.
+     * Scores each individual in sequence.
      */
     private void scoreGenesSequential(List<Individual> pool) {
         pool.forEach(Individual::getScore);
     }
 
     /**
-     * Score each individual in parallel.
-     *
-     * @param pool
+     * Scores individuals in parallel to improve performance on multi-core systems.
      */
     private void scoreGenesParallel(List<Individual> pool) {
         pool.parallelStream().unordered().forEach(Individual::getScore);
     }
 
 
-    /***
-     * Return a string containing some basic information about the state of the system.
-     * @return String containing simple report
+    /**
+     * Generates a simple report about the current state of the solver.
+     *
+     * @return A string containing the report.
      */
     public String report() {
         Individual best = findBestScoringIndividual(genePool);
         return "Pool Size: " + genePool.size();
     }
 
-    /***
-     * Search the supplied pool of individuals and return the highest scoring one.
-     * @return Highest scoring member of the supplied list.
+    /**
+     * Retrieves the individual with the best (highest) score from the current population.
+     *
+     * @return The best-scoring {@link Individual}.
      */
     @Override
     public Individual getBestScoringIndividual() {
@@ -256,6 +292,11 @@ public class Javolver extends Solver {
     }
 
 
+    /**
+     * Sets the scoring function to be used for evaluating individuals.
+     *
+     * @param scoreFunction The {@link ScoreFunction} to use.
+     */
     @Override
     public void setScoreFunction(ScoreFunction scoreFunction) {
         config.setScoreFunction(scoreFunction);

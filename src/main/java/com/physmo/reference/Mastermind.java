@@ -1,6 +1,5 @@
 package com.physmo.reference;
 
-
 import com.physmo.javolver.Individual;
 import com.physmo.javolver.breedingoperator.BreedingOperatorUniform;
 import com.physmo.javolver.mutationoperator.MutationOperatorShuffle;
@@ -10,45 +9,72 @@ import com.physmo.javolver.selectionoperator.SelectionOperatorTournament;
 import com.physmo.javolver.solver.Javolver;
 import com.physmo.javolver.solver.Solver;
 
+/**
+ * An example class demonstrating the use of the Javolver genetic algorithm library to solve
+ * a simple "Mastermind"-like problem, where the goal is to discover a fixed sequence of numbers.
+ * <p>
+ * The solver uses a population of candidate solutions (individuals) and evolves them through
+ * selection, mutation, and breeding to approach the correct solution.
+ */
 public class Mastermind {
 
+    // The correct solution that the algorithm is trying to guess.
     int[] solution = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
 
+    /**
+     * Main entry point. Creates a Mastermind instance and starts the search.
+     *
+     * @param args Command-line arguments (unused).
+     */
     public static void main(String[] args) {
         Mastermind mastermind = new Mastermind();
         mastermind.go();
     }
 
+    /**
+     * Sets up and runs the genetic algorithm for a fixed number of iterations.
+     * Prints out the best solution found on each iteration.
+     */
     private void go() {
-
         Solver solver = Javolver.builder()
-                .populationTargetSize(50).dnaSize(solution.length)
+                .populationTargetSize(50)
+                .dnaSize(solution.length)
                 .keepBestIndividualAlive(false)
                 .addMutationOperator(new MutationOperatorSimple(1, 0.5))
                 .addMutationOperator(new MutationOperatorShuffle(1))
                 .addMutationOperator(new MutationOperatorSwap(0.1, 2))
                 .setSelectionOperator(new SelectionOperatorTournament(0.15))
                 .setBreedingOperator(new BreedingOperatorUniform())
-                .scoreFunction(this::calculateScore).build();
+                .scoreFunction(this::calculateScore)
+                .build();
 
         for (int i = 0; i < 20; i++) {
             solver.doOneCycle();
             Individual bestA = solver.getBestScoringIndividual();
-
-            System.out.printf("Iteration: %2d  score: %4.1f   solution: %s %n", i, bestA.getScore(), toString(bestA));
+            System.out.printf(
+                "Iteration: %2d  score: %4.1f   solution: %s %n",
+                i, bestA.getScore(), toString(bestA)
+            );
         }
-
     }
 
+    /**
+     * Scores an individual by comparing its DNA to the correct solution.
+     * - 20 points for each exact match in the right position.
+     * - 10 points for each number guessed correctly, regardless of position.
+     *
+     * @param individual The individual to score.
+     * @return The fitness score for the individual.
+     */
     public double calculateScore(Individual individual) {
         int score = 0;
 
-        // Exact match.
+        // Exact position and number match.
         for (int i = 0; i < solution.length; i++) {
             if (getGuess(individual.getDna().getData(), i) == solution[i]) score += 20;
         }
 
-        // Exists match
+        // Number exists anywhere in the solution.
         for (int i = 0; i < solution.length; i++) {
             if (isNumberInSolution(getGuess(individual.getDna().getData(), i))) score += 10;
         }
@@ -56,10 +82,23 @@ public class Mastermind {
         return score;
     }
 
+    /**
+     * Converts a DNA value to an integer guess.
+     *
+     * @param data  The DNA data array.
+     * @param index The gene index to read.
+     * @return The guessed integer value.
+     */
     public int getGuess(double[] data, int index) {
         return (int) (data[index] * (solution.length + 1));
     }
 
+    /**
+     * Checks if a number exists in the solution array.
+     *
+     * @param number The number to check.
+     * @return True if the number is part of the solution; false otherwise.
+     */
     public boolean isNumberInSolution(int number) {
         for (int j : solution) {
             if (number == j) return true;
@@ -67,12 +106,17 @@ public class Mastermind {
         return false;
     }
 
+    /**
+     * Converts an individual's DNA to a human-readable string of guesses.
+     *
+     * @param individual The individual whose DNA to display.
+     * @return String representation of the individual's guesses.
+     */
     public String toString(Individual individual) {
-        String str = "";
+        StringBuilder str = new StringBuilder();
         for (int i = 0; i < solution.length; i++) {
-            str += getGuess(individual.getDna().getData(), i) + ", ";
+            str.append(getGuess(individual.getDna().getData(), i)).append(", ");
         }
-        return str;
+        return str.toString();
     }
-
 }
