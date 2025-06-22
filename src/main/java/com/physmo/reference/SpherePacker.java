@@ -38,8 +38,8 @@ public class SpherePacker extends MinvioApp {
     public void init(BasicDisplay bd) {
 
         attenuator = new Attenuator();
-        attenuator.addParameter(MUTATION_RATE, 1, 0.01);
-        attenuator.setIterationRange(1000);
+        attenuator.addParam(MUTATION_RATE, 1, 0.01);
+        //attenuator.setIterationRange(1000);
 
         testEvolver = Javolver.builder()
                 .populationTargetSize(populationSize)
@@ -140,7 +140,7 @@ public class SpherePacker extends MinvioApp {
         Individual topB = testOptimizer.getBestScoringIndividual();
 
 
-        attenuator.setCurrentIteration(testEvolver.getIteration());
+        //attenuator.s(testEvolver.getIteration());
         double mutationRate = attenuator.getValue(MUTATION_RATE);
 
         testEvolver.setTemperature(mutationRate);

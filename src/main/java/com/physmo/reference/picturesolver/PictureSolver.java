@@ -5,11 +5,9 @@ import com.physmo.javolver.Individual;
 import com.physmo.javolver.Spreader;
 import com.physmo.javolver.breedingoperator.BreedingOperatorCrossover;
 import com.physmo.javolver.mutationoperator.MutationOperatorSimple;
-import com.physmo.javolver.mutationoperator.MutationOperatorSwap;
 import com.physmo.javolver.selectionoperator.SelectionOperatorTournament;
 import com.physmo.javolver.solver.Javolver;
 import com.physmo.javolver.solver.Solver;
-import com.physmo.reference.symbolicregression.CullSimilar;
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
 import com.physmo.minvio.utils.BasicGraph;
@@ -26,15 +24,23 @@ public class PictureSolver {
 
     BufferedImage targetImage = null;
     BufferedImage workImage = null;
-    int populationSize = 400;
+    int populationSize = 15;
     ImageComparer imageComparer;
     Graphics2D dc;
-    int numObjects = 55; //50;
+    int numObjects = 150; //50;
     DnaDrawer drawerClass;
     Color graphBG = new Color(36, 68, 23);
     Color graphFG = new Color(171, 206, 64);
 
-    Attenuator attenuator = new Attenuator();
+    Attenuator attenuator = createConfiguredAttenuator();
+
+    private Attenuator createConfiguredAttenuator() {
+        return new Attenuator()
+                .setScoreRange(0.70, 1.0)
+                .addParam("testImageSize", 5, 150)
+                .addParam("mutationAmount", 1, 0.2)
+                .addParam("renderObjectCount", 5, numObjects);
+    }
 
     public static void main(String[] args) {
         PictureSolver pictureSolver = new PictureSolver();
@@ -42,19 +48,14 @@ public class PictureSolver {
     }
 
     public void run() {
-        drawerClass = new DnaDrawerPolys(); numObjects = 100;
-        //drawerClass = new DnaDrawerSimpleSquares();
-        //numObjects = 60;
-
-        //drawerClass = new DnaDrawerString(); numObjects=400;
-        //drawerClass = new DnaDrawerCircles();numObjects = 250;
-
+        drawerClass = DrawerType.CIRCLES.create();
 
         try {
-            targetImage = ImageIO.read(new File(String.valueOf(PictureSolver.class.getResource("/mona_lisa.jpg").getFile())));
+            targetImage = ImageIO.read(new File(String.valueOf(PictureSolver.class.getResource("/parrot.jpg").getFile())));
         } catch (IOException e) {
             System.out.println("Image not found.");
         }
+
         workImage = new BufferedImage(targetImage.getWidth(), targetImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
         dc = workImage.createGraphics();
         imageComparer = new ImageComparer(targetImage);
@@ -67,40 +68,20 @@ public class PictureSolver {
 
         MultiViewer multiViewer = new MultiViewer(800, 800);
 
-        attenuator.setScoreRange(0.60, 1.0);
-        attenuator.addParameter("testImageSize", 60, 300);
-        attenuator.addParameter("mutationAmount", 1, 0.5);
-        attenuator.addParameter("renderObjectCount", numObjects, numObjects);
+        // Removed direct configuration, as now the attenuator is preconfigured upon field initialization
 
-        Solver solver;
-
-        //MutationOperatorSimple MutationOperatorSimple = new MutationOperatorSimple(1, 1);
+        Javolver solver;
 
         solver = Javolver.builder()
                 .populationTargetSize(populationSize)
                 .dnaSize(numObjects * drawerClass.getObjectSize())
-                .keepBestIndividualAlive(false)
-                .addMutationOperator(new MutationOperatorSimple(2, 0.1))
-//                .addMutationOperator(new MutationOperatorSimple(8, 0.3))
-//                .addMutationOperator(new MutationOperatorShuffle(2))
-                .addMutationOperator(new MutationOperatorSwap(0.2, 2))
-                .setSelectionOperator(new SelectionOperatorTournament(0.2))
+                .keepBestIndividualAlive(true)
+                .addMutationOperator(new MutationOperatorSimple(2, 0.5))
+                .setSelectionOperator(new SelectionOperatorTournament(0.5))
                 .setBreedingOperator(new BreedingOperatorCrossover())
                 .scoreFunction(this::calculateScore)
-//                .setSpeciesCheck((i,j) -> isSameSpecies(i,j))
                 .build();
 
-//        solver = Optimizer.builder()
-//                .dnaSize(numObjects * drawerClass.getObjectSize())
-//                .addMutationStrategy(new MutationOperatorSimple(2, 1))
-//                .scoreFunction(i -> calculateScore(i))
-//                .build();
-
-
-//        evolver = new OptimizerES();
-//        evolver.setDnaSize(numObjects * drawerClass.getObjectSize());
-//        evolver.setScoreFunction(this::calculateScore);
-//        evolver.init();
 
         Spreader spreader = new Spreader(0.0001, 0, 1);
 
@@ -111,39 +92,41 @@ public class PictureSolver {
 
             Individual top = solver.getBestScoringIndividual();
             double topScore = top.getScore();
-            attenuator.setCurrentScore(topScore);
+            attenuator.setScore(topScore);
             double mutationAmount = attenuator.getValue("mutationAmount");
             solver.setTemperature(mutationAmount);
 
 
-
-            if (j % 100 == 0) {
-                for (int i = 0; i < 100; i++) spreader.spread(((Javolver) solver).getPool());
-            }
+//            if (j % 100 == 0) {
+//                for (int i = 0; i < 100; i++) spreader.spread(solver.getPool());
+//            }
 
             if (j % 10 == 0) {
 
                 disp.drawImage(targetImage, 0, 0);
                 Graphics2D dc = workImage.createGraphics();
-                drawerClass.render(dc, top.getDna(), workImage.getWidth(), workImage.getHeight());
+                int objectLimit = (int) attenuator.getValue("renderObjectCount");
+
+                drawerClass.render(dc, top.getDna(), workImage.getWidth(), workImage.getHeight(), objectLimit);
 
                 disp.drawImage(workImage, targetImage.getWidth(), 0);
                 disp.repaint();
 
-                String str2 = String.format("i:%d topScore:%5.3f  testImageSize: %d   mutationAmount: %5.3f ", solver.getIteration(), topScore, (int) attenuator.getValue("testImageSize"), attenuator.getValue("mutationAmount"));
+                String str2 = String.format("i:%d topScore:%5.3f  testImageSize: %d   mutationAmount: %5.3f objectLimit: %d",
+                        solver.getIteration(), topScore, (int) attenuator.getValue("testImageSize"), attenuator.getValue("mutationAmount"), objectLimit);
 
                 System.out.println(str2);
 
                 if (multiViewer != null)
-                    multiViewer.redraw(((Javolver) solver).getPool(), drawerClass, workImage.getWidth(), workImage.getHeight());
+                    multiViewer.redraw(solver.getPool(), drawerClass, workImage.getWidth(), workImage.getHeight(), objectLimit);
 
             }
 
-            if (j % 50 == 0) {
-                CullSimilar cullSimilar = new CullSimilar();
-                cullSimilar.run((Javolver) solver);
-                ((Javolver) solver).increasePopulation(populationSize);
-            }
+//            if (j % 50 == 0) {
+//                CullSimilar cullSimilar = new CullSimilar();
+//                cullSimilar.run((Javolver) solver);
+//                ((Javolver) solver).increasePopulation(populationSize);
+//            }
 
             if (j % 100 == 0) {
                 graph2.addData(Math.pow(top.getScore(), 2));
@@ -178,7 +161,9 @@ public class PictureSolver {
     public double calculateScore(Individual i) {
         dc.setBackground(Color.GRAY);
         dc.clearRect(0, 0, workImage.getWidth(), workImage.getHeight());
-        drawerClass.render(dc, i.getDna(), workImage.getWidth(), workImage.getHeight());
+
+        int objectLimit = (int) attenuator.getValue("renderObjectCount");
+        drawerClass.render(dc, i.getDna(), workImage.getWidth(), workImage.getHeight(), objectLimit);
         double score = imageComparer.compareScaled(workImage, (int) attenuator.getValue("testImageSize"), 1);
 
         double penalty = drawerClass.getScoreAdjustments(i.getDna(), workImage.getWidth(), workImage.getHeight());
@@ -202,4 +187,25 @@ public class PictureSolver {
 
         return true;
     }
+}
+
+enum DrawerType {
+    STRING {
+        @Override
+        public DnaDrawer create() { return new DnaDrawerString(); }
+    },
+    CIRCLES {
+        @Override
+        public DnaDrawer create() { return new DnaDrawerCircles(); }
+    },
+    SQUARES {
+        @Override
+        public DnaDrawer create() { return new DnaDrawerSimpleSquares(); }
+    },
+    POLYS {
+        @Override
+        public DnaDrawer create() { return new DnaDrawerPolys(); }
+    };
+
+    public abstract DnaDrawer create();
 }

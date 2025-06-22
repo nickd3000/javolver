@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class TravellingSalesman {
 
-    int numCities = 100; // (for brute force, use 11)
+    int numCities = 110; // (for brute force, use 11)
     List<City> cityList = new ArrayList<>();
     BasicDisplay basicDisplay;
     double bruteForceMinDistance = -1;
@@ -44,7 +44,7 @@ public class TravellingSalesman {
                 .dnaSize(cityList.size())
                 .populationTargetSize(10)
                 .keepBestIndividualAlive(true)
-                .setSelectionOperator(new SelectionOperatorTournament(.2))
+                .setSelectionOperator(new SelectionOperatorTournament(.3))
                 .addMutationOperator(new MutationOperatorSwap(1, 2))
                 .addMutationOperator(new MutationOperatorShuffle(2))
                 .setBreedingOperator(new BreedingStrategyTS())
