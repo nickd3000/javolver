@@ -12,7 +12,7 @@ public interface DnaDrawer {
      * @param dc  Graphics context to draw to
      * @param dna Chromosome to base drawing from
      */
-    void render(Graphics2D dc, Chromosome dna, int width, int height);
+    void render(Graphics2D dc, Chromosome dna, int width, int height, int objectLimit);
 
     /**
      *

@@ -8,15 +8,16 @@ import java.awt.Graphics2D;
 public class DnaDrawerSimpleSquares implements DnaDrawer {
 
     int objectSize = 7;
-    double squareSize = 40;
+    double squareSize = 80;
 
     @Override
-    public void render(Graphics2D dc, Chromosome dna, int width, int height) {
+    public void render(Graphics2D dc, Chromosome dna, int width, int height, int objectLimit) {
 
         int numObjects = dna.getSize() / objectSize;
 
         int baseIndex = 0;
         for (int i = 0; i < numObjects; i++) {
+            if (i>objectLimit) continue;
             baseIndex = objectSize * i;
             int x = (int) (dna.getDouble(baseIndex + 0) * (double) width);
             int y = (int) (dna.getDouble(baseIndex + 1) * (double) height);
@@ -40,25 +41,26 @@ public class DnaDrawerSimpleSquares implements DnaDrawer {
 
     @Override
     public double getScoreAdjustments(Chromosome dna, int width, int height) {
-        int numObjects = dna.getSize() / objectSize;
-
-        double penalty = 0;
-        int baseIndex = 0;
-        for (int i = 0; i < numObjects; i++) {
-            baseIndex = objectSize * i;
-            int x = (int) (dna.getDouble(baseIndex + 0) * (double) width);
-            int y = (int) (dna.getDouble(baseIndex + 1) * (double) height);
-            int size = (int) (dna.getDouble(baseIndex + 6) * squareSize);
-            penalty += calculatePositionPenalty(x, size, width);
-            penalty += calculatePositionPenalty(y, size, height);
-        }
-        return penalty / width;
+//        int numObjects = dna.getSize() / objectSize;
+//
+//        double penalty = 0;
+//        int baseIndex = 0;
+//        for (int i = 0; i < numObjects; i++) {
+//            baseIndex = objectSize * i;
+//            int x = (int) (dna.getDouble(baseIndex + 0) * (double) width);
+//            int y = (int) (dna.getDouble(baseIndex + 1) * (double) height);
+//            int size = (int) (dna.getDouble(baseIndex + 6) * squareSize);
+//            penalty += calculatePositionPenalty(x, size, width);
+//            penalty += calculatePositionPenalty(y, size, height);
+//        }
+//        return penalty / width;
+        return 0;
     }
 
     public double calculatePositionPenalty(double pos, double size, double fieldSize) {
-        double scale = 0.5;
-        if (pos < 0) return (0 - pos) * scale;
-        if (pos + size > fieldSize) return (fieldSize - (pos + size)) * scale * -1;
+//        double scale = 0.5;
+//        if (pos < 0) return (0 - pos) * scale;
+//        if (pos + size > fieldSize) return (fieldSize - (pos + size)) * scale * -1;
         return 0;
     }
 

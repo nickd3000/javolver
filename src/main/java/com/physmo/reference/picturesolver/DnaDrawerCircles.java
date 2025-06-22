@@ -9,17 +9,19 @@ public class DnaDrawerCircles implements DnaDrawer {
 
     int objectSize = 8;
     boolean enableTransparency = true;
-    double radMin = 5;
-    double radMax = 80;
+    double radMin = 3;
+    double radMax = 100;
 
     @Override
-    public void render(Graphics2D dc, Chromosome dna, int width, int height) {
+    public void render(Graphics2D dc, Chromosome dna, int width, int height, int objectLimit) {
         int numObjects = dna.getSize() / objectSize;
         int xpos = 0, ypos = 0, rad = 0;
         float[] cols = new float[4];
         int baseIndex = 0;
 
         for (int i = 0; i < numObjects; i++) {
+            if (i > objectLimit * 3) continue;
+
             baseIndex = objectSize * i;
 
             xpos = (int) (dna.getDouble(baseIndex + 0) * width);
@@ -67,7 +69,7 @@ public class DnaDrawerCircles implements DnaDrawer {
 
         }
 
-        return penalty*0.001;
+        return 0; //penalty*0.001;
     }
 
     public double getWallPenalty(double x, double y, double r) {
@@ -79,7 +81,7 @@ public class DnaDrawerCircles implements DnaDrawer {
         if (x-r > 1 ) penalty += Math.abs(1-(x-r));
         if (y-r > 1 ) penalty += Math.abs(1-(y-r));
 
-        return penalty;
+        return 0; //penalty;
     }
 
     @Override

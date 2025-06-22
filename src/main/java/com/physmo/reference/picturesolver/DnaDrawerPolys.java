@@ -11,7 +11,7 @@ public class DnaDrawerPolys implements DnaDrawer {
     double penaltyScale = 0.0050;
 
     @Override
-    public void render(Graphics2D dc, Chromosome dna, int width, int height) {
+    public void render(Graphics2D dc, Chromosome dna, int width, int height, int objectLimit) {
 
         int numObjects = dna.getSize() / objectSize;
 //        int[] xl = new int[3];
@@ -23,6 +23,7 @@ public class DnaDrawerPolys implements DnaDrawer {
         int lowestDepthIndex;
 
         for (int i = 0; i < numObjects; i++) {
+            if (i>objectLimit) continue;
 
             lowestDepthRolling = 100;
             lowestDepthIndex = -1;
@@ -98,7 +99,7 @@ public class DnaDrawerPolys implements DnaDrawer {
             }
         }
 
-        return penalty;
+        return penalty/5;
     }
 
     public double calculatePositionPenalty(double pos, double limit) {

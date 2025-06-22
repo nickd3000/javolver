@@ -11,14 +11,15 @@ public class DnaDrawerString implements DnaDrawer {
     int objectSize = 2;
 
     @Override
-    public void render(Graphics2D dc, Chromosome dna, int width, int height) {
+    public void render(Graphics2D dc, Chromosome dna, int width, int height, int objectLimit) {
         int numObjects = dna.getSize() / objectSize;
 
         int baseIndex;
         double radius = Math.max(width, height) * 0.5;
         dc.setColor(new Color(0, 0, 0, 100));
-        dc.setStroke(new BasicStroke(3));
+        dc.setStroke(new BasicStroke(2));
         for (int i = 0; i < numObjects; i++) {
+            if (i>objectLimit*20) continue;
             baseIndex = objectSize * i;
             double a1 = dna.getDouble(baseIndex + 0);
             double a2 = dna.getDouble(baseIndex + 1);
