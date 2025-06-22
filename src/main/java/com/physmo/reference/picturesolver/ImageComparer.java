@@ -15,6 +15,17 @@ public class ImageComparer {
         workImage = new BufferedImage(targetImage.getWidth() * 4, targetImage.getHeight() * 3, BufferedImage.TYPE_INT_RGB); // For scaled compare
     }
 
+    /**
+     * Compares a given test image to the target image by scaling both images to a specified size,
+     * iterating over the scaled images, and calculating a score that quantifies the difference
+     * between corresponding pixels in the images.
+     *
+     * @param testImage the BufferedImage to be compared to the target image
+     * @param size the dimension to which both images should be scaled
+     * @param skip the number of pixels to skip between samples during comparison to improve performance
+     * @return a double value representing the average squared difference between corresponding pixels
+     *         of the two scaled images
+     */
     public double compareScaled(BufferedImage testImage, int size, int skip) {
 
         if (dc == null) dc = workImage.createGraphics();
@@ -31,7 +42,6 @@ public class ImageComparer {
                 col1 = workImage.getRGB(x, y);
                 col2 = workImage.getRGB(x + size, y);
                 double diff = Math.abs(getScoreFromColours(col1, col2));
-                diff = diff * diff;
                 total += diff;
                 count++;
             }
@@ -52,12 +62,12 @@ public class ImageComparer {
         g1 = g1 - g2;
         b1 = b1 - b2;
 
-        double dist = Math.sqrt(((r1 * r1) + (g1 * g1) + (b1 * b1)));
-        if (dist < 0) dist = 0;
-        if (dist > max) dist = max;
+        double dist = Math.sqrt(((r1 * r1) + (g1 * g1) + (b1 * b1)))/max;
 
-        dist = (max - dist) / max;
+        if (dist > 1) dist = 1;
 
+        dist = (1 - dist);
+        dist=dist*dist;
         return dist;
     }
 }

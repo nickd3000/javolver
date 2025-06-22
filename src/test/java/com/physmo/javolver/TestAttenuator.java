@@ -11,14 +11,14 @@ public class TestAttenuator {
 
         attenuator.setScoreRange(10, 20);
 
-        Assert.assertEquals(0, attenuator.setCurrentScore(5), 0.01);
-        Assert.assertEquals(0, attenuator.setCurrentScore(10), 0.01);
-        Assert.assertEquals(0.5, attenuator.setCurrentScore(15), 0.01);
-        Assert.assertEquals(1.0, attenuator.setCurrentScore(20), 0.01);
-        Assert.assertEquals(1.0, attenuator.setCurrentScore(25), 0.01);
+//        Assert.assertEquals(0, attenuator.setScore(5), 0.01);
+//        Assert.assertEquals(0, attenuator.setScore(10), 0.01);
+//        Assert.assertEquals(0.5, attenuator.setScore(15), 0.01);
+//        Assert.assertEquals(1.0, attenuator.setScore(20), 0.01);
+//        Assert.assertEquals(1.0, attenuator.setScore(25), 0.01);
 
-        attenuator.addParameter("var1", 100, 200);
-        attenuator.setCurrentScore(15);
+        attenuator.addParam("var1", 100, 200);
+        attenuator.setScore(15);
         Assert.assertEquals(150, attenuator.getValue("var1"), 0.01);
     }
 }

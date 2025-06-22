@@ -2,13 +2,7 @@ package com.physmo.javolver;
 
 
 public class Scoring {
-    /**
-     *  Returns 1.0 for an exact match
-     * @param actual
-     * @param expected
-     * @param range
-     * @return
-     */
+
     public static double scoreValue(double actual, double expected, double range) {
         double diff = Math.abs(expected - actual);
         if (diff > range) diff = range;

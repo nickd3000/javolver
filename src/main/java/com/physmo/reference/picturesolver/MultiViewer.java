@@ -4,6 +4,7 @@ import com.physmo.javolver.Individual;
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.Comparator;
@@ -16,13 +17,14 @@ public class MultiViewer {
         bd = new BasicDisplayAwt(width, height);
     }
 
-    public void redraw(List<Individual> pool, DnaDrawer drawer, int width, int height) {
+    public void redraw(List<Individual> pool, DnaDrawer drawer, int width, int height, int objectLimit) {
 
         pool.sort(Comparator.comparingDouble(Individual::getScore).reversed());
 
 
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D dc = image.createGraphics();
+        bd.cls();
 
         //int scaleFactor = width / (int) Math.sqrt(pool.size());
         double scaleFactor = 1;
@@ -40,7 +42,9 @@ public class MultiViewer {
 
         int x = 0, y = 0;
         for (int i = 0; i < pool.size(); i++) {
-            drawer.render(dc, pool.get(i).getDna(), width, height);
+            dc.setBackground(Color.GRAY);
+            dc.clearRect(0, 0, width, height);
+            drawer.render(dc, pool.get(i).getDna(), width, height, objectLimit);
             bd.drawImage(image, x, y, scaledWidth, scaledHeight);
             x += scaledWidth;
             if (x + scaledWidth > bd.getWidth()) {
