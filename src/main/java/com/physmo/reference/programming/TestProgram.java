@@ -274,7 +274,7 @@ public class TestProgram {
         int numberOfSteps = programEvaluator.getNumberOfSteps();
         double score = 0, stepScore = 0;
 
-        bd.cls(Color.lightGray);
+        bd.getDrawingContext().cls(Color.lightGray);
 
         for (int step = 0; step < numberOfSteps * 10; step++) {
             sm = new SimpleMachine2();

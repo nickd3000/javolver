@@ -13,6 +13,7 @@ import java.util.List;
 public class MultiViewer {
     BasicDisplay bd;
 
+
     public MultiViewer(int width, int height) {
         bd = new BasicDisplayAwt(width, height);
     }
@@ -24,7 +25,7 @@ public class MultiViewer {
 
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D dc = image.createGraphics();
-        bd.cls();
+        bd.getDrawingContext().cls();
 
         //int scaleFactor = width / (int) Math.sqrt(pool.size());
         double scaleFactor = 1;
@@ -45,7 +46,7 @@ public class MultiViewer {
             dc.setBackground(Color.GRAY);
             dc.clearRect(0, 0, width, height);
             drawer.render(dc, pool.get(i).getDna(), width, height, objectLimit);
-            bd.drawImage(image, x, y, scaledWidth, scaledHeight);
+            bd.getDrawingContext().drawImage(image, x, y, scaledWidth, scaledHeight);
             x += scaledWidth;
             if (x + scaledWidth > bd.getWidth()) {
                 y += scaledHeight;

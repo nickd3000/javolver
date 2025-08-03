@@ -48,7 +48,7 @@ public class PictureSolver {
     }
 
     public void run() {
-        drawerClass = DrawerType.CIRCLES.create();
+        drawerClass = DrawerType.POLYS.create();
 
         try {
             targetImage = ImageIO.read(new File(String.valueOf(PictureSolver.class.getResource("/parrot.jpg").getFile())));
@@ -103,13 +103,13 @@ public class PictureSolver {
 
             if (j % 10 == 0) {
 
-                disp.drawImage(targetImage, 0, 0);
+                disp.getDrawingContext().drawImage(targetImage, 0, 0);
                 Graphics2D dc = workImage.createGraphics();
                 int objectLimit = (int) attenuator.getValue("renderObjectCount");
 
                 drawerClass.render(dc, top.getDna(), workImage.getWidth(), workImage.getHeight(), objectLimit);
 
-                disp.drawImage(workImage, targetImage.getWidth(), 0);
+                disp.getDrawingContext().drawImage(workImage, targetImage.getWidth(), 0);
                 disp.repaint();
 
                 String str2 = String.format("i:%d topScore:%5.3f  testImageSize: %d   mutationAmount: %5.3f objectLimit: %d",
@@ -133,7 +133,7 @@ public class PictureSolver {
             }
             if (j % 10 == 0) {
                 graph.addData(Math.pow(top.getScore(), 2));
-                dispGraph.cls(graphBG);
+                dispGraph.getDrawingContext().cls(graphBG);
                 graph.draw(dispGraph, 0, 0, 200, 200, graphFG);
                 graph2.draw(dispGraph, 200, 0, 200, 200, graphFG);
                 dispGraph.repaint();

@@ -6,6 +6,7 @@ import com.physmo.javolver.mutationoperator.MutationOperatorSimple;
 import com.physmo.javolver.mutationoperator.MutationOperatorSwap;
 import com.physmo.javolver.selectionoperator.SelectionOperatorTournament;
 import com.physmo.javolver.solver.Javolver;
+import com.physmo.minvio.Utils;
 import com.physmo.reference.programming.simplemachinie.SimpleMachine2;
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
@@ -152,7 +153,7 @@ public class TestProgramGraph {
 
         for (int i = 0; i < individual.getDna().getData().length / 2; i++) {
             int instruction = (int) (individual.getDna().getDouble(i * 2) * 30.0); //250
-            double position = BasicDisplay.clamp(0, 1.0, (individual.getDna().getDouble((i * 2) + 1)));
+            double position = Utils.clamp(0, 1.0, (individual.getDna().getDouble((i * 2) + 1)));
             int iPosition = (int) (list.size() * position);
             list.add(iPosition, instruction);
         }
@@ -214,7 +215,7 @@ public class TestProgramGraph {
         int numberOfSteps = programEvaluator.getNumberOfSteps();
         double score = 0, stepScore = 0;
 
-        bd.cls(Color.lightGray);
+        bd.getDrawingContext().cls(Color.lightGray);
 
         for (int x = 0; x < 400; x++) {
             sm = new SimpleMachine2();

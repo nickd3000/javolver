@@ -2,6 +2,7 @@ package com.physmo.reference.programming;
 
 import com.physmo.javolver.Chromosome;
 import com.physmo.javolver.Scoring;
+import com.physmo.minvio.DrawingContext;
 import com.physmo.reference.programming.simplemachinie.SimpleMachine2;
 import com.physmo.minvio.BasicDisplay;
 
@@ -58,16 +59,18 @@ public class FunctionEvaluator implements ProgramEvaluator {
     public void render(SimpleMachine2 sm, Chromosome dna, BasicDisplay bd, double x) {
         double y = 0;
         double radius = 2;
-        bd.setDrawColor(Color.BLUE);
+        DrawingContext dc = bd.getDrawingContext();
+
+        dc.setDrawColor(Color.BLUE);
 
         double inputValue = inputValue(x); //((double)x/(double)width)*2;
-        bd.setDrawColor(Color.BLUE);
+        dc.setDrawColor(Color.BLUE);
         y = func(inputValue);
-        bd.drawFilledCircle(x, (int) y, radius);
+        dc.drawFilledCircle(x, (int) y, radius);
 
-        bd.setDrawColor(Color.WHITE);
+        dc.setDrawColor(Color.WHITE);
         y = sm.regB;
-        bd.drawFilledCircle(x-1, (int) y+2, radius);
+        dc.drawFilledCircle(x-1, (int) y+2, radius);
     }
 
     @Override

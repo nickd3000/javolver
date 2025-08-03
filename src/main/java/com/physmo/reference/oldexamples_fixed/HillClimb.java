@@ -7,6 +7,7 @@ import com.physmo.javolver.selectionoperator.SelectionOperatorRoulette;
 import com.physmo.javolver.solver.Javolver;
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
+import com.physmo.minvio.DrawingContext;
 import com.physmo.minvio.MinvioApp;
 
 import java.awt.Color;
@@ -52,7 +53,7 @@ public class HillClimb extends MinvioApp {
     }
 
     @Override
-    public void update(double delta) {
+    public void update(BasicDisplay bd, double delta) {
         // Control simulation step timing.
         tickTimer -= delta;
         if (tickTimer <= 0) {
@@ -63,18 +64,18 @@ public class HillClimb extends MinvioApp {
     }
 
     @Override
-    public void draw(BasicDisplay bd, double delta) {
+    public void draw(double delta) {
         // Render the scoring field and individuals.
-        drawField(bd); // Draw the grid representing the scoring field.
-        drawIndividuals(bd); // Draw all individuals and highlight the best one.
+        drawField(getDrawingContext()); // Draw the grid representing the scoring field.
+        drawIndividuals(getDrawingContext()); // Draw all individuals and highlight the best one.
     }
 
     /**
      * Draw the scoring field in a grid with color-coded scores.
      * Higher scores are represented with brighter green squares.
      */
-    private void drawField(BasicDisplay bd) {
-        int width = bd.getWidth();
+    private void drawField(DrawingContext dc) {
+        int width = dc.getWidth();
         double stepSize = (double) width / FIELD_STEPS;
 
         for (int y = 0; y < FIELD_STEPS; y++) {
@@ -83,8 +84,8 @@ public class HillClimb extends MinvioApp {
                 double normalizedY = (double) y / FIELD_STEPS;
                 double score = Math.min(getScoreForPosition(normalizedX, normalizedY), 1);
 
-                bd.setDrawColor(new Color(0, (int) (score * 255), 0));
-                bd.drawFilledRect(
+                dc.setDrawColor(new Color(0, (int) (score * 255), 0));
+                dc.drawFilledRect(
                         (int) (x * stepSize),
                         (int) (y * stepSize),
                         (int) stepSize,
@@ -97,35 +98,35 @@ public class HillClimb extends MinvioApp {
     /**
      * Draw all individuals from the population. The top individual is highlighted in red.
      *
-     * @param bd The display context.
+     * @param dc display context.
      */
-    private void drawIndividuals(BasicDisplay bd) {
+    private void drawIndividuals(DrawingContext dc) {
         Individual topIndividual = javolver.getBestScoringIndividual(); // Best scoring individual.
 
         for (Individual individual : javolver.getPool()) {
             // Skip the top individual, it will be drawn with its own color.
             if (!topIndividual.equals(individual)) {
-                drawIndividual(individual, bd, OTHER_INDIVIDUAL_COLOR, 3);
+                drawIndividual(individual, dc, OTHER_INDIVIDUAL_COLOR, 3);
             }
         }
 
         // Highlight the best individual with a red marker.
-        drawIndividual(topIndividual, bd, BEST_INDIVIDUAL_COLOR, 5);
+        drawIndividual(topIndividual, dc, BEST_INDIVIDUAL_COLOR, 5);
     }
 
     /**
      * Draw a single individual as a filled circle on the display.
      * 
      * @param individual The individual (solution) to draw.
-     * @param bd         The display context.
+     * @param dc         The display context.
      * @param color      The color to use for the individual.
      * @param radius     The radius of the circle representing the individual.
      */
-    private void drawIndividual(Individual individual, BasicDisplay bd, Color color, double radius) {
-        double x = individual.getDna().getDouble(0) * bd.getWidth();
-        double y = individual.getDna().getDouble(1) * bd.getHeight();
-        bd.setDrawColor(color);
-        bd.drawFilledCircle(x, y, radius);
+    private void drawIndividual(Individual individual, DrawingContext dc, Color color, double radius) {
+        double x = individual.getDna().getDouble(0) * dc.getWidth();
+        double y = individual.getDna().getDouble(1) * dc.getHeight();
+        dc.setDrawColor(color);
+        dc.drawFilledCircle(x, y, radius);
     }
 
     /**

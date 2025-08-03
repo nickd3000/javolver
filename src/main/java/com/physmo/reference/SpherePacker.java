@@ -15,6 +15,8 @@ import com.physmo.minvio.MinvioApp;
 
 import java.awt.Color;
 
+import static com.physmo.minvio.Utils.getDistinctColor;
+
 public class SpherePacker extends MinvioApp {
 
     static String MUTATION_RATE = "mutationRate";
@@ -125,7 +127,7 @@ public class SpherePacker extends MinvioApp {
     }
 
     @Override
-    public void update(double delta) {
+    public void update(BasicDisplay bd, double delta) {
         for (int i = 0; i < 10; i++) {
             testEvolver.doOneCycle();
             testOptimizer.doOneCycle();
@@ -133,7 +135,7 @@ public class SpherePacker extends MinvioApp {
     }
 
     @Override
-    public void draw(BasicDisplay bd, double delta) {
+    public void draw(double delta) {
 
 
         Individual top = testEvolver.getBestScoringIndividual();
@@ -150,21 +152,21 @@ public class SpherePacker extends MinvioApp {
         System.out.printf("Top score:%5.3f  mutation: %5.4f %n", top.getScore(), attenuator.getValue(MUTATION_RATE));
         //System.out.println("Top score:" + top.getScore() + "  mutation:" + attenuator.getValue(paramName));
 
-        bd.cls(new Color(64, 64, 64));
-        drawIndividual(top, bd, padding, padding, boxSize);
-        drawIndividual(topB, bd, padding + 300, padding, boxSize);
+        cls(new Color(64, 64, 64));
+        drawIndividual(top, padding, padding, boxSize);
+        drawIndividual(topB,padding + 300, padding, boxSize);
 
-        bd.setDrawColor(Color.white);
-        bd.drawRect(padding, padding, boxSize, boxSize);
+        setDrawColor(Color.white);
+        drawRect(padding, padding, boxSize, boxSize);
 
     }
 
-    public void drawIndividual(Individual idv, BasicDisplay disp, float offsx, float offsy, float scale) {
+    public void drawIndividual(Individual idv, float offsx, float offsy, float scale) {
         Chromosome dna = idv.getDna();
 
         for (int i = 0; i < numberOfSpheres * objectSize; i += objectSize) {
-            disp.setDrawColor(disp.getDistinctColor(i, 0.8f));
-            disp.drawFilledCircle(
+            setDrawColor(getDistinctColor(i, 0.8f));
+            drawFilledCircle(
                     offsx + (dna.getDouble(i) * scale),
                     offsy + (dna.getDouble(i + 1) * scale),
                     dna.getDouble(i + 2) * scale);

@@ -8,6 +8,7 @@ import com.physmo.javolver.selectionoperator.SelectionOperatorTournament;
 import com.physmo.javolver.solver.Javolver;
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
+import com.physmo.minvio.DrawingContext;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -20,6 +21,8 @@ public class TravellingSalesman {
     int numCities = 110; // (for brute force, use 11)
     List<City> cityList = new ArrayList<>();
     BasicDisplay basicDisplay;
+    DrawingContext dc;
+
     double bruteForceMinDistance = -1;
     int[] bruteForceBestSolution = new int[numCities];
 
@@ -38,7 +41,7 @@ public class TravellingSalesman {
         }
 
         basicDisplay = new BasicDisplayAwt(400, 400);
-
+        dc = basicDisplay.getDrawingContext();
 
         Javolver javolver = Javolver.builder()
                 .dnaSize(cityList.size())
@@ -63,7 +66,7 @@ public class TravellingSalesman {
                 lastTime = System.currentTimeMillis();
                 System.out.format("Iteration: %d  score: %.2f  %s %n", javolver.getIteration(), bestScoringIndividual.getScore(), individualToString(bestScoringIndividual));
 
-                basicDisplay.cls(Color.LIGHT_GRAY);
+                dc.cls(Color.LIGHT_GRAY);
                 if (performBruteForce) {
                     drawIndividual(createIndividualFromArray(bruteForceBestSolution), Color.BLUE);
                 }
@@ -137,15 +140,15 @@ public class TravellingSalesman {
         double scale = 400;
         int size = individual.getDna().getSize();
 
-        basicDisplay.setDrawColor(lineColor);
+        dc.setDrawColor(lineColor);
         for (int i = 0; i < size - 1; i++) {
             City city1 = cityList.get((int) individual.getDna().getDouble(i));
             City city2 = cityList.get((int) individual.getDna().getDouble(i + 1));
-            basicDisplay.drawLine(city1.x * scale, city1.y * scale, city2.x * scale, city2.y * scale);
+            dc.drawLine(city1.x * scale, city1.y * scale, city2.x * scale, city2.y * scale);
         }
-        basicDisplay.setDrawColor(Color.white);
+        dc.setDrawColor(Color.white);
         for (City city : cityList) {
-            basicDisplay.drawFilledCircle(city.x * scale, city.y * scale, 5);
+            dc.drawFilledCircle(city.x * scale, city.y * scale, 5);
         }
         basicDisplay.repaint();
     }
