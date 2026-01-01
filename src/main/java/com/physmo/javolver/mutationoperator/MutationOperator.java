@@ -6,7 +6,7 @@ import com.physmo.javolver.Individual;
  * An interface representing a mutation operator used to alter an individual's genetic information (DNA).
  * Mutation operators are typically used in evolutionary algorithms to introduce genetic diversity
  * by modifying the genetic data of individuals in a population.
- *
+ * <BR>
  * Implementations of this interface define specific mutation strategies, where mutations may vary
  * based on parameters such as mutation intensity, probability, temperature, or other contextual factors.
  * The mutation process may involve modifying the existing genetic information or reshuffling the structure
