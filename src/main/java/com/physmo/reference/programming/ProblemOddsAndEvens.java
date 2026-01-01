@@ -17,7 +17,7 @@ public class ProblemOddsAndEvens implements ProgramEvaluator {
     int outputIndex = 5;
 
     @Override
-    public void preEvaluateStep(SimpleMachine2 sm, Chromosome dna, double step) {
+    public void preEvaluateStep(SimpleMachine2 sm, Chromosome dna, double step, long randomSeed) {
         input1 = random.nextInt(maxValueRange / 2);
 
         sm.memory[inputIndex + 1] = input1;

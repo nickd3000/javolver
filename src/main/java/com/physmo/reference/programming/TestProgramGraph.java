@@ -25,6 +25,7 @@ public class TestProgramGraph {
     Javolver evolver;
     BasicDisplay bd;
     boolean useOffsetLoader = true;
+    long randomSeed = 0;
 
     public static void main(String[] args) throws Exception {
         TestProgramGraph testProgram = new TestProgramGraph();
@@ -119,7 +120,7 @@ public class TestProgramGraph {
             sm.reset();
             setupSimpleMachineFromDNA_Offset(sm, individual);
             int xx = (int) (x + (Math.random() * 10));
-            programEvaluator.preEvaluateStep(sm, individual.getDna(), xx);
+            programEvaluator.preEvaluateStep(sm, individual.getDna(), xx, randomSeed);
             runSimpleMachine(sm);
             stepScore = programEvaluator.evaluate(sm, individual.getDna(), xx);
             score += stepScore;
@@ -221,7 +222,7 @@ public class TestProgramGraph {
             sm = new SimpleMachine2();
 
             setupSimpleMachineFromDNA_Offset(sm, individual);
-            programEvaluator.preEvaluateStep(sm, individual.getDna(), x);
+            programEvaluator.preEvaluateStep(sm, individual.getDna(), x, randomSeed);
             runSimpleMachine(sm);
 
             programEvaluator.render(sm, individual.getDna(), bd, x);

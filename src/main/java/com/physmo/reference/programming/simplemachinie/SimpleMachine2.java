@@ -26,7 +26,7 @@ public class SimpleMachine2 {
     }
 
     public void reset() {
-        pc = 0;
+        pc = 10;
         regA = 0;
         regB = 0;
         regC = 0;
@@ -57,6 +57,16 @@ public class SimpleMachine2 {
         }
 
         return 0;
+    }
+
+    public int countNoOps() {
+        int count = 0;
+        for (int i = 0; i < memSize; i++) {
+            int currentInstruction = memory[i];
+            String name = microcode.getInstructionName(currentInstruction);
+            if (name !=null && name.contains("NOP")) count++;
+        }
+        return count;
     }
 
     private void doMicroOp(MicroOp op) {

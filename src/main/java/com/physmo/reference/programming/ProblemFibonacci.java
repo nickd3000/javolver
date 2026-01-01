@@ -29,7 +29,7 @@ public class ProblemFibonacci implements ProgramEvaluator {
     }
 
     @Override
-    public void preEvaluateStep(SimpleMachine2 sm, Chromosome dna, double step) {
+    public void preEvaluateStep(SimpleMachine2 sm, Chromosome dna, double step, long randomSeed) {
         int seqPos = random.nextInt(seq.length-8)+2;
         input1=seq[seqPos];
         input2=seq[seqPos+1];

@@ -9,7 +9,7 @@ import java.util.Random;
 
 public class ProblemMaxOfThree implements ProgramEvaluator {
 
-    Random random = new Random();
+    //Random random = new Random();
     int[] inputs = new int[3];
     int maxValueRange = 99;
     int maxValue = 0;
@@ -17,7 +17,9 @@ public class ProblemMaxOfThree implements ProgramEvaluator {
     int inputIndex = 0;
 
     @Override
-    public void preEvaluateStep(SimpleMachine2 sm, Chromosome dna, double step) {
+    public void preEvaluateStep(SimpleMachine2 sm, Chromosome dna, double step, long randomSeed) {
+
+        Random random = new Random( randomSeed);
 
         for (int i=0;i<3;i++) {
             inputs[i] = random.nextInt(maxValueRange);

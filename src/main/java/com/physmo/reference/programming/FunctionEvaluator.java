@@ -11,7 +11,7 @@ import java.awt.Color;
 public class FunctionEvaluator implements ProgramEvaluator {
 
     @Override
-    public void preEvaluateStep(SimpleMachine2 sm, Chromosome dna, double step) {
+    public void preEvaluateStep(SimpleMachine2 sm, Chromosome dna, double step, long randomSeed) {
         sm.regA = (int) inputValue(step);
     }
 

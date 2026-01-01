@@ -17,7 +17,7 @@ public class ProblemInvertNumber implements ProgramEvaluator {
     int inputIndex = 0;
 
     @Override
-    public void preEvaluateStep(SimpleMachine2 sm, Chromosome dna, double step) {
+    public void preEvaluateStep(SimpleMachine2 sm, Chromosome dna, double step, long randomSeed) {
         input1 = random.nextInt(maxValueRange);
 
         sm.memory[inputIndex + 1] = input1;

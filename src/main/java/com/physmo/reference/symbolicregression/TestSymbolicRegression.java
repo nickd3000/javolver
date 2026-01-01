@@ -13,7 +13,7 @@ public class TestSymbolicRegression {
     static int dnaSize = 200;
     static int populationSize = 500;
     static int maxDepth = 4;
-    static double penaltyPerStatement = 0.01;
+    static double penaltyPerStatement = 0.03;
     static TreeParser treeParser = new TreeParser(maxDepth);
     static Remapper registerRemapper = new Remapper(0, 1, -10, 10);
     Javolver solver;

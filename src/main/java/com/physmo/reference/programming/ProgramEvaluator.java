@@ -6,7 +6,7 @@ import com.physmo.reference.programming.simplemachinie.SimpleMachine2;
 
 
 public interface ProgramEvaluator {
-    void preEvaluateStep(SimpleMachine2 sm, Chromosome dna, double x);
+    void preEvaluateStep(SimpleMachine2 sm, Chromosome dna, double x, long randomSeed);
 
     double evaluate(SimpleMachine2 sm, Chromosome dna, double x);
 

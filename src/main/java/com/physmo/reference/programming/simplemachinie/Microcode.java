@@ -42,25 +42,27 @@ public class Microcode {
     public Microcode() {
         int id = 0;
 
-        define(id++, "NOP", NOP);
+        define(id++, "NOP 1", NOP);
 
 
-        define(id++, "LD A,A", FETCH_A, STORE_A);
+        //define(id++, "LD A,A", FETCH_A, STORE_A);
         define(id++, "LD A,B", FETCH_B, STORE_A);
         define(id++, "LD A,C", FETCH_C, STORE_A);
         define(id++, "LD A,D", FETCH_D, STORE_A);
         define(id++, "LD B,A", FETCH_A, STORE_B);
-        define(id++, "LD B,B", FETCH_B, STORE_B);
+        //define(id++, "LD B,B", FETCH_B, STORE_B);
         define(id++, "LD B,C", FETCH_C, STORE_B);
         define(id++, "LD B,D", FETCH_D, STORE_B);
         define(id++, "LD C,A", FETCH_A, STORE_C);
         define(id++, "LD C,B", FETCH_B, STORE_C);
-        define(id++, "LD C,C", FETCH_C, STORE_C);
+        //define(id++, "LD C,C", FETCH_C, STORE_C);
         define(id++, "LD C,D", FETCH_D, STORE_C);
         define(id++, "LD D,A", FETCH_A, STORE_D);
         define(id++, "LD D,B", FETCH_B, STORE_D);
         define(id++, "LD D,C", FETCH_C, STORE_D);
-        define(id++, "LD D,D", FETCH_D, STORE_D);
+        //define(id++, "LD D,D", FETCH_D, STORE_D);
+
+        define(id++, "NOP 2", NOP);
 
         define(id++, "LD A,pBYTE", FETCH_ADDRESS, FETCH_BYTE_FROM_ADDRESS, STORE_A); // Load A with value from address
         define(id++, "LD pBYTE,A", FETCH_ADDRESS, FETCH_A, STORE_BYTE_IN_ADDRESS); // Load A to address
@@ -73,6 +75,8 @@ public class Microcode {
 
         define(id++, "LD D,pBYTE", FETCH_ADDRESS, FETCH_BYTE_FROM_ADDRESS, STORE_D); // Load A with value from address
         define(id++, "LD pBYTE,D", FETCH_ADDRESS, FETCH_D, STORE_BYTE_IN_ADDRESS); // Load A to address
+
+        define(id++, "NOP 3", NOP);
 
         define(id++, "LD A,BYTE", FETCH_BYTE, STORE_A);
         define(id++, "LD B,BYTE", FETCH_BYTE, STORE_B);
@@ -89,6 +93,8 @@ public class Microcode {
         define(id++, "SUB A,C", FETCH_C, SUB);
         define(id++, "SUB A,D", FETCH_D, SUB);
 
+        define(id++, "NOP 4", NOP);
+
         define(id++, "MUL A,A", FETCH_A, MUL);
         define(id++, "MUL A,B", FETCH_B, MUL);
         define(id++, "MUL A,C", FETCH_C, MUL);
@@ -99,6 +105,7 @@ public class Microcode {
         define(id++, "CMP A,C", FETCH_C, CMP);
         define(id++, "CMP A,D", FETCH_D, CMP);
 
+        define(id++, "NOP 5", NOP);
 
         define(id++, "OR A,A", FETCH_A, OR);
         define(id++, "OR A,B", FETCH_B, OR);
@@ -121,12 +128,15 @@ public class Microcode {
         define(id++, "SHR A,C", FETCH_C, SHR);
         define(id++, "SHR A,D", FETCH_D, SHR);
 
+        define(id++, "NOP 6", NOP);
 
         define(id++, "JP NZ,byte", FETCH_ADDRESS, JUMP_NZ);
         define(id++, "JP Z,byte", FETCH_ADDRESS, JUMP_Z);
         define(id++, "JP byte", FETCH_ADDRESS, JUMP);
         define(id++, "JP GT,byte", FETCH_ADDRESS, JUMP_GT);
         define(id++, "JP LT,byte", FETCH_ADDRESS, JUMP_LT);
+
+        define(id++, "NOP 7", NOP);
 
         define(id++, "STOP", STOP);
         stopInstruction = id - 1;
@@ -147,8 +157,9 @@ public class Microcode {
     }
 
     public MicroOp[] getInstructionCode(int instruction) {
-        if (instruction>=n.length) return null;
-        return n[instruction];
+        //if (instruction>=n.length) return null;
+        int index = ((instruction%n.length)+n.length)%n.length;
+        return n[index];
     }
 
     public String getInstructionName(int instruction) {

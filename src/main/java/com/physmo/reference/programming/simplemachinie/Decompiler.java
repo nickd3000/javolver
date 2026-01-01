@@ -18,15 +18,18 @@ public class Decompiler {
 
             String name = microcode.getInstructionName(fetched);
 
-            if (name != null && !name.equals("NOP")) output += System.lineSeparator() + pc + " - " + name;
+            if (name != null && !name.contains("NOP")) {
+                output += System.lineSeparator() + pc + " - " + name;
+            }
+
             if (doesInstructionFetchByte(microOps)) {
                 fetchedByte = sm.memory[pc++];
 
-                output += "  - " + fetchedByte;
-                if (fetchedByte<sm.memSize) {
-                    targetByte = sm.memory[fetchedByte];
-                    output += "("+targetByte+")";
-                }
+                output += "  - =" + fetchedByte;
+//                if (fetchedByte<sm.memSize) {
+//                    targetByte = sm.memory[fetchedByte];
+//                    output += "("+targetByte+")";
+//                }
             }
             //output += System.lineSeparator();
         }

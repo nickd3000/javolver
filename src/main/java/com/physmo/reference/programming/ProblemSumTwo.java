@@ -2,14 +2,14 @@ package com.physmo.reference.programming;
 
 import com.physmo.javolver.Chromosome;
 import com.physmo.javolver.Scoring;
-import com.physmo.reference.programming.simplemachinie.SimpleMachine2;
 import com.physmo.minvio.BasicDisplay;
+import com.physmo.reference.programming.simplemachinie.SimpleMachine2;
 
 import java.util.Random;
 
 public class ProblemSumTwo implements ProgramEvaluator {
 
-    Random random = new Random();
+
     int maxValueRange = 99;
     int input1 = 0;
     int input2 = 0;
@@ -18,16 +18,18 @@ public class ProblemSumTwo implements ProgramEvaluator {
     int outputIndex = 5;
 
     @Override
-    public void preEvaluateStep(SimpleMachine2 sm, Chromosome dna, double step) {
-        input1 = random.nextInt(maxValueRange/2);
-        input2 = random.nextInt(maxValueRange/2);
+    public void preEvaluateStep(SimpleMachine2 sm, Chromosome dna, double step, long randomSeed) {
+        Random random = new Random(randomSeed);
 
-        if (random.nextDouble()<0.0) {
-            double rnd =random.nextDouble();
-            if (rnd<0.3) {
+        input1 = random.nextInt(maxValueRange / 2);
+        input2 = random.nextInt(maxValueRange / 2);
+
+        if (random.nextDouble() < 0.0) {
+            double rnd = random.nextDouble();
+            if (rnd < 0.3) {
                 input1 = 50;
                 input2 = 25;
-            } else if (rnd<0.6) {
+            } else if (rnd < 0.6) {
                 input1 = 20;
                 input2 = 10;
             } else {
@@ -36,20 +38,22 @@ public class ProblemSumTwo implements ProgramEvaluator {
             }
         }
 
-        sm.memory[inputIndex+1] = input1;
-        sm.memory[inputIndex+2] = input2;
+        sm.memory[inputIndex + 1] = input1;
+        sm.memory[inputIndex + 2] = input2;
 
-        sm.pc=10;
+        sm.pc = 10;
     }
 
     @Override
     public double evaluate(SimpleMachine2 sm, Chromosome dna, double step) {
         double output = sm.regD;
-        double target = input1+input2;
-
-        return Scoring.scoreValue(output, target, 100);
+        double target = input1 + input2;
+        double score = Scoring.scoreValue(output, target, 100) / 10;
+        if (output == target) score += 1;
+        if (Math.abs(output-target)<15) score+=0.1;
+        if (Math.abs(output-target)<5) score+=0.2;
+        return score;
     }
-
 
 
     @Override
@@ -70,10 +74,10 @@ public class ProblemSumTwo implements ProgramEvaluator {
     @Override
     public String report(SimpleMachine2 sm, Chromosome dna) {
         double output = sm.regD;
-        double target = input1+input2;
+        double target = input1 + input2;
 
         //String str = "["+sm.memory[inputIndex+0]+","+sm.memory[inputIndex+1]+","+sm.memory[inputIndex+2]+"]";
-        String result = " expecting "+(target)+" got "+output;
+        String result = " expecting " + (target) + " got " + output;
         return result;
     }
 }
