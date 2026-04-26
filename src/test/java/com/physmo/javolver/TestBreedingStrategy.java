@@ -1,8 +1,7 @@
 package com.physmo.javolver;
 
-import com.physmo.javolver.Individual;
-import com.physmo.javolver.breedingstrategy.BreedingStrategyAverage;
-import com.physmo.javolver.breedingstrategy.BreedingStrategyCrossover;
+import com.physmo.javolver.breedingoperator.BreedingOperatorAverage;
+import com.physmo.javolver.breedingoperator.BreedingOperatorCrossover;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -20,7 +19,7 @@ public class TestBreedingStrategy {
         i2.dna.init(10);
         setAllDnaValuesTo(i2, 1);
 
-        BreedingStrategyAverage breedingStrategyAverage = new BreedingStrategyAverage();
+        BreedingOperatorAverage breedingStrategyAverage = new BreedingOperatorAverage();
 
         List<Individual> children = breedingStrategyAverage.breed(i1, i2);
 
@@ -48,7 +47,7 @@ public class TestBreedingStrategy {
         i2.dna.init(10);
         setAllDnaValuesTo(i2, 1);
 
-        BreedingStrategyCrossover breedingStrategyAverage = new BreedingStrategyCrossover();
+        BreedingOperatorCrossover breedingStrategyAverage = new BreedingOperatorCrossover();
 
         List<Individual> children = breedingStrategyAverage.breed(i1, i2);
 

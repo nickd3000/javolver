@@ -2,14 +2,14 @@ package com.physmo.javolver.solver;
 
 import com.physmo.javolver.Individual;
 import com.physmo.javolver.ScoreFunction;
-import com.physmo.javolver.mutationstrategy.MutationStrategy;
+import com.physmo.javolver.mutationoperator.MutationOperator;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Optimizer implements Solver {
+public class Optimizer extends Solver {
 
-    private final List<MutationStrategy> mutationStrategies = new ArrayList<>();
+    private final List<MutationOperator> mutationStrategies = new ArrayList<>();
     Individual bestIndividual;
     int dnaSize = 10;
     int stuckCounter = 0;
@@ -43,16 +43,16 @@ public class Optimizer implements Solver {
     }
 
     @Override
-    public void doOneCycle() {
+    public void runOneGeneration() {
         iteration++;
-        algorithm1();
+        algorithm();
     }
 
-    public void algorithm1() {
+    public void algorithm() {
 
         Individual clone = bestIndividual.cloneFully();
 
-        for (MutationStrategy mutationStrategy : mutationStrategies) {
+        for (MutationOperator mutationStrategy : mutationStrategies) {
             mutationStrategy.mutate(clone, changeAmount);
         }
 
@@ -89,7 +89,7 @@ public class Optimizer implements Solver {
         return iteration;
     }
 
-    public void addMutationStrategy(MutationStrategy strategy) {
+    public void addMutationStrategy(MutationOperator strategy) {
         mutationStrategies.add(strategy);
     }
 }

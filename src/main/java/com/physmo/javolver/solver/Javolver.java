@@ -3,187 +3,179 @@ package com.physmo.javolver.solver;
 import com.physmo.javolver.Individual;
 import com.physmo.javolver.ScoreFunction;
 import com.physmo.javolver.SpeciesCheck;
-import com.physmo.javolver.breedingstrategy.BreedingStrategy;
-import com.physmo.javolver.breedingstrategy.BreedingStrategyUniform;
-import com.physmo.javolver.mutationstrategy.MutationStrategy;
-import com.physmo.javolver.mutationstrategy.MutationStrategySimple;
-import com.physmo.javolver.selectionstrategy.SelectionStrategy;
-import com.physmo.javolver.selectionstrategy.SelectionStrategyTournament;
+import com.physmo.javolver.mutationoperator.MutationOperator;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
-import java.util.function.IntToDoubleFunction;
-
 
 /**
- * Javolver is a simple engine that processes a pool of individuals using genetic selection.
- * The user must derive a class from the Individual class and supply an object of this derived type to the constructor.
+ * A population-based genetic algorithm solver.
+ * <p>
+ * {@code Javolver} manages a pool of {@link Individual} instances and evolves them over
+ * successive generations. Each generation scores the current population, selects parents,
+ * breeds new children, applies mutation operators, and replaces the old population with
+ * the newly generated one.
+ * <p>
+ * Solver behavior is controlled by {@link JavolverConfig}, including population size,
+ * DNA size, scoring, selection, breeding, mutation, elitism, duplicate prevention, and
+ * optional parallel scoring.
  *
  * @author Nick Donnelly (Twitter: @nickd3000)
- * @version 1.0
- * @since 2016-04-01
  */
-public class Javolver implements Solver {
+public class Javolver extends Solver {
 
-    private List<Individual> genePool = new ArrayList<>();
-    private final List<MutationStrategy> mutationStrategies = new ArrayList<>();
-    private BreedingStrategy breedingStrategy = null;
-    private SelectionStrategy selectionStrategy = null;
-
-    IntToDoubleFunction dnaInitializer = null;
     Random random = new Random();
-    // Keep the best individual alive between generations.
-    private boolean keepBestIndividualAlive = false;
-    // Use multi-threading for the scoring process.
-    private boolean parallelScoring = false;
-    private ScoreFunction scoreFunction;
-
+    private List<Individual> genePool = new ArrayList<>();
     private boolean allScored = false;
-
-    private int targetPopulationSize = 0;
-    private int dnaSize = 0;
-    private int iteration = 0;
-    private double changeAmount = 1;
-    private boolean preventDuplicateChildren = false;
+    private final double changeAmount = 1;
     private SpeciesCheck speciesCheck = null;
+    private JavolverConfig config;
 
     /**
-     * Create Javolver object with prototype individual and set the population size.
+     * Constructs a Javolver instance with a given configuration.
+     *
+     * @param javolverConfig The configuration object specifying all solver settings.
      */
-    public Javolver() {
-
+    public Javolver(JavolverConfig javolverConfig) {
+        this.config = javolverConfig;
     }
 
+    /**
+     * Provides a builder for conveniently creating and configuring a Javolver instance.
+     *
+     * @return A new {@link JavolverBuilder} instance.
+     */
     public static JavolverBuilder builder() {
         return new JavolverBuilder();
     }
 
+    /**
+     * Retrieves the current configuration of the solver.
+     *
+     * @return The {@link JavolverConfig} object.
+     */
+    public JavolverConfig getConfig() {
+        return config;
+    }
+
+    /**
+     * Sets a new configuration for the solver.
+     *
+     * @param config The {@link JavolverConfig} object to set.
+     */
+    public void setConfig(JavolverConfig config) {
+        this.config = config;
+    }
+
+    /**
+     * Returns the number of iterations (generations) performed so far.
+     *
+     * @return The current iteration count.
+     */
     @Override
     public int getIteration() {
         return iteration;
     }
 
 
+    /**
+     * Initializes the solver by creating the initial population.
+     */
     @Override
     public void init() {
-        increasePopulation(targetPopulationSize);
+        increasePopulation(config.getTargetPopulationSize());
     }
 
     /**
-     * Add a number of randomly initialized genes to the population, until it reaches specified size.
+     * Adds new, randomly initialized individuals to the population until it reaches the target size.
      *
-     * @param targetCount The target number of individuals that the population will reach.
+     * @param targetCount The desired size of the population.
      */
-    private void increasePopulation(int targetCount) {
+    public void increasePopulation(int targetCount) {
         Individual n;
         int target = targetCount - genePool.size();
         if (target < 1) return;
 
         for (int i = 0; i < target; i++) {
-            n = new Individual(dnaSize);
-            n.setScoreFunction(scoreFunction);
-            if (dnaInitializer != null) n.getDna().initFromFunction(dnaInitializer);
+            n = new Individual(config.getDnaSize());
+            n.setScoreFunction(config.getScoreFunction());
+            if (config.getDnaInitializer() != null) n.getDna().initFromFunction(config.getDnaInitializer());
             genePool.add(n);
         }
     }
 
+    /**
+     * Gets the DNA size for individuals in the population.
+     *
+     * @return The configured DNA size.
+     */
     public int getDnaSize() {
-        return dnaSize;
+        return config.getDnaSize();
     }
 
+    /**
+     * Sets the DNA size for individuals in the population.
+     *
+     * @param dnaSize The new DNA size.
+     */
     @Override
     public void setDnaSize(int dnaSize) {
-        this.dnaSize = dnaSize;
+        config.setDnaSize(dnaSize);
     }
 
-    public int getTargetPopulationSize() {
-        return targetPopulationSize;
-    }
-
-    public void setTargetPopulationSize(int targetPopulationSize) {
-        this.targetPopulationSize = targetPopulationSize;
-    }
-
-    public void keepBestIndividualAlive(boolean val) {
-        keepBestIndividualAlive = val;
-    }
-
-    public void parallelScoring(boolean val) {
-        parallelScoring = val;
-    }
 
     /**
-     * Apply some sensible default strategies.
+     * Finds the best score of any individual in the supplied pool.
      *
-     * @return
-     */
-    public Javolver setDefaultStrategies() {
-
-        breedingStrategy = new BreedingStrategyUniform();
-
-        selectionStrategy = new SelectionStrategyTournament(0.15);
-
-        mutationStrategies.add(new MutationStrategySimple(1, 0.012));
-
-        return this;
-    }
-
-    public Javolver setBreedingStrategy(BreedingStrategy strategy) {
-        this.breedingStrategy = strategy;
-        return this;
-    }
-
-    public Javolver setSelectionStrategy(SelectionStrategy strategy) {
-        this.selectionStrategy = strategy;
-        return this;
-    }
-
-    public Javolver addMutationStrategy(MutationStrategy strategy) {
-        mutationStrategies.add(strategy);
-        return this;
-    }
-
-    /**
-     * Find the best score of any individual in the current generation.
-     *
-     * @return The best score of any individual in the current generation.
+     * @param pool The list of individuals to check.
+     * @return The best score found in the pool.
      */
     public double getBestScore(List<Individual> pool) {
         if (pool == null) pool = genePool;
         return findBestScoringIndividual(pool).getScore();
     }
 
+    /**
+     * Finds the individual with the highest score in the supplied pool.
+     *
+     * @param pool The list of individuals to search.
+     * @return The best-scoring individual.
+     */
     public Individual findBestScoringIndividual(List<Individual> pool) {
         return pool.stream().max(Comparator.comparing(Individual::getScore)).get();
     }
 
+    /**
+     * Finds the best score among all individuals in the current population.
+     *
+     * @return The highest score in the current generation.
+     */
     public double getBestScore() {
         return findBestScoringIndividual(genePool).getScore();
     }
 
     /**
-     * The main function that does most of the work to evolve the system.<br>
-     * 1. All individuals scoring mechanisms get called.<br>
-     * 2. The best scoring individual is automatically moved to the next generation.<br>
-     * 3. A new generation of individuals is created by breeding selected member from the current generation.<br>
-     * <br>
-     * The size of the new pool will match the previous generation population.
+     * Executes one full generation of the evolutionary process. This involves:
+     * 1. Scoring all individuals in the population.
+     * 2. Optionally preserving the best individual (elitism).
+     * 3. Selecting parents and breeding them to create a new generation.
+     * 4. Mutating the offspring to introduce genetic diversity.
+     * 5. Replacing the old population with the new one.
      */
     @Override
-    public void doOneCycle() {
+    public void runOneGeneration() {
         iteration++;
 
-        // Request that all individuals perform scoring.
+        // Ensure all individuals have an up-to-date score.
         scoreGenes(genePool);
 
         ArrayList<Individual> newGenePool = new ArrayList<>();
-
         int targetPop = genePool.size();
 
-        // Elitism - keep the best individual in the new pool.
-        if (keepBestIndividualAlive) {
+        // Elitism: keep the best individual if configured to do so.
+        if (config.isKeepBestIndividualAlive()) {
             Individual bestScorer = findBestScoringIndividual(genePool);
             bestScorer.setProcessed(false);
             newGenePool.add(bestScorer);
@@ -191,15 +183,14 @@ public class Javolver implements Solver {
 
         Individual g1, g2;
 
+        // Create the new generation.
         while (newGenePool.size() < targetPop) {
             g1 = g2 = null;
             int speciationClashes = 0;
-            // Select parents
+            // Select two distinct parents.
             for (int ii = 0; ii < 100; ii++) {
-
-                g1 = selectionStrategy.select(genePool);
-                g2 = selectionStrategy.select(genePool);
-
+                g1 = config.getSelectionOperator().select(genePool);
+                g2 = config.getSelectionOperator().select(genePool);
 
                 if (speciesCheck != null && !speciesCheck.isSameSpecies(g1, g2) && speciationClashes < 50) {
                     speciationClashes++;
@@ -209,52 +200,52 @@ public class Javolver implements Solver {
                 if (g1 != null && g2 != null && g1 != g2) break;
             }
 
-            // Breed
-            List<Individual> children = breedingStrategy.breed(g1, g2);
+            // Breed parents to produce children.
+            List<Individual> children = config.getBreedingOperator().breed(g1, g2);
 
-            // Mutate children.
+            // Mutate the children.
             for (Individual child : children) {
-                MutationStrategy ms = mutationStrategies.get(random.nextInt(mutationStrategies.size()));
+                MutationOperator ms = config.getMutationOperators().get(random.nextInt(config.getMutationOperators().size()));
                 ms.mutate(child, changeAmount);
             }
 
-            if (preventDuplicateChildren) {
+            // Optionally prevent duplicate individuals in the new generation.
+            if (config.isPreventDuplicateChildren()) {
                 boolean skip = false;
                 for (Individual child : children) {
                     for (Individual individual : newGenePool) {
                         if (individual.getHash() == child.getHash()) skip = true;
                     }
                 }
-                if (skip == true) {
-                    //System.out.println("skipping");
+                if (skip) {
                     continue;
                 }
             }
 
 
-            // Add children to new gene pool.
+            // Add children to the new gene pool.
             newGenePool.addAll(children);
         }
 
-        // Copy new pool over main pool.
+        // Replace the old population with the new one.
         genePool = newGenePool;
         allScored = false;
 
-        // Request that all individuals perform scoring.
+        // Score the new generation.
         scoreGenes(genePool);
     }
 
-    /***
-     * Triggers each individual in the pool to calculate it's score.
-     * The sequential or parallel method is used depending on config settings.
-     * @param    pool    ArrayList of individuals to be scored.
+    /**
+     * Triggers the scoring calculation for each individual in a given pool.
+     * This can be run sequentially or in parallel, based on the solver's configuration.
+     *
+     * @param pool The list of individuals to be scored.
      */
     public void scoreGenes(List<Individual> pool) {
         if (pool == null) pool = getPool();
-
         if (allScored) return;
 
-        if (parallelScoring) {
+        if (config.isParallelScoring()) {
             scoreGenesParallel(pool);
         } else {
             scoreGenesSequential(pool);
@@ -263,64 +254,59 @@ public class Javolver implements Solver {
         allScored = true;
     }
 
+    /**
+     * Retrieves the current population of individuals.
+     *
+     * @return A list of all individuals in the gene pool.
+     */
     public List<Individual> getPool() {
         return genePool;
     }
 
     /**
-     * Score each individual in turn.
+     * Scores each individual in sequence.
      */
     private void scoreGenesSequential(List<Individual> pool) {
         pool.forEach(Individual::getScore);
     }
 
     /**
-     * Score each individual in parallel.
-     *
-     * @param pool
+     * Scores individuals in parallel to improve performance on multi-core systems.
      */
     private void scoreGenesParallel(List<Individual> pool) {
         pool.parallelStream().unordered().forEach(Individual::getScore);
     }
 
 
-    /***
-     * Return a string containing some basic information about the state of the system.
-     * @return String containing simple report
+    /**
+     * Generates a simple report about the current state of the solver.
+     *
+     * @return A string containing the report.
      */
     public String report() {
         Individual best = findBestScoringIndividual(genePool);
         return "Pool Size: " + genePool.size();
     }
 
-    /***
-     * Search the supplied pool of individuals and return the highest scoring one.
-     * @return Highest scoring member of the supplied list.
+    /**
+     * Retrieves the individual with the best (highest) score from the current population.
+     *
+     * @return The best-scoring {@link Individual}.
      */
     @Override
     public Individual getBestScoringIndividual() {
         return findBestScoringIndividual(genePool);
     }
 
-    @Override
-    public void setTemperature(double temperature) {
-        this.changeAmount = temperature;
-    }
 
+    /**
+     * Sets the scoring function to be used for evaluating individuals.
+     *
+     * @param scoreFunction The {@link ScoreFunction} to use.
+     */
     @Override
     public void setScoreFunction(ScoreFunction scoreFunction) {
-        this.scoreFunction = scoreFunction;
+        config.setScoreFunction(scoreFunction);
     }
 
-    public void setSpeciesCheck(SpeciesCheck speciesCheck) {
-        this.speciesCheck = speciesCheck;
-    }
-
-    public ScoreFunction getScoreFunction() {
-        return scoreFunction;
-    }
-
-    public void setDnaInitializer(IntToDoubleFunction dnaInitializer) {
-        this.dnaInitializer = dnaInitializer;
-    }
 }

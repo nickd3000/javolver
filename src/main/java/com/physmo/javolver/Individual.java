@@ -38,14 +38,17 @@ public class Individual {
     public Individual(Individual cloneSource) {
         this.dna = new Chromosome(cloneSource.getDna().getSize());
         this.scoreFunction = (cloneSource.scoreFunction);
+        this.processed=false;
+        this.score=0;
+        this.diversity=0;
     }
 
     public ScoreFunction getScoreFunction() {
         return scoreFunction;
     }
 
-    public void setDna(Chromosome dna) {
-        this.dna = dna;
+    public void setScoreFunction(ScoreFunction scoreFunction) {
+        this.scoreFunction = scoreFunction;
     }
 
     /**
@@ -97,9 +100,8 @@ public class Individual {
         return dna;
     }
 
-
-    public void setScoreFunction(ScoreFunction scoreFunction) {
-        this.scoreFunction = scoreFunction;
+    public void setDna(Chromosome dna) {
+        this.dna = dna;
     }
 
     /**
@@ -124,7 +126,7 @@ public class Individual {
     }
 
     public int getHash() {
-        int combined=0;
+        int combined = 0;
         for (double val : dna.getData()) {
             combined += Double.hashCode(val);
         }

@@ -2,19 +2,17 @@ package com.physmo.javolver.solver;
 
 import com.physmo.javolver.Individual;
 import com.physmo.javolver.ScoreFunction;
-import com.physmo.javolver.mutationstrategy.MutationStrategy;
-import com.physmo.javolver.solver.Solver;
+import com.physmo.javolver.mutationoperator.MutationOperator;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
-// Evelutionary Strategies experiment
-public class OptimizerES implements Solver {
 
-    private final List<MutationStrategy> mutationStrategies = new ArrayList<>();
+/**
+ * Evelutionary Strategies based solver.
+ */
+public class OptimizerES extends Solver {
+
+    private final List<MutationOperator> mutationStrategies = new ArrayList<>();
     Individual bestIndividual;
     int dnaSize = 10;
     int poolSize = 20;
@@ -47,12 +45,12 @@ public class OptimizerES implements Solver {
     }
 
     @Override
-    public void doOneCycle() {
+    public void runOneGeneration() {
         iteration++;
-        algorithm1();
+        algorithm();
     }
 
-    public void algorithm1() {
+    public void algorithm() {
         List<Individual> pool = new ArrayList<>();
 
         // Create pool of mutated clones.
@@ -108,7 +106,7 @@ public class OptimizerES implements Solver {
         return iteration;
     }
 
-    public void addMutationStrategy(MutationStrategy strategy) {
+    public void addMutationStrategy(MutationOperator strategy) {
         mutationStrategies.add(strategy);
     }
 }

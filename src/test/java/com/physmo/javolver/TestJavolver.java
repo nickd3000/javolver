@@ -1,13 +1,12 @@
 package com.physmo.javolver;
 
-import com.physmo.javolver.Individual;
-import com.physmo.javolver.breedingstrategy.BreedingStrategyCrossover;
-import com.physmo.javolver.mutationstrategy.MutationStrategySingle;
-import com.physmo.javolver.selectionstrategy.SelectionStrategyTournament;
+import com.physmo.javolver.breedingoperator.BreedingOperatorCrossover;
+import com.physmo.javolver.mutationoperator.MutationOperatorSingle;
+import com.physmo.javolver.selectionoperator.SelectionOperatorTournament;
 import com.physmo.javolver.solver.Javolver;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class TestJavolver {
     final double scoreTarget = 100;
@@ -20,9 +19,9 @@ public class TestJavolver {
                 .dnaSize(5)
                 .populationTargetSize(50)
                 .keepBestIndividualAlive(false)
-                .addMutationStrategy(new MutationStrategySingle(0.2))
-                .setSelectionStrategy(new SelectionStrategyTournament(0.1))
-                .setBreedingStrategy(new BreedingStrategyCrossover())
+                .addMutationOperator(new MutationOperatorSingle(0.2))
+                .setSelectionOperator(new SelectionOperatorTournament(0.1))
+                .setBreedingOperator(new BreedingOperatorCrossover())
                 .scoreFunction(this::calculateScore)
                 .build();
 
@@ -36,6 +35,8 @@ public class TestJavolver {
             }
         }
 
+        double bestScore = javolver.getBestScore();
+
         double solutionTolerance = 0.03;
         boolean solutionFound = false;
 
@@ -45,7 +46,7 @@ public class TestJavolver {
         if (Math.abs(solutionDelta) < solutionTolerance) solutionFound = true;
         if (solutionFound) System.out.println("Solution found.");
 
-        assertEquals(solutionFound, true);
+        assertTrue(solutionFound);
 
     }
 
