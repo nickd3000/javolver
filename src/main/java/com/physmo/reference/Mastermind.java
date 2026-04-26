@@ -19,7 +19,9 @@ import com.physmo.javolver.solver.Solver;
 public class Mastermind {
 
     // The correct solution that the algorithm is trying to guess.
-    int[] solution = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+    private static final int[] SOLUTION = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+    private static final int POPULATION_SIZE = 50;
+    private static final int GENERATIONS = 200;
 
     /**
      * Main entry point. Creates a Mastermind instance and starts the search.
@@ -37,8 +39,8 @@ public class Mastermind {
      */
     private void go() {
         Solver solver = Javolver.builder()
-                .populationTargetSize(50)
-                .dnaSize(solution.length)
+                .populationTargetSize(POPULATION_SIZE)
+                .dnaSize(SOLUTION.length)
                 .keepBestIndividualAlive(false)
                 .addMutationOperator(new MutationOperatorSimple(1, 0.5))
                 .addMutationOperator(new MutationOperatorShuffle(1))
@@ -48,12 +50,12 @@ public class Mastermind {
                 .scoreFunction(this::calculateScore)
                 .build();
 
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < GENERATIONS; i++) {
             solver.doOneCycle();
             Individual bestA = solver.getBestScoringIndividual();
             System.out.printf(
                 "Iteration: %2d  score: %4.1f   solution: %s %n",
-                i, bestA.getScore(), toString(bestA)
+                i, bestA.getScore(), formatGuess(bestA)
             );
         }
     }
@@ -61,22 +63,23 @@ public class Mastermind {
     /**
      * Scores an individual by comparing its DNA to the correct solution.
      * - 20 points for each exact match in the right position.
-     * - 10 points for each number guessed correctly, regardless of position.
+     * - 10 points for each number guessed correctly in the wrong position.
      *
      * @param individual The individual to score.
      * @return The fitness score for the individual.
      */
     public double calculateScore(Individual individual) {
         int score = 0;
+        double[] data = individual.getDna().getData();
 
-        // Exact position and number match.
-        for (int i = 0; i < solution.length; i++) {
-            if (getGuess(individual.getDna().getData(), i) == solution[i]) score += 20;
-        }
+        for (int i = 0; i < SOLUTION.length; i++) {
+            int guess = getGuess(data, i);
 
-        // Number exists anywhere in the solution.
-        for (int i = 0; i < solution.length; i++) {
-            if (isNumberInSolution(getGuess(individual.getDna().getData(), i))) score += 10;
+            if (guess == SOLUTION[i]) {
+                score += 20;
+            } else if (isNumberInSolution(guess)) {
+                score += 10;
+            }
         }
 
         return score;
@@ -90,7 +93,8 @@ public class Mastermind {
      * @return The guessed integer value.
      */
     public int getGuess(double[] data, int index) {
-        return (int) (data[index] * (solution.length + 1));
+        int guess = 1 + (int) (data[index] * SOLUTION.length);
+        return Math.min(guess, SOLUTION.length);
     }
 
     /**
@@ -100,7 +104,7 @@ public class Mastermind {
      * @return True if the number is part of the solution; false otherwise.
      */
     public boolean isNumberInSolution(int number) {
-        for (int j : solution) {
+        for (int j : SOLUTION) {
             if (number == j) return true;
         }
         return false;
@@ -112,11 +116,15 @@ public class Mastermind {
      * @param individual The individual whose DNA to display.
      * @return String representation of the individual's guesses.
      */
-    public String toString(Individual individual) {
+    public String formatGuess(Individual individual) {
         StringBuilder str = new StringBuilder();
-        for (int i = 0; i < solution.length; i++) {
-            str.append(getGuess(individual.getDna().getData(), i)).append(", ");
+        double[] data = individual.getDna().getData();
+
+        for (int i = 0; i < SOLUTION.length; i++) {
+            if (i > 0) str.append(", ");
+            str.append(getGuess(data, i));
         }
+
         return str.toString();
     }
 }

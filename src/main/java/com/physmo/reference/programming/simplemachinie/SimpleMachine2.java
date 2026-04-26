@@ -26,7 +26,7 @@ public class SimpleMachine2 {
     }
 
     public void reset() {
-        pc = 10;
+        pc = 10; // Start PC at 10 because the first section is used for variables.
         regA = 0;
         regB = 0;
         regC = 0;
@@ -65,6 +65,16 @@ public class SimpleMachine2 {
             int currentInstruction = memory[i];
             String name = microcode.getInstructionName(currentInstruction);
             if (name !=null && name.contains("NOP")) count++;
+        }
+        return count;
+    }
+
+    public int countRealInstructions() {
+        int count = 0;
+        for (int i = 10; i < memSize; i++) {
+            int currentInstruction = memory[i];
+            String name = microcode.getInstructionName(currentInstruction);
+            if (name !=null && !name.contains("NOP")) count++;
         }
         return count;
     }
@@ -155,10 +165,10 @@ public class SimpleMachine2 {
                 pc = addressBuffer;
                 break;
             case JUMP_NZ:
-                if (flagEquals) pc = addressBuffer;
+                if (!flagEquals) pc = addressBuffer;
                 break;
             case JUMP_Z:
-                if (!flagEquals) pc = addressBuffer;
+                if (flagEquals) pc = addressBuffer;
                 break;
             case JUMP_GT:
                 if (flagGT) pc = addressBuffer;

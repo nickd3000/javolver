@@ -38,18 +38,10 @@ public class KnapsackDemo {
             Individual best = solver.getBestScoringIndividual();
 
             if (generation % 100 == 0 || generation == 99) {
-                boolean[] items = genomeToItems(best);
-                int totalValue = 0;
-                int totalWeight = 0;
-                for (int i = 0; i < NUM_ITEMS; i++) {
-                    if (items[i]) {
-                        totalValue += values[i];
-                        totalWeight += weights[i];
-                    }
-                }
+                KnapsackResult result = evaluateIndividual(best);
 
                 System.out.printf("Generation %3d | Value: %3d | Weight: %3d | Items: %s%n",
-                        generation, totalValue, totalWeight, genomeToString(items));
+                        generation, result.totalValue(), result.totalWeight(), genomeToString(result.items()));
             }
             solver.doOneCycle();
 
@@ -57,17 +49,28 @@ public class KnapsackDemo {
 
         // Print the best solution found
         Individual best = solver.getBestScoringIndividual();
-        boolean[] items = genomeToItems(best);
+        KnapsackResult result = evaluateIndividual(best);
+        System.out.println("Best solution found:");
+        System.out.printf("Value: %d, Weight: %d, Items: %s%n",
+                result.totalValue(), result.totalWeight(), genomeToString(result.items()));
+    }
+
+    private record KnapsackResult(boolean[] items, int totalValue, int totalWeight) {
+    }
+
+    private static KnapsackResult evaluateIndividual(Individual individual) {
+        boolean[] items = genomeToItems(individual);
         int totalValue = 0;
         int totalWeight = 0;
+
         for (int i = 0; i < NUM_ITEMS; i++) {
             if (items[i]) {
                 totalValue += values[i];
                 totalWeight += weights[i];
             }
         }
-        System.out.println("Best solution found:");
-        System.out.printf("Value: %d, Weight: %d, Items: %s%n", totalValue, totalWeight, genomeToString(items));
+
+        return new KnapsackResult(items, totalValue, totalWeight);
     }
 
     // Converts Individual's genome to boolean[] denoting which items are chosen
@@ -82,16 +85,10 @@ public class KnapsackDemo {
 
     // Returns fitness: value if total weight is under MAX_WEIGHT, else 0
     public static double calculateScore(Individual individual) {
-        int value = 0;
-        int weight = 0;
-        for (int i = 0; i < NUM_ITEMS; i++) {
-            if (individual.getDna().getDouble(i) > 0.5) {
-                value += values[i];
-                weight += weights[i];
-            }
-        }
+        KnapsackResult result = evaluateIndividual(individual);
+
         // Penalize overweight genomes
-        return (weight <= MAX_WEIGHT) ? value : 0.0;
+        return (result.totalWeight() <= MAX_WEIGHT) ? result.totalValue() : 0.0;
     }
 
     // Pretty-prints selected items as a string of 0/1

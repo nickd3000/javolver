@@ -76,6 +76,8 @@ public class Microcode {
         define(id++, "LD D,pBYTE", FETCH_ADDRESS, FETCH_BYTE_FROM_ADDRESS, STORE_D); // Load A with value from address
         define(id++, "LD pBYTE,D", FETCH_ADDRESS, FETCH_D, STORE_BYTE_IN_ADDRESS); // Load A to address
 
+        define(id++, "LD pBYTE,BYTE", FETCH_ADDRESS, FETCH_BYTE, STORE_BYTE_IN_ADDRESS);
+
         define(id++, "NOP 3", NOP);
 
         define(id++, "LD A,BYTE", FETCH_BYTE, STORE_A);
@@ -146,7 +148,7 @@ public class Microcode {
 
     public int getOpcodeFromName(String name) {
         for (Integer i : names.keySet()) {
-            if (names.get(i) == name) return i;
+            if (names.get(i).equals(name)) return i;
         }
         return 0;
     }

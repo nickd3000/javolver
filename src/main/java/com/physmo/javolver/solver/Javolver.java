@@ -11,9 +11,16 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Javolver is the main engine for processing a population of individuals using genetic algorithms.
- * It orchestrates the evolutionary process, including selection, breeding, and mutation,
- * based on the provided configuration.
+ * A population-based genetic algorithm solver.
+ * <p>
+ * {@code Javolver} manages a pool of {@link Individual} instances and evolves them over
+ * successive generations. Each generation scores the current population, selects parents,
+ * breeds new children, applies mutation operators, and replaces the old population with
+ * the newly generated one.
+ * <p>
+ * Solver behavior is controlled by {@link JavolverConfig}, including population size,
+ * DNA size, scoring, selection, breeding, mutation, elitism, duplicate prevention, and
+ * optional parallel scoring.
  *
  * @author Nick Donnelly (Twitter: @nickd3000)
  */
