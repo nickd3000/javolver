@@ -4,59 +4,60 @@
 
 ![Evolved Tree](https://i.imgur.com/YQOhyQV.png "Evolved tree")
 
-The library is designed to be extremely simple to set up and run. To get strted, create a derived class from
-the [Individual](https://github.com/nickd3000/javolver/blob/master/javolver/Individual.java) class, and implement three
-functions:
-clone()
-toString();
-calculateScore();
+The library is designed to be extremely simple to set up and run. To get started, you typically define a `ScoreFunction` to evaluate your individuals.
 
-An object of Javolver is then created and passed in the user's derived type, and then the fun can begin.
+An individual's genetic information is stored in a `Chromosome` (an array of doubles between 0.0 and 1.0). You can map these values to any data type your problem requires.
 
 *Documentation*
 Java docs for the library are
 available [here](http://htmlpreview.github.com/?https://github.com/nickd3000/javolver/blob/master/docs/index.html)
 
-Simple Example
+### Simple Example
 
-``` 
-    /**
-	 * Example testing the CWord class.
-	 * Individuals of type CWord are scored by how well they spell
-	 * out a string compared to the supplied target word.
-	 */
-	public static void testWord() {
+The following example shows how to set up a solver to evolve a string to match a target word.
 
-		int populationSize = 100;
-		String targetWord = "HELLOWORLD";
-		Javolver testEvolver = new Javolver(new CWord(targetWord), populationSize);
-		
-		// Configure the engine (Not required).
-		testEvolver.setKeepBestIndividualAlive(false);
-		testEvolver.setMutationCount(1);
-		testEvolver.setMutationAmount(1.0/20.0);
-		testEvolver.setSelectionType(SELECTION_TYPE.tournament);
-		testEvolver.setSelectionRange(0.25);
-		testEvolver.setDiversityAmount(1.0);
-		
-		// Perform a few iterations of evolution.
-		for (int j = 0; j < 30; j++) {
-			
-			// Call the evolver class to perform one evolution step.
-			testEvolver.doOneCycle();
-			
-			// Print output every so often.
-			System.out.println("Iteration " + j + "  " + testEvolver.report());
-		}
+```java
+    public static void testWord() {
+        String targetWord = "HELLOWORLD";
+        int populationSize = 100;
 
-		System.out.print("END ");
-	}
+        Solver solver = Javolver.builder()
+                .dnaSize(targetWord.length())
+                .populationTargetSize(populationSize)
+                .keepBestIndividualAlive(true)
+                .addMutationOperator(new MutationOperatorSimple(1, 0.05))
+                .setSelectionOperator(new SelectionOperatorTournament(0.25))
+                .setBreedingOperator(new BreedingOperatorUniform())
+                .scoreFunction(individual -> {
+                    double score = 0;
+                    for (int i = 0; i < targetWord.length(); i++) {
+                        if (individual.getDna().getChar(i) == targetWord.charAt(i)) {
+                            score += 1.0;
+                        }
+                    }
+                    return score;
+                })
+                .build();
+
+        // Perform a few iterations of evolution.
+        for (int j = 0; j < 100; j++) {
+            // Call the solver to perform one evolution step.
+            solver.doOneCycle();
+
+            Individual best = solver.getBestScoringIndividual();
+            System.out.println("Iteration " + j + " Best Score: " + best.getScore());
+            
+            if (best.getScore() >= targetWord.length()) break;
+        }
+    }
 ```
 
-There are a few tests included in the project, a simulation
-that [evolves trees](https://github.com/nickd3000/javolver/blob/master/test/GeneTree.java), one
-that [packs arbitrarily sized circles](https://github.com/nickd3000/javolver/blob/master/test/CSpherePacker.java) into a
-set area and a simple [word finding algorithm](https://github.com/nickd3000/javolver/blob/master/test/CWord.java).
+### Included Examples
+
+There are several examples included in the project:
+* [Word Finder](src/main/java/com/physmo/reference/WordFinder.java) - Evolving a string to match a target.
+* [Sphere Packer](src/main/java/com/physmo/reference/SpherePacker.java) - Packing circles into a set area.
+* [Symbolic Regression](src/main/java/com/physmo/reference/symbolicregression/TestSymbolicRegression.java) - Evolving mathematical expressions (trees).
 
 ![Sphere Packing](https://i.imgur.com/sidizaf.png "Sphere Packing")
 ![Basic test](https://i.imgur.com/TT5nKZB.png "Basic test")
