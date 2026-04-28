@@ -3,8 +3,8 @@ package com.physmo.javolver;
 
 /**
  * This is the base class that should be used to create custom individual types to feed into the evolver.<br>
- * Individual provides a simple array of floats to represent the 'DNA' of the individual, <br>
- * these floats can be mapped by the user to any data type they require.
+ * Individual provides a simple array of floats to represent the 'DNA' of the individual. <br>
+ * the user can map these floats to any data type they require.
  *
  * @author Nick Donnelly (Twitter: @nickd3000)
  * @version 1.0
@@ -13,7 +13,7 @@ package com.physmo.javolver;
 public class Individual {
     /**
      * Holds the genetic information for the individual as an array of doubles
-     * Each type of individual should map double values to theie required data ranages.
+     * Each type of individual should map double values to their required data ranges.
      */
     public Chromosome dna;
     /**
@@ -22,8 +22,8 @@ public class Individual {
     protected double score = 0.0;
     ScoreFunction scoreFunction;
     /**
-     * A latch variable that represents whether the individual has being scored or not.
-     * Scoring can be computationally intensive so this helps prevent multiple scoring events.
+     * A latch variable that represents whether the individual has been scored or not.
+     * Scoring can be computationally intensive, so this helps prevent multiple scoring events.
      */
     boolean processed = false;
     double diversity = 0.0;
@@ -52,7 +52,7 @@ public class Individual {
     }
 
     /**
-     * Return score of this individual. If the individual has not yet been processed, call calculateScore() first.
+     * Return the score of this individual. If the individual has not yet been processed, call calculateScore() first.
      *
      * @return Double value representing the score of the individual. Higher is better.
      */
@@ -79,7 +79,7 @@ public class Individual {
     }
 
     /**
-     * Sets the individuals score.
+     * Sets the individual's score.
      *
      * @param s The score.
      * @return The score (pass through).

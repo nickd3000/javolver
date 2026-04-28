@@ -27,7 +27,7 @@ public class PictureSolver {
     int populationSize = 15;
     ImageComparer imageComparer;
     Graphics2D dc;
-    int numObjects = 150; //50;
+    int numObjects = 50; //50;
     DnaDrawer drawerClass;
     Color graphBG = new Color(36, 68, 23);
     Color graphFG = new Color(171, 206, 64);

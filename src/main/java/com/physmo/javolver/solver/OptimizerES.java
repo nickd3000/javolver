@@ -20,7 +20,7 @@ public class OptimizerES extends Solver {
     int mutationCount = 2;
     int iteration = 0;
     Random random = new Random();
-    double changeAmount = 1;
+    double changeAmount = 0.1;
     private ScoreFunction scoreFunction;
 
     public OptimizerES() {
@@ -48,6 +48,7 @@ public class OptimizerES extends Solver {
     public void runOneGeneration() {
         iteration++;
         algorithm();
+        changeAmount *= 0.99;
     }
 
     public void algorithm() {
@@ -55,7 +56,7 @@ public class OptimizerES extends Solver {
 
         // Create pool of mutated clones.
         for (int i = 0; i < poolSize; i++) {
-            pool.add(createMutatedClone(bestIndividual, 5.0));
+            pool.add(createMutatedClone(bestIndividual, 0.1));
         }
 
         // Sort pool.
