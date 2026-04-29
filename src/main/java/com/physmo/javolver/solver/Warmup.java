@@ -17,10 +17,9 @@ public class Warmup {
      * @param iterations The number of iterations to run in each mini-evolutionary cycle.
      */
     public static void warmup(Solver solver, int iterations) {
-        if (!(solver instanceof Javolver)) {
+        if (!(solver instanceof Javolver javolver)) {
             return;
         }
-        Javolver javolver = (Javolver) solver;
         int targetPopulationSize = javolver.getConfig().getTargetPopulationSize();
 
         Set<Individual> distinctIndividuals = new LinkedHashSet<>();

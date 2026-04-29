@@ -7,6 +7,7 @@ import com.physmo.javolver.breedingoperator.BreedingOperatorCrossover;
 import com.physmo.javolver.mutationoperator.MutationOperatorSimple;
 import com.physmo.javolver.selectionoperator.SelectionOperatorTournament;
 import com.physmo.javolver.solver.Javolver;
+import com.physmo.javolver.solver.OptimizerES;
 import com.physmo.javolver.solver.Solver;
 import com.physmo.javolver.solver.Warmup;
 import com.physmo.minvio.BasicDisplay;
@@ -85,7 +86,6 @@ public class PictureSolver {
 
         Warmup.warmup(solver, 1);
 
-        Spreader spreader = new Spreader(0.0001, 0, 1);
 
         // Perform a few iterations of evolution.
         for (int j = 0; j < 3000000; j++) {

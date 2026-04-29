@@ -3,12 +3,10 @@ package com.physmo.reference;
 import com.physmo.javolver.Attenuator;
 import com.physmo.javolver.Chromosome;
 import com.physmo.javolver.Individual;
-import com.physmo.javolver.breedingoperator.BreedingOperatorCrossover;
 import com.physmo.javolver.breedingoperator.BreedingOperatorUniform;
 import com.physmo.javolver.mutationoperator.MutationOperatorSimple;
 import com.physmo.javolver.selectionoperator.SelectionOperatorTournament;
 import com.physmo.javolver.solver.Javolver;
-import com.physmo.javolver.solver.Optimizer;
 import com.physmo.javolver.solver.OptimizerES;
 import com.physmo.javolver.solver.Solver;
 import com.physmo.javolver.solver.Warmup;
@@ -24,7 +22,7 @@ public class SpherePacker extends MinvioApp {
 
     static String MUTATION_RATE = "mutationRate";
     int populationSize = 500;
-    int numberOfSpheres = 20;
+    int numberOfSpheres = 40;
     int genesPerSphere = 3; // Each sphere uses three DNA values: x position, y position, and radius.
     double overlapPenaltyScale = 0.25;
     double wallPenaltyScale = 20.0;
@@ -60,7 +58,7 @@ public class SpherePacker extends MinvioApp {
                 .scoreFunction(this::calculateScore)
                 .build();
 
-        Warmup.warmup(javolverSolver, 20);
+        Warmup.warmup(javolverSolver, 2);
 
 //        testOptimizer = Optimizer.builder()
 //                .dnaSize(numberOfSpheres * genesPerSphere)
@@ -71,6 +69,8 @@ public class SpherePacker extends MinvioApp {
         ((OptimizerES) optimizerSolver).setDnaSize(numberOfSpheres * genesPerSphere);
         optimizerSolver.setScoreFunction(this::calculateScore);
         optimizerSolver.setTemperature(0.001);
+        ((OptimizerES) optimizerSolver).setPoolSize(500);
+        ((OptimizerES) optimizerSolver).setUseAdaptiveStepSize(false);
         optimizerSolver.init();
 
     }

@@ -160,6 +160,15 @@ public class Individual {
     }
 
     /**
+     * Checks whether the individual has been processed and scored.
+     *
+     * @return True if processed, false otherwise.
+     */
+    public boolean isProcessed() {
+        return processed;
+    }
+
+    /**
      * Sets whether this individual has been processed (scored).
      *
      * @param processed True if the individual should be marked as processed.

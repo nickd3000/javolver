@@ -196,8 +196,6 @@ public class Javolver extends Solver {
      */
     @Override
     public void runOneGeneration() {
-        iteration++;
-
         // Ensure all individuals have an up-to-date score.
         scoreGenes(genePool);
 
@@ -253,8 +251,12 @@ public class Javolver extends Solver {
             }
 
 
-            // Add children to the new gene pool.
-            newGenePool.addAll(children);
+            // Add children to the new gene pool, respecting the target population size.
+            for (Individual child : children) {
+                if (newGenePool.size() < targetPop) {
+                    newGenePool.add(child);
+                }
+            }
         }
 
         // Replace the old population with the new one.
@@ -273,7 +275,15 @@ public class Javolver extends Solver {
      */
     public void scoreGenes(List<Individual> pool) {
         if (pool == null) pool = getPool();
-        if (allScored) return;
+
+        boolean anyUnprocessed = false;
+        for (Individual individual : pool) {
+            if (!individual.isProcessed()) {
+                anyUnprocessed = true;
+                break;
+            }
+        }
+        if (!anyUnprocessed) return;
 
         if (config.isParallelScoring()) {
             scoreGenesParallel(pool);

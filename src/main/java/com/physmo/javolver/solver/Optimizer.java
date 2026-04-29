@@ -60,7 +60,6 @@ public class Optimizer extends Solver {
 
     @Override
     public void runOneGeneration() {
-        iteration++;
         algorithm();
     }
 
@@ -82,8 +81,10 @@ public class Optimizer extends Solver {
         if (newScore > originalScore) {
             bestIndividual = clone;
         } else if (stuckCounter > 20) {
+            // Apply a mutation even if it doesn't improve the score to get out of local optima.
             bestIndividual = clone;
             stuckCounter = 0;
+            bestIndividual.setProcessed(false);
         }
 
         if (originalScore != stuckScore) {

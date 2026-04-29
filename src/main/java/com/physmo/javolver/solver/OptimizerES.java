@@ -19,11 +19,15 @@ public class OptimizerES extends Solver {
     Individual bestIndividual;
     int dnaSize = 10;
     int poolSize = 20;
-    int combineSize = 5;
+    int combineSize = poolSize/4;
     int mutationCount = 2;
     int iteration = 0;
     Random random = new Random();
-    double changeAmount = 0.1;
+    double changeAmount = 0.01;
+    int successCount = 0;
+    int totalCount = 0;
+    boolean useAdaptiveStepSize = true;
+    boolean useClamping = true;
     private ScoreFunction scoreFunction;
 
     /**
@@ -58,9 +62,20 @@ public class OptimizerES extends Solver {
 
     @Override
     public void runOneGeneration() {
-        iteration++;
         algorithm();
-        changeAmount *= 0.99;
+        iteration++;
+
+        if (useAdaptiveStepSize) {
+            if (totalCount >= 10) {
+                double rate = (double) successCount / totalCount;
+                if (rate > 0.2) changeAmount *= 1.1;
+                else if (rate < 0.2) changeAmount *= 0.9;
+                successCount = 0;
+                totalCount = 0;
+            }
+        } else {
+            changeAmount *= 0.999;
+        }
     }
 
     /**
@@ -73,27 +88,49 @@ public class OptimizerES extends Solver {
 
         // Create pool of mutated clones.
         for (int i = 0; i < poolSize; i++) {
-            pool.add(createMutatedClone(bestIndividual, 0.1));
+            pool.add(createMutatedClone(bestIndividual, changeAmount));
         }
 
         // Sort pool.
         pool.sort(Comparator.comparingDouble(Individual::getScore).reversed());
 
-        // Combine top results.
-        Individual clone = bestIndividual.cloneFully();
-        clone.setProcessed(false);
+        // Recombination: average the top individuals.
+        Individual offspring = bestIndividual.cloneFully();
+        offspring.setProcessed(false);
 
-        double[] cloneDnaArray = clone.getDna().getData();
-        Arrays.fill(cloneDnaArray, 0);
-        for (int i = 0; i < combineSize; i++) {
-            double[] parentDnaArray = pool.get(i).getDna().getData();
-            for (int j = 0; j < parentDnaArray.length; j++) {
-                cloneDnaArray[j] += parentDnaArray[j] / (double) combineSize;
+        double[] offspringDna = offspring.getDna().getData();
+        Arrays.fill(offspringDna, 0);
+
+        int count = Math.min(combineSize, pool.size());
+        for (int i = 0; i < count; i++) {
+            double[] parentDna = pool.get(i).getDna().getData();
+            for (int j = 0; j < parentDna.length; j++) {
+                offspringDna[j] += parentDna[j];
             }
         }
 
-        bestIndividual = clone;
+        if (count > 0) {
+            for (int j = 0; j < offspringDna.length; j++) {
+                offspringDna[j] /= count;
+            }
+        }
 
+        // Pick the best among bestIndividual, bestClone (pool.get(0)), and offspring.
+        Individual winner = bestIndividual;
+        Individual bestClone = pool.get(0);
+
+        if (bestClone.getScore() > winner.getScore()) {
+            winner = bestClone;
+        }
+        if (offspring.getScore() > winner.getScore()) {
+            winner = offspring;
+        }
+
+        if (winner != bestIndividual) {
+            bestIndividual = winner;
+            successCount++;
+        }
+        totalCount++;
     }
 
     /**
@@ -107,11 +144,34 @@ public class OptimizerES extends Solver {
         Individual clone = parent.cloneFully();
         clone.setProcessed(false);
 
-        for (int j = 0; j < mutationCount; j++) {
-            int i = random.nextInt(clone.getDna().getSize());
-            double dnaElement = clone.getDna().getDouble(i);
-            dnaElement += (Math.random() - 0.5) * mutationAmount * changeAmount;
-            clone.getDna().set(i, dnaElement);
+        if (mutationStrategies.isEmpty()) {
+            double[] data = clone.getDna().getData();
+            int size = data.length;
+            int count = Math.min(mutationCount, size);
+            
+            // If mutationCount is set to a negative value or exceeds size, mutate all.
+            if (mutationCount <= 0 || mutationCount >= size) {
+                for (int i = 0; i < size; i++) {
+                    data[i] += random.nextGaussian() * mutationAmount;
+                    if (useClamping) {
+                        if (data[i] < 0) data[i] = 0;
+                        if (data[i] > 1) data[i] = 1;
+                    }
+                }
+            } else {
+                for (int j = 0; j < mutationCount; j++) {
+                    int i = random.nextInt(size);
+                    data[i] += random.nextGaussian() * mutationAmount;
+                    if (useClamping) {
+                        if (data[i] < 0) data[i] = 0;
+                        if (data[i] > 1) data[i] = 1;
+                    }
+                }
+            }
+        } else {
+            for (MutationOperator strategy : mutationStrategies) {
+                strategy.mutate(clone, mutationAmount);
+            }
         }
         return clone;
     }
@@ -138,5 +198,47 @@ public class OptimizerES extends Solver {
      */
     public void addMutationStrategy(MutationOperator strategy) {
         mutationStrategies.add(strategy);
+    }
+
+    public int getPoolSize() {
+        return poolSize;
+    }
+
+    public void setPoolSize(int poolSize) {
+        this.poolSize = poolSize;
+        this.combineSize = poolSize/4;
+    }
+
+
+    public double getChangeAmount() {
+        return changeAmount;
+    }
+
+    public void setChangeAmount(double changeAmount) {
+        this.changeAmount = changeAmount;
+    }
+
+    public boolean isUseAdaptiveStepSize() {
+        return useAdaptiveStepSize;
+    }
+
+    public void setUseAdaptiveStepSize(boolean useAdaptiveStepSize) {
+        this.useAdaptiveStepSize = useAdaptiveStepSize;
+    }
+
+    public boolean isUseClamping() {
+        return useClamping;
+    }
+
+    public void setUseClamping(boolean useClamping) {
+        this.useClamping = useClamping;
+    }
+
+    public int getMutationCount() {
+        return mutationCount;
+    }
+
+    public void setMutationCount(int mutationCount) {
+        this.mutationCount = mutationCount;
     }
 }

@@ -30,7 +30,10 @@ public class BreedingOperatorCrossover implements BreedingOperator {
         double[] parent1Data = parent1.getDna().getData();
         double[] parent2Data = parent2.getDna().getData();
 
-        int crossoverPoint = random.nextInt(dnaSize);
+        int crossoverPoint = 0;
+        if (dnaSize > 0) {
+            crossoverPoint = random.nextInt(dnaSize);
+        }
 
         for (int i = 0; i < dnaSize; i++) {
             if (i < crossoverPoint) {

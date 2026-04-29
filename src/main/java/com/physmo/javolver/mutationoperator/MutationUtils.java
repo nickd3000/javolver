@@ -12,14 +12,11 @@ class MutationUtils {
 
     /**
      * Swaps two DNA elements at random.
-     * NOTE: This operation can be quite destructive to the individual's fitness,
-     * so it is currently limited to run only 10% of the time when called.
      *
      * @param individual The individual to modify.
      * @param count      The number of swap operations to attempt.
      */
     public static void randomSwap(Individual individual, int count) {
-        if (Math.random() < 0.9) return; // heavily limit this.
         for (int i = 0; i < count; i++) {
             int index1 = getRandomDnaIndexForIndividual(individual);
             int index2 = getRandomDnaIndexForIndividual(individual);
