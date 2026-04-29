@@ -6,6 +6,7 @@ import com.physmo.javolver.SpeciesCheck;
 import com.physmo.javolver.mutationoperator.MutationOperator;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
@@ -86,6 +87,35 @@ public class Javolver extends Solver {
     @Override
     public void init() {
         increasePopulation(config.getTargetPopulationSize());
+    }
+
+    @Override
+    public void resetPopulation() {
+        genePool.clear();
+        increasePopulation(config.getTargetPopulationSize());
+    }
+
+    /**
+     * Adds an individual to the population.
+     *
+     * @param individual The individual to add.
+     */
+    public void addIndividual(Individual individual) {
+        if (individual.getScoreFunction() == null) {
+            individual.setScoreFunction(config.getScoreFunction());
+        }
+        genePool.add(individual);
+    }
+
+    /**
+     * Adds a collection of individuals to the population.
+     *
+     * @param individuals The collection of individuals to add.
+     */
+    public void addIndividuals(Collection<Individual> individuals) {
+        for (Individual individual : individuals) {
+            addIndividual(individual);
+        }
     }
 
     /**

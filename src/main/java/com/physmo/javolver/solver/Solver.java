@@ -21,6 +21,9 @@ public abstract class Solver {
      */
     public abstract void init();
 
+    // Clear population and rebuild it to the population size.
+    public abstract void resetPopulation();
+
     /**
      * Executes a single cycle or iteration of the solving process.
      * This method increments the iteration counter and then calls the

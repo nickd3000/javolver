@@ -8,6 +8,7 @@ import com.physmo.javolver.mutationoperator.MutationOperatorSimple;
 import com.physmo.javolver.selectionoperator.SelectionOperatorTournament;
 import com.physmo.javolver.solver.Javolver;
 import com.physmo.javolver.solver.Solver;
+import com.physmo.javolver.solver.Warmup;
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
 import com.physmo.minvio.utils.BasicGraph;
@@ -24,7 +25,7 @@ public class PictureSolver {
 
     BufferedImage targetImage = null;
     BufferedImage workImage = null;
-    int populationSize = 15;
+    int populationSize = 55;
     ImageComparer imageComparer;
     Graphics2D dc;
     int numObjects = 50; //50;
@@ -48,7 +49,7 @@ public class PictureSolver {
     }
 
     public void run() {
-        drawerClass = DrawerType.POLYS.create();
+        drawerClass = DrawerType.CIRCLES.create();
 
         try {
             targetImage = ImageIO.read(new File(String.valueOf(PictureSolver.class.getResource("/parrot.jpg").getFile())));
@@ -82,6 +83,7 @@ public class PictureSolver {
                 .scoreFunction(this::calculateScore)
                 .build();
 
+        Warmup.warmup(solver, 1);
 
         Spreader spreader = new Spreader(0.0001, 0, 1);
 

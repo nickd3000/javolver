@@ -125,11 +125,30 @@ public class Individual {
         this.processed = processed;
     }
 
-    public int getHash() {
-        int combined = 0;
-        for (double val : dna.getData()) {
-            combined += Double.hashCode(val);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Individual that = (Individual) o;
+        if (this.dna.getSize() != that.dna.getSize()) return false;
+        double[] thisData = this.dna.getData();
+        double[] thatData = that.dna.getData();
+        for (int i = 0; i < thisData.length; i++) {
+            if (Double.compare(thisData[i], thatData[i]) != 0) return false;
         }
-        return Integer.hashCode(combined);
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 0;
+        for (double val : dna.getData()) {
+            result = 31 * result + Double.hashCode(val);
+        }
+        return result;
+    }
+
+    public int getHash() {
+        return hashCode();
     }
 }

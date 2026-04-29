@@ -11,6 +11,7 @@ import com.physmo.javolver.solver.Javolver;
 import com.physmo.javolver.solver.Optimizer;
 import com.physmo.javolver.solver.OptimizerES;
 import com.physmo.javolver.solver.Solver;
+import com.physmo.javolver.solver.Warmup;
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
 import com.physmo.minvio.MinvioApp;
@@ -54,10 +55,12 @@ public class SpherePacker extends MinvioApp {
                 .parallelScoring(false)
                 .addMutationOperator(new MutationOperatorSimple(2, 0.5))
                 .setSelectionOperator(new SelectionOperatorTournament(0.25))
-                .setBreedingOperator(new BreedingOperatorCrossover())
+                //.setBreedingOperator(new BreedingOperatorCrossover())
+                .setBreedingOperator(new BreedingOperatorUniform())
                 .scoreFunction(this::calculateScore)
                 .build();
 
+        Warmup.warmup(javolverSolver, 20);
 
 //        testOptimizer = Optimizer.builder()
 //                .dnaSize(numberOfSpheres * genesPerSphere)

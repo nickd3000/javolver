@@ -6,6 +6,7 @@ import com.physmo.javolver.mutationoperator.MutationOperatorSimple;
 import com.physmo.javolver.selectionoperator.SelectionOperatorTournament;
 import com.physmo.javolver.solver.Javolver;
 import com.physmo.javolver.solver.Solver;
+import com.physmo.javolver.solver.Warmup;
 
 /**
  * Example class that uses a genetic algorithm to evolve a population of strings
@@ -37,6 +38,8 @@ public class WordFinder {
                 .setBreedingOperator(new BreedingOperatorUniform())
                 .scoreFunction(WordFinder::calculateScore)
                 .build();
+
+        Warmup.warmup(solver, 10);
 
         // Run evolution until an exact solution is found or maximum cycles reached.
         for (int j = 0; j < 500; j++) {

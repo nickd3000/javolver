@@ -8,6 +8,7 @@ import com.physmo.javolver.mutationoperator.MutationOperatorSwap;
 import com.physmo.javolver.selectionoperator.SelectionOperatorRoulette;
 import com.physmo.javolver.selectionoperator.SelectionOperatorTournament;
 import com.physmo.javolver.solver.Javolver;
+import com.physmo.javolver.solver.Warmup;
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.reference.programming.simplemachinie.Decompiler;
 import com.physmo.reference.programming.simplemachinie.SimpleMachine2;
@@ -64,6 +65,8 @@ public class TestProgram {
                 .setBreedingOperator(new BreedingOperatorUniform())
                 .scoreFunction(this::calculateScore)
                 .build();
+
+        Warmup.warmup(evolver, 2);
     }
 
     // experiment to do multiple quick runs from scratch to use for the initial population.
@@ -128,7 +131,7 @@ public class TestProgram {
     public void go() {
         init();
 
-        preRun(100, 5);
+        //preRun(100, 5);
         //doRecursivePreRun();
 
         for (int j = 0; j < 50000; j++) {

@@ -35,6 +35,12 @@ public class OptimizerES extends Solver {
     }
 
     @Override
+    public void resetPopulation() {
+        bestIndividual = new Individual(dnaSize);
+        bestIndividual.setScoreFunction(scoreFunction);
+    }
+
+    @Override
     public void setDnaSize(int dnaSize) {
         this.dnaSize = dnaSize;
     }

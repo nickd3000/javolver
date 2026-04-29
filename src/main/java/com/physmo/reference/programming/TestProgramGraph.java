@@ -6,6 +6,7 @@ import com.physmo.javolver.mutationoperator.MutationOperatorSimple;
 import com.physmo.javolver.mutationoperator.MutationOperatorSwap;
 import com.physmo.javolver.selectionoperator.SelectionOperatorTournament;
 import com.physmo.javolver.solver.Javolver;
+import com.physmo.javolver.solver.Warmup;
 import com.physmo.minvio.Utils;
 import com.physmo.reference.programming.simplemachinie.SimpleMachine2;
 import com.physmo.minvio.BasicDisplay;
@@ -51,6 +52,8 @@ public class TestProgramGraph {
                 .setBreedingOperator(new BreedingOperatorUniform())
                 .scoreFunction(this::calculateScore)
                 .build();
+
+        Warmup.warmup(evolver, 1);
     }
 
     public void go() {

@@ -52,6 +52,21 @@ The following example shows how to set up a solver to evolve a string to match a
     }
 ```
 
+### Pre-populating the Algorithm
+
+You can pre-populate the algorithm with a set of individuals (e.g. from a previous run or a heuristic).
+
+```java
+    List<Individual> preEvolvedIndividuals = loadPreEvolvedIndividuals();
+    
+    Solver solver = Javolver.builder()
+            .dnaSize(100)
+            .populationTargetSize(100)
+            .addIndividuals(preEvolvedIndividuals) // Pre-populate!
+            .scoreFunction(myScoreFunction)
+            .build();
+```
+
 ### Included Examples
 
 There are several examples included in the project:

@@ -1,11 +1,13 @@
 package com.physmo.javolver.solver;
 
+import com.physmo.javolver.Individual;
 import com.physmo.javolver.ScoreFunction;
 import com.physmo.javolver.SpeciesCheck;
 import com.physmo.javolver.breedingoperator.BreedingOperator;
 import com.physmo.javolver.mutationoperator.MutationOperator;
 import com.physmo.javolver.selectionoperator.SelectionOperator;
 
+import java.util.Collection;
 import java.util.function.IntToDoubleFunction;
 
 /**
@@ -21,6 +23,28 @@ public class JavolverBuilder {
     public JavolverBuilder() {
         javolverConfig = new JavolverConfig();
         javolver = new Javolver(javolverConfig);
+    }
+
+    /**
+     * Adds an individual to the initial population.
+     *
+     * @param individual The individual to add.
+     * @return This builder instance for chaining.
+     */
+    public JavolverBuilder addIndividual(Individual individual) {
+        javolver.addIndividual(individual);
+        return this;
+    }
+
+    /**
+     * Adds a collection of individuals to the initial population.
+     *
+     * @param individuals The collection of individuals to add.
+     * @return This builder instance for chaining.
+     */
+    public JavolverBuilder addIndividuals(Collection<Individual> individuals) {
+        javolver.addIndividuals(individuals);
+        return this;
     }
 
     /**

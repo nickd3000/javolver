@@ -6,6 +6,7 @@ import com.physmo.javolver.mutationoperator.MutationOperatorShuffle;
 import com.physmo.javolver.mutationoperator.MutationOperatorSwap;
 import com.physmo.javolver.selectionoperator.SelectionOperatorTournament;
 import com.physmo.javolver.solver.Javolver;
+import com.physmo.javolver.solver.Warmup;
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
 import com.physmo.minvio.DrawingContext;
@@ -45,7 +46,7 @@ public class TravellingSalesman {
 
         Javolver javolver = Javolver.builder()
                 .dnaSize(cityList.size())
-                .populationTargetSize(10)
+                .populationTargetSize(100)
                 .keepBestIndividualAlive(true)
                 .setSelectionOperator(new SelectionOperatorTournament(.3))
                 .addMutationOperator(new MutationOperatorSwap(1, 2))
@@ -54,6 +55,8 @@ public class TravellingSalesman {
                 .dnaInitializer(this::dnaInitializer)
                 .scoreFunction(this::scoreFunction)
                 .build();
+
+        Warmup.warmup(javolver, 10);
 
         long lastTime = System.currentTimeMillis();
 

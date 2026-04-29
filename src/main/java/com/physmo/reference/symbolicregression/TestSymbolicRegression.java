@@ -7,6 +7,7 @@ import com.physmo.javolver.mutationoperator.MutationOperatorSimple;
 import com.physmo.javolver.mutationoperator.MutationOperatorSwap;
 import com.physmo.javolver.selectionoperator.SelectionOperatorTournament;
 import com.physmo.javolver.solver.Javolver;
+import com.physmo.javolver.solver.Warmup;
 
 public class TestSymbolicRegression {
 
@@ -61,6 +62,8 @@ public class TestSymbolicRegression {
                 .scoreFunction(this::calculateScore)
                 .dnaInitializer(this::dnaInitializer)
                 .build();
+
+        Warmup.warmup(solver, 1);
 
         solver.setTemperature(1);
     }
