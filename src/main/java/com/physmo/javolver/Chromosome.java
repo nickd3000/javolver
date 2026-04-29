@@ -34,11 +34,21 @@ public class Chromosome {
         }
     }
 
+    /**
+     * Gets the number of elements in the chromosome.
+     *
+     * @return The size of the DNA array.
+     */
     public int getSize() {
         if (data == null) return 0;
         return data.length;
     }
 
+    /**
+     * Initializes the chromosome's data using a provided function that maps an index to a double value.
+     *
+     * @param initFunction A function that takes an index and returns the initial value for that index.
+     */
     public void initFromFunction(IntToDoubleFunction initFunction) {
         for (int i = 0; i < data.length; i++) {
             data[i] = initFunction.applyAsDouble(i);
@@ -99,6 +109,12 @@ public class Chromosome {
         if (val > max) data[i] = max;
     }
 
+    /**
+     * Swaps the values at two specified indices in the chromosome.
+     *
+     * @param index1 The first index.
+     * @param index2 The second index.
+     */
     public void swap(int index1, int index2) {
         double v1 = data[index1];
         double v2 = data[index2];

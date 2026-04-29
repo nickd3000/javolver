@@ -46,8 +46,11 @@ public class Attenuator {
     }
 
     /**
-     * Set the current score (in the configured range).  
+     * Set the current score (in the configured range).
+     * The attenuator will calculate a normalized score based on the range
+     * provided in {@link #setScoreRange(double, double)}.
      *
+     * @param score The current fitness score.
      */
     public void setScore(double score) {
         if (score<previousScore) score=previousScore;
@@ -57,7 +60,10 @@ public class Attenuator {
     }
 
     /**
-     * Get the current attenuated value for a parameter.
+     * Get the current attenuated value for a parameter based on the last score set.
+     *
+     * @param param The name of the parameter.
+     * @return The interpolated value between min and max for the current normalized score.
      */
     public double getValue(String param) {
         if (!minValues.containsKey(param) || !maxValues.containsKey(param)) {

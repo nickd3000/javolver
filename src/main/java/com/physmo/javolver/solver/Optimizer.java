@@ -7,6 +7,12 @@ import com.physmo.javolver.mutationoperator.MutationOperator;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A simple hill-climbing optimizer.
+ * It maintains a single best individual and tries to improve it by applying
+ * mutation strategies and keeping the result if it yields a better score.
+ * It also includes a mechanism to "unstick" if no progress is made for a while.
+ */
 public class Optimizer extends Solver {
 
     private final List<MutationOperator> mutationStrategies = new ArrayList<>();
@@ -18,6 +24,9 @@ public class Optimizer extends Solver {
     int iteration = 0;
     private ScoreFunction scoreFunction;
 
+    /**
+     * Default constructor.
+     */
     public Optimizer() {
 
     }
@@ -55,6 +64,10 @@ public class Optimizer extends Solver {
         algorithm();
     }
 
+    /**
+     * Core optimization logic. Clones the best individual, mutates it,
+     * and updates the best individual if the clone is better.
+     */
     public void algorithm() {
 
         Individual clone = bestIndividual.cloneFully();
@@ -96,6 +109,11 @@ public class Optimizer extends Solver {
         return iteration;
     }
 
+    /**
+     * Adds a mutation operator to be used during the optimization process.
+     *
+     * @param strategy The mutation strategy to add.
+     */
     public void addMutationStrategy(MutationOperator strategy) {
         mutationStrategies.add(strategy);
     }

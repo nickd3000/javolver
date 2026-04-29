@@ -8,7 +8,10 @@ import java.util.*;
 
 
 /**
- * Evelutionary Strategies based solver.
+ * A solver that uses an Evolutionary Strategy (ES) approach.
+ * Unlike the standard population-based genetic algorithm, ES typically focuses on
+ * evolving a single best individual (or a small set of individuals) through
+ * heavy mutation and recombination of a pool of mutated clones.
  */
 public class OptimizerES extends Solver {
 
@@ -23,6 +26,9 @@ public class OptimizerES extends Solver {
     double changeAmount = 0.1;
     private ScoreFunction scoreFunction;
 
+    /**
+     * Default constructor.
+     */
     public OptimizerES() {
 
     }
@@ -57,6 +63,11 @@ public class OptimizerES extends Solver {
         changeAmount *= 0.99;
     }
 
+    /**
+     * Performs one generation of the ES algorithm.
+     * This includes creating a pool of mutated clones, sorting them by score,
+     * and combining the top individuals into a new "best" individual.
+     */
     public void algorithm() {
         List<Individual> pool = new ArrayList<>();
 
@@ -85,6 +96,13 @@ public class OptimizerES extends Solver {
 
     }
 
+    /**
+     * Creates a mutated copy of a parent individual.
+     *
+     * @param parent         The parent individual to clone.
+     * @param mutationAmount The magnitude of mutation to apply.
+     * @return A new, mutated Individual.
+     */
     public Individual createMutatedClone(Individual parent, double mutationAmount) {
         Individual clone = parent.cloneFully();
         clone.setProcessed(false);
@@ -113,6 +131,11 @@ public class OptimizerES extends Solver {
         return iteration;
     }
 
+    /**
+     * Adds a mutation operator to be used by the solver.
+     *
+     * @param strategy The mutation strategy to add.
+     */
     public void addMutationStrategy(MutationOperator strategy) {
         mutationStrategies.add(strategy);
     }

@@ -35,6 +35,12 @@ public class Individual {
         dna = new Chromosome(dnaSize);
     }
 
+    /**
+     * Copy constructor. Creates a new individual with the same DNA size as the source,
+     * and copies the score function. The score and processed status are reset.
+     *
+     * @param cloneSource The individual to copy configuration from.
+     */
     public Individual(Individual cloneSource) {
         this.dna = new Chromosome(cloneSource.getDna().getSize());
         this.scoreFunction = (cloneSource.scoreFunction);
@@ -43,10 +49,20 @@ public class Individual {
         this.diversity=0;
     }
 
+    /**
+     * Gets the score function used to evaluate this individual.
+     *
+     * @return The score function.
+     */
     public ScoreFunction getScoreFunction() {
         return scoreFunction;
     }
 
+    /**
+     * Sets the score function used to evaluate this individual.
+     *
+     * @param scoreFunction The score function.
+     */
     public void setScoreFunction(ScoreFunction scoreFunction) {
         this.scoreFunction = scoreFunction;
     }
@@ -64,6 +80,12 @@ public class Individual {
         return score;
     }
 
+    /**
+     * Gets the diversity value of this individual.
+     * Diversity can be used to maintain variety in the population.
+     *
+     * @return The diversity value.
+     */
     public double getDiversity() {
         return diversity;
     }
@@ -88,6 +110,12 @@ public class Individual {
         return score = s;
     }
 
+    /**
+     * Creates a deep copy of this individual, including its DNA data.
+     * The new individual will have the same DNA values but a reset score and processed status.
+     *
+     * @return A new Individual instance that is a deep clone of this one.
+     */
     public Individual cloneFully() {
         Individual clone = new Individual(this);
         for (int i = 0; i < this.getDna().getSize(); i++) {
@@ -96,10 +124,20 @@ public class Individual {
         return clone;
     }
 
+    /**
+     * Gets the chromosome (DNA) of this individual.
+     *
+     * @return The chromosome.
+     */
     public Chromosome getDna() {
         return dna;
     }
 
+    /**
+     * Sets the chromosome (DNA) of this individual.
+     *
+     * @param dna The new chromosome.
+     */
     public void setDna(Chromosome dna) {
         this.dna = dna;
     }
@@ -121,6 +159,11 @@ public class Individual {
         return diff / (double) size;
     }
 
+    /**
+     * Sets whether this individual has been processed (scored).
+     *
+     * @param processed True if the individual should be marked as processed.
+     */
     public void setProcessed(boolean processed) {
         this.processed = processed;
     }
@@ -148,6 +191,12 @@ public class Individual {
         return result;
     }
 
+    /**
+     * Gets a hash code representing the state of this individual's DNA.
+     * This is a convenience method that calls {@link #hashCode()}.
+     *
+     * @return An integer hash of the DNA data.
+     */
     public int getHash() {
         return hashCode();
     }

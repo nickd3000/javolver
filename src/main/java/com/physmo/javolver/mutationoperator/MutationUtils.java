@@ -4,16 +4,19 @@ import com.physmo.javolver.Individual;
 
 import java.util.Random;
 
+/**
+ * Utility class providing helper methods for mutation operations.
+ */
 class MutationUtils {
     private static final Random random = new Random();
 
     /**
-     * Swap two DNA elements at random.
-     * NOTE: seems quite destructive, so it's been limited to only
-     * run 10% of the time for now.
+     * Swaps two DNA elements at random.
+     * NOTE: This operation can be quite destructive to the individual's fitness,
+     * so it is currently limited to run only 10% of the time when called.
      *
-     * @param individual The Individual
-     * @param count      Number of swaps to perform.
+     * @param individual The individual to modify.
+     * @param count      The number of swap operations to attempt.
      */
     public static void randomSwap(Individual individual, int count) {
         if (Math.random() < 0.9) return; // heavily limit this.
