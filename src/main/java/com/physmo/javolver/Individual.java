@@ -107,6 +107,7 @@ public class Individual {
      * @return The score (pass through).
      */
     public double setScore(double s) {
+        processed = true;
         return score = s;
     }
 
